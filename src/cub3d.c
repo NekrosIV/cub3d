@@ -6,14 +6,16 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/07/31 14:48:56 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/16 17:48:17 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	main(void)
+int	main(int ac, char **av)
 {
-	ft_printf("Hello cub3d\n");
+	(void)av;
+	if (ac != 2)
+		return (1);
 	return (0);
 }

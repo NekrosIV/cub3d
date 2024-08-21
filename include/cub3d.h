@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/21 16:41:22 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/21 18:47:59 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 # define LIGHT_GREEN "\1\033[38;5;120m\2"
 
 # define E_MALLOC "Malloc failure!"
+# define E_DIR "Wrong argument: Directory"
 # define E_SPACE "Invalid whitespace characters"
 
 typedef struct s_game
@@ -57,5 +58,8 @@ t_game		*parsing(char *file);
 void		read_file(char *file, t_game *game);
 void		free_exit(t_game *game, int line, char *file, char *error);
 t_game		*init_game(void);
+char		*get_texture_path(char *line, t_game *game);
+void		print_struct(t_game *game);
+void		print_tabsquare(char **tab);
 
 #endif

@@ -1,42 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.c                                            :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/21 15:06:55 by kasingh          ###   ########.fr       */
+/*   Created: 2024/08/21 15:18:57 by kasingh           #+#    #+#             */
+/*   Updated: 2024/08/21 16:04:56 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-t_game	*init_game(void)
+void	free_exit(t_game *game, int line, char *file, char *error)
 {
-	t_game	*game;
-
-	game = malloc(sizeof(t_game));
-	if (!game)
-		exit(1);
-	game->ceiling = NULL;
-	game->ea = NULL;
-	game->no = NULL;
-	game->so = NULL;
-	game->we = NULL;
-	game->floor = NULL;
-	game->pos_x = -1;
-	game->pos_y = -1;
-	game->map = NULL;
-	return (game);
-}
-
-int	main(int ac, char **av)
-{
-	t_game	*game;
-
-	if (ac != 2)
-		return (1);
-	game = parsing(av[1]);
-	return (0);
+	if (game)
+	{
+		// free_everything(game);
+		free(game);
+	}
+	if (error)
+	{
+		ft_putstr_fd(RED, 2);
+		ft_putstr_fd("Error: ", 2);
+		ft_putendl_fd(error, 2);
+		ft_putstr_fd("In file: ", 2);
+		ft_putstr_fd(file, 2);
+		ft_putstr_fd("   line: ", 2);
+		ft_putnbr_fd(line, 2);
+		ft_putstr_fd("\n", 2);
+		ft_putstr_fd(RESET, 2);
+	}
+	exit(1);
 }

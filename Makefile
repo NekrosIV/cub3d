@@ -5,7 +5,9 @@ MLX_FLAGS = -Lmlx -lmlx -Imlx -lXext -lX11 -lm
 LIBFTDIR := ./libft
 MLXDIR := ./mlx
 
-FILES := cub3d.c 
+FILES := cub3d.c \
+		parsing/parsing.c \
+		error/exit.c
 
 SRCS_DIR := ./src
 OBJS_DIR := ./poubelle
@@ -26,6 +28,8 @@ LBLUE	:= \033[38;5;51m
 BLUE	:= \033[38;5;117m
 INDI	:= \033[38;5;99m
 RESET	:= \033[00m
+
+OBJ_SUBDIRS := $(sort $(dir $(OBJS)))
 
 all: $(NAME)
 
@@ -68,12 +72,12 @@ $(NAME): $(OBJS)
 	@printf "⠀⠀⠀⢠⡾⢋⠾⢡⠀⡿⡟⠺⢶⣅⠐⠄⠑⢻⡿⠚⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢴⡀⠈⠲⣙⠻⢿⣿⣿⣿⣿⣿⣿⢦⣴⡤⠀⠀⠀⠀⠀⠈⣿⠠⠒⢢⡴⢶⠞⢄⡖⣿⣿⢟⢱⡟⢁⠒⠌⣀⡾⠛⠿⡦⢄⠀⠀⠩⠦⢤⠉⠠⡀⠀⠀⢸⠄⠡⠠⠏⠹⠂⠀⠈⣀⠤⠠⠤⠀⠀⠀⠀⠃⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀\n"
 	@printf "⠀⠀⠀⠃⠁⠈⠘⠀⠀⠁⠁⠀⠀⠈⠁⠁⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠉⠛⠙⠋⠉⠐⠉⠁⠀⠀⠀⠀⠀⠀⠂⠘⠀⠐⠈⠉⠃⠀⠚⠉⠛⠁⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠈⠓⠀⠀⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠚⠁⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀\n"
 	
-$(OBJS_DIR) :
-	@mkdir $@
+$(OBJS_DIR) $(OBJ_SUBDIRS) :
+	@mkdir -p $@
 
 -include $(DEPS)
 
-$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c | $(OBJS_DIR)
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c | $(OBJ_SUBDIRS)
 	@printf "$(LBLUE)[Compilation]$(RESET) In progress... $(GREEN)$<" && \
 	$(CC) $(CFLAGS) -I$(HEADERS) -c $< -o $@ && \
 	printf "\r$(LBLUE)[Compilation]$(RESET) Completed   ... $(GREEN)$<" && \
@@ -93,3 +97,4 @@ fclean: clean
 re: fclean all
 
 .PHONY : all clean fclean re 
+	

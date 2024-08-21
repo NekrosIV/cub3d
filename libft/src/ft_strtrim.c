@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/12 13:20:50 by kasingh           #+#    #+#             */
-/*   Updated: 2024/04/27 19:16:14 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/21 16:22:34 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ char	*ft_strtrim(char const *s1, char const *set)
 	len_flage = 0;
 	size_malloc = 0;
 	j = 0;
+	if (!s1 || !set)
+		return (NULL);
 	while (s1[len_flage] && ft_is_sep(s1[len_flage++], set))
 		j++;
 	len_flage = ft_strlen(s1);

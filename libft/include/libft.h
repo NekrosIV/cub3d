@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:05:46 by kasingh           #+#    #+#             */
-/*   Updated: 2024/07/31 14:44:05 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/22 17:43:53 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void				ft_lstclear(t_list **lst, void (*del)(void *));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
-						
+
 int					ft_printf(const char *format, ...);
 int					ft_print_char(char c);
 int					ft_print_str(char *str);
@@ -83,5 +83,6 @@ int					ft_putnbr_base_16(unsigned long int n, char *base, int len);
 char				*get_next_line(int fd);
 char				*ft_strdup_gnl(const char *src);
 char				*ft_strchr_gnl(const char *str, int c);
+char				**ft_split_piscine(char *str, char *charset);
 
 #endif

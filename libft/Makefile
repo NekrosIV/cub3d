@@ -64,6 +64,7 @@ FILES = ft_isalpha.c  \
 		ft_print_unsigned_int.c \
 		ft_putnbr_base_16.c \
 		get_next_line.c \
+		ft_split_piscine.c \
 		get_next_line_utils.c
 
 SRCS_DIR := ./src

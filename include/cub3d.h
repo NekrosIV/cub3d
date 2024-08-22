@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/21 18:47:59 by pscala           ###   ########.fr       */
+/*   Updated: 2024/08/22 19:09:28 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "../libft/include/libft.h"
 # include <errno.h>
 # include <fcntl.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -39,7 +40,12 @@
 
 # define E_MALLOC "Malloc failure!"
 # define E_DIR "Wrong argument: Directory"
+# define E_TNFOND "Texture path not found"
+# define E_TMULTI "Multiple definition for textutre path : "
 # define E_SPACE "Invalid whitespace characters"
+# define E_FILE "Invalid file extension"
+# define E_RGB "Invalid RGB value"
+# define E_TEXTURE "Invalid texture"
 
 typedef struct s_game
 {
@@ -50,8 +56,8 @@ typedef struct s_game
 	char	*so;
 	char	*we;
 	char	*ea;
-	char	*ceiling;
-	char	*floor;
+	int		ceiling[3];
+	int		floor[3];
 }			t_game;
 
 t_game		*parsing(char *file);
@@ -61,5 +67,6 @@ t_game		*init_game(void);
 char		*get_texture_path(char *line, t_game *game);
 void		print_struct(t_game *game);
 void		print_tabsquare(char **tab);
+void		free_taboftab(char **tab);
 
 #endif

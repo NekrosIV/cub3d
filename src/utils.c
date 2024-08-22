@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 18:34:35 by pscala            #+#    #+#             */
-/*   Updated: 2024/08/21 18:49:04 by pscala           ###   ########.fr       */
+/*   Updated: 2024/08/22 18:35:54 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,23 @@ void	print_tabsquare(char **tab)
 	}
 }
 
+void	print_tabint(int *tab, int len)
+{
+	int	i;
+
+	i = 0;
+	if (!tab)
+		return ;
+	while (i < len)
+	{
+		printf("%d", tab[i]);
+		if (i + 1 < len)
+			printf(",");
+		i++;
+	}
+	printf("\n");
+}
+
 void	print_struct(t_game *game)
 {
 	printf("map :\n");
@@ -36,6 +53,8 @@ void	print_struct(t_game *game)
 	printf("SO: %s\n", game->so);
 	printf("EA: %s\n", game->ea);
 	printf("WE: %s\n", game->we);
-	printf("ceiling: %s\n", game->ceiling);
-	printf("floor: %s\n", game->floor);
+	printf("ceiling: \n");
+	print_tabint(game->ceiling, 3);
+	printf("floor: \n");
+	print_tabint(game->floor, 3);
 }

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/21 15:06:55 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/22 16:57:41 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,16 @@ t_game	*init_game(void)
 	game = malloc(sizeof(t_game));
 	if (!game)
 		exit(1);
-	game->ceiling = NULL;
 	game->ea = NULL;
 	game->no = NULL;
 	game->so = NULL;
 	game->we = NULL;
-	game->floor = NULL;
+	game->ceiling[0] = -1;
+	game->ceiling[1] = -1;
+	game->ceiling[2] = -1;
+	game->floor[0] = -1;
+	game->floor[1] = -1;
+	game->floor[2] = -1;
 	game->pos_x = -1;
 	game->pos_y = -1;
 	game->map = NULL;

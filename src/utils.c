@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 18:34:35 by pscala            #+#    #+#             */
-/*   Updated: 2024/08/22 18:35:54 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/23 17:28:08 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	print_struct(t_game *game)
 	print_tabsquare(game->map);
 	printf("pos_x: %d\n", game->pos_x);
 	printf("pos_x: %d\n", game->pos_x);
+	printf("map_pos: %d\n", game->map_pos);
+	printf("map_rows: %d\n", game->map_rows);
 	printf("NO: %s\n", game->no);
 	printf("SO: %s\n", game->so);
 	printf("EA: %s\n", game->ea);

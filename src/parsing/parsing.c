@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/22 19:17:29 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/23 17:58:52 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,8 +163,14 @@ void	trime_line(t_game *game, char *line)
 		fill_tab_rgb(game, line + i, 'F');
 	else if (ft_strncmp(line + i, "C", 1) == 0 && !multi_def(game, line, 'C'))
 		fill_tab_rgb(game, line + i, 'C');
+	else if (game->map_rows == -1 && !look_like_a_map_line(line))
+		(free(line), free_exit(game, 0, NULL, E_TEXTURE));
+	else if (look_like_a_map_line(line))
+		(free(line), free_exit(game, 0, NULL, E_HITORMISS));
+	else
+		(free(line), free_exit(game, 0, NULL, E_NLAST));
 	if (line[i] == '\0')
-		(free(line), free_exit(game, __LINE__, __FILE__, E_SPACE));
+		(free(line), free_exit(game, 0, NULL, E_SPACE));
 }
 
 char	*get_texture_path(char *line, t_game *game)
@@ -176,7 +182,6 @@ char	*get_texture_path(char *line, t_game *game)
 
 	k = 0;
 	i = 2 + skip_e_space(line + 2, true);
-	printf("line = %s\n", line + i);
 	if (line[i] == '\0')
 		(free(line), free_exit(game, 0, NULL, E_TNFOND));
 	j = i + skip_e_space(line + i, false);
@@ -192,17 +197,68 @@ char	*get_texture_path(char *line, t_game *game)
 		i++;
 	}
 	result[k] = '\0';
+	if (ft_strncmp(&result[ft_strlen(result) - 4], ".xpm", 4))
+		(free(line), free(result), free_exit(NULL, 0, NULL, E_T_EXTS));
 	return (result);
 }
 
-void	check_line(t_game *game, char *line)
+bool	textures_filled(t_game *game)
+{
+	if (game->ceiling[0] == -1 || game->floor[0] == -1)
+		return (false);
+	else if (!game->ea || !game->no || !game->so || !game->we)
+		return (false);
+	return (true);
+}
+
+bool	look_like_a_map_line(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == '1' || line[i] == '0' || line[i] == ' '
+			|| line[i] == '\n')
+			i++;
+		else
+			return (false);
+	}
+	return (true);
+}
+
+bool	check_if_its_map(t_game *game, char *line, int fd)
+{
+	char	*new_line;
+
+	new_line = NULL;
+	if (game->map_rows != -1)
+		return (false);
+	game->map_pos++;
+	if (textures_filled(game) && look_like_a_map_line(line))
+	{
+		game->map_rows = 1;
+		while (1)
+		{
+			new_line = get_next_line(fd);
+			if (new_line == NULL || new_line[0] == '\n')
+				return (true);
+			free(new_line);
+			game->map_rows++;
+		}
+	}
+	return (false);
+}
+
+void	check_line(t_game *game, char *line, int fd)
 {
 	int	i;
 
 	i = 0;
 	if (line[0] == '\n')
 		return ;
-	trime_line(game, line);
+	if (!check_if_its_map(game, line, fd))
+		trime_line(game, line);
 }
 
 int	check_if_dir(char *file)
@@ -227,9 +283,12 @@ void	read_file(char *file, t_game *game)
 	if (fd < 0)
 		free_exit(game, __LINE__ - 2, __FILE__, strerror(errno));
 	line = get_next_line(fd);
+	if (!line)
+		free_exit(game, 0, NULL, E_EMPTY);
+	game->map_pos = 0;
 	while (line)
 	{
-		check_line(game, line);
+		check_line(game, line, fd);
 		free(line);
 		line = get_next_line(fd);
 	}

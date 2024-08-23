@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/22 19:09:28 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/23 17:57:25 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,18 @@
 # define E_FILE "Invalid file extension"
 # define E_RGB "Invalid RGB value"
 # define E_TEXTURE "Invalid texture"
+# define E_EMPTY "Empty file"
+# define E_NLAST "Map is not the last element"
+# define E_T_EXTS "Invalid texture file extension"
+# define E_HITORMISS "Missing texture or is after the map"
 
 typedef struct s_game
 {
 	char	**map;
 	int		pos_x;
 	int		pos_y;
+	int		map_pos;
+	int		map_rows;
 	char	*no;
 	char	*so;
 	char	*we;
@@ -68,5 +74,6 @@ char		*get_texture_path(char *line, t_game *game);
 void		print_struct(t_game *game);
 void		print_tabsquare(char **tab);
 void		free_taboftab(char **tab);
+bool		look_like_a_map_line(char *line);
 
 #endif

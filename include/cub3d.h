@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/23 17:57:25 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/24 18:19:10 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,10 @@
 # define E_NLAST "Map is not the last element"
 # define E_T_EXTS "Invalid texture file extension"
 # define E_HITORMISS "Missing texture or is after the map"
+# define E_MAPCHAR "Invalid map character"
+# define E_MULTIPOS "Multiple starting position for the player"
+# define E_MISSPOS "Missing player starting position"
+
 
 typedef struct s_game
 {
@@ -58,12 +62,15 @@ typedef struct s_game
 	int		pos_y;
 	int		map_pos;
 	int		map_rows;
+	int		map_column;
 	char	*no;
 	char	*so;
 	char	*we;
 	char	*ea;
 	int		ceiling[3];
 	int		floor[3];
+	int		fd;
+	char	player_dir;
 }			t_game;
 
 t_game		*parsing(char *file);

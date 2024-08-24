@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:18:57 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/22 16:54:01 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/24 16:24:31 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void	free_taboftab(char **tab)
 
 void	free_everything(t_game *game)
 {
+	if (game->fd != -1)
+		close(game->fd);
 	if (game->no)
 		free(game->no);
 	if (game->so)

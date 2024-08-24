@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/23 17:58:52 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/24 18:29:47 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,7 @@ bool	look_like_a_map_line(char *line)
 	return (true);
 }
 
-bool	check_if_its_map(t_game *game, char *line, int fd)
+bool	check_if_its_map(t_game *game, char *line)
 {
 	char	*new_line;
 
@@ -240,9 +240,9 @@ bool	check_if_its_map(t_game *game, char *line, int fd)
 		game->map_rows = 1;
 		while (1)
 		{
-			new_line = get_next_line(fd);
+			new_line = get_next_line(game->fd);
 			if (new_line == NULL || new_line[0] == '\n')
-				return (true);
+				return (free(new_line), true);
 			free(new_line);
 			game->map_rows++;
 		}
@@ -250,14 +250,14 @@ bool	check_if_its_map(t_game *game, char *line, int fd)
 	return (false);
 }
 
-void	check_line(t_game *game, char *line, int fd)
+void	check_line(t_game *game, char *line)
 {
 	int	i;
 
 	i = 0;
 	if (line[0] == '\n')
 		return ;
-	if (!check_if_its_map(game, line, fd))
+	if (!check_if_its_map(game, line))
 		trime_line(game, line);
 }
 
@@ -272,26 +272,136 @@ int	check_if_dir(char *file)
 	return (1);
 }
 
-void	read_file(char *file, t_game *game)
+int	check_file(char *file, t_game *game)
 {
-	int		fd;
-	char	*line;
+	int	fd;
 
 	if (check_if_dir(file) == 1)
 		free_exit(game, -1, NULL, E_DIR);
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 		free_exit(game, __LINE__ - 2, __FILE__, strerror(errno));
-	line = get_next_line(fd);
+	return (fd);
+}
+
+void	fill_map(t_game *game, char *line)
+{
+	int	i;
+
+	game->map_column++;
+	i = 0;
+	game->map[game->map_column] = ft_strtrim(line, "\n");
+	if (!game->map[game->map_column])
+		(free(line), free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC));
+}
+
+void	replace_space_in_map(t_game *game)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (game->map[y])
+	{
+		x = 0;
+		while (game->map[y][x])
+		{
+			if (game->map[y][x] == ' ')
+				game->map[y][x] = '1';
+			x++;
+		}
+		y++;
+	}
+}
+
+bool	check_valid_char(char c)
+{
+	return (c != '1' && c != '0' && c != ' ' && c != 'N' && c != 'E' && c != 'W'
+		&& c != 'S');
+}
+
+bool	check_play_pos(char c)
+{
+	return (c == 'N' || c == 'E' || c == 'W' || c == 'S');
+}
+
+void	pars_map(t_game *game)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	// print_tabsquare(game->map);
+	while (game->map[y])
+	{
+		x = 0;
+		while (game->map[y][x])
+		{
+			if (check_valid_char(game->map[y][x]))
+				free_exit(game, 0, NULL, E_MAPCHAR);
+			if (game->player_dir == '0' && check_play_pos(game->map[y][x]))
+			{
+				game->player_dir = game->map[y][x];
+				game->pos_y = y;
+				game->pos_x = x;
+			}
+			else if (game->player_dir != '0' && check_play_pos(game->map[y][x]))
+				free_exit(game, 0, NULL, E_MULTIPOS);
+			x++;
+		}
+		y++;
+	}
+	if (game->player_dir == '0')
+		free_exit(game, 0, NULL, E_MISSPOS);
+}
+
+void	init_map(t_game *game, char *file)
+{
+	char	*line;
+	int		i;
+
+	game->fd = check_file(file, game);
+	game->map = ft_calloc(sizeof(char *), (game->map_rows + 1));
+	if (!game->map)
+		free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC);
+	i = 1;
+	while (1)
+	{
+		line = get_next_line(game->fd);
+		if (!line)
+			break ;
+		if (line[0] == '\n')
+		{
+			free(line);
+			continue ;
+		}
+		if (i >= game->map_pos)
+			fill_map(game, line);
+		free(line);
+		i++;
+	}
+	(close(game->fd), pars_map(game), replace_space_in_map(game));
+}
+
+void	read_file(char *file, t_game *game)
+{
+	char	*line;
+
+	game->fd = check_file(file, game);
+	line = get_next_line(game->fd);
 	if (!line)
 		free_exit(game, 0, NULL, E_EMPTY);
 	game->map_pos = 0;
 	while (line)
 	{
-		check_line(game, line, fd);
+		check_line(game, line);
 		free(line);
-		line = get_next_line(fd);
+		line = get_next_line(game->fd);
 	}
+	close(game->fd);
+	game->fd = -1;
+	init_map(game, file);
+	game->fd = -1;
 }
 
 t_game	*parsing(char *file)
@@ -303,5 +413,6 @@ t_game	*parsing(char *file)
 	game = init_game();
 	read_file(file, game);
 	print_struct(game);
+	free_exit(game, 0, NULL, NULL);
 	return (game);
 }

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/24 17:40:02 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/26 16:42:28 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ t_game	*init_game(void)
 	game->fd = -1;
 	game->map_column = -1;
 	game->player_dir = '0';
+	game->cpy_map = NULL;
 	return (game);
 }
 

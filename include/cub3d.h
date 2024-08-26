@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/24 18:19:10 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/26 16:34:38 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,13 @@
 # define E_MAPCHAR "Invalid map character"
 # define E_MULTIPOS "Multiple starting position for the player"
 # define E_MISSPOS "Missing player starting position"
-
+# define E_CLOSE "Map is not closed"
+# define E_NOMAP "No map found bg"
 
 typedef struct s_game
 {
 	char	**map;
+	char	**cpy_map;
 	int		pos_x;
 	int		pos_y;
 	int		map_pos;
@@ -82,5 +84,6 @@ void		print_struct(t_game *game);
 void		print_tabsquare(char **tab);
 void		free_taboftab(char **tab);
 bool		look_like_a_map_line(char *line);
+void		print_tabint(int *tab, int len);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 18:34:35 by pscala            #+#    #+#             */
-/*   Updated: 2024/08/24 18:23:37 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/26 16:46:48 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	print_tabsquare(char **tab)
 		return ;
 	while (tab[i])
 	{
-		printf("%s\n", tab[i]);
+		ft_printf("%s\n", tab[i]);
 		i++;
 	}
 }

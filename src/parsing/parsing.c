@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/24 18:29:47 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/26 17:53:35 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,6 +295,21 @@ void	fill_map(t_game *game, char *line)
 		(free(line), free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC));
 }
 
+void	cpy_map(t_game *game)
+{
+	int	i;
+
+	i = 0;
+	game->cpy_map = ft_calloc(sizeof(char *), (game->map_rows + 1));
+	if (!game->cpy_map)
+		free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC);
+	while (game->map[i])
+	{
+		game->cpy_map[i] = ft_strdup(game->map[i]);
+		i++;
+	}
+}
+
 void	replace_space_in_map(t_game *game)
 {
 	int	x;
@@ -312,6 +327,7 @@ void	replace_space_in_map(t_game *game)
 		}
 		y++;
 	}
+	cpy_map(game);
 }
 
 bool	check_valid_char(char c)
@@ -325,7 +341,7 @@ bool	check_play_pos(char c)
 	return (c == 'N' || c == 'E' || c == 'W' || c == 'S');
 }
 
-void	pars_map(t_game *game)
+void	pre_pars_map(t_game *game)
 {
 	int	x;
 	int	y;
@@ -355,6 +371,68 @@ void	pars_map(t_game *game)
 		free_exit(game, 0, NULL, E_MISSPOS);
 }
 
+void	pars_map(t_game *game)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (game->map[y])
+	{
+		x = 0;
+		while (game->map[y][x])
+		{
+			if ((y == 0 || (y == game->map_rows - 1)) && game->map[y][x] != '1')
+			{
+				free_exit(game, 0, NULL, E_CLOSE);
+			}
+			if ((x == 0 || game->map[y][x + 1] == '\0')
+				&& game->map[y][x] != '1')
+			{
+				free_exit(game, 0, NULL, E_CLOSE);
+			}
+			x++;
+		}
+		y++;
+	}
+}
+void	flood_fill(t_game *game, char **map, int x, int y)
+{
+	if (y < 0 || y >= game->map_rows || x < 0
+		|| x >= (int)ft_strlen(game->map[y]))
+	{
+		free_exit(game, 0, NULL, E_CLOSE);
+		return ;
+	}
+	if (map[y][x] == '1' || map[y][x] == 'V')
+		return ;
+	map[y][x] = 'V';
+	flood_fill(game, map, x + 1, y);
+	flood_fill(game, map, x - 1, y);
+	flood_fill(game, map, x, y + 1);
+	flood_fill(game, map, x, y - 1);
+}
+
+void	pre_flood_fill(t_game *game)
+{
+	int	y;
+	int	x;
+
+	y = 0;
+	flood_fill(game, game->cpy_map, game->pos_x, game->pos_y);
+	while (game->cpy_map[y])
+	{
+		x = 0;
+		while (game->cpy_map[y][x])
+		{
+			if (game->cpy_map[y][x] == '0')
+				flood_fill(game, game->cpy_map, x, y);
+			x++;
+		}
+		y++;
+	}
+}
+
 void	init_map(t_game *game, char *file)
 {
 	char	*line;
@@ -380,7 +458,8 @@ void	init_map(t_game *game, char *file)
 		free(line);
 		i++;
 	}
-	(close(game->fd), pars_map(game), replace_space_in_map(game));
+	(close(game->fd), pre_pars_map(game), replace_space_in_map(game));
+	(pars_map(game), pre_flood_fill(game));
 }
 
 void	read_file(char *file, t_game *game)
@@ -400,6 +479,8 @@ void	read_file(char *file, t_game *game)
 	}
 	close(game->fd);
 	game->fd = -1;
+	if (game->map_rows == -1)
+		free_exit(game, 0, NULL, E_NOMAP);
 	init_map(game, file);
 	game->fd = -1;
 }

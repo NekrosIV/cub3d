@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:18:57 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/24 16:24:31 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/26 17:56:57 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	free_everything(t_game *game)
 		free(game->we);
 	if (game->map)
 		free_taboftab(game->map);
+	if (game->cpy_map)
+		free_taboftab(game->cpy_map);
 	free(game);
 }
 

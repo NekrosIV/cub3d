@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:18:57 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/26 17:56:57 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/29 17:49:30 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,17 @@ void	free_taboftab(char **tab)
 		i++;
 	}
 	free(tab);
+}
+void	free_mlx(t_mlx *mlx)
+{
+	if (mlx->mlx_ptr)
+	{
+		if (mlx->mlx_win)
+			mlx_destroy_window(mlx->mlx_ptr, mlx->mlx_win);
+		mlx_destroy_display(mlx->mlx_ptr);
+		free(mlx->mlx_ptr);
+	}
+	free(mlx);
 }
 
 void	free_everything(t_game *game)
@@ -41,6 +52,8 @@ void	free_everything(t_game *game)
 		free_taboftab(game->map);
 	if (game->cpy_map)
 		free_taboftab(game->cpy_map);
+	if (game->mlx)
+		free_mlx(game->mlx);
 	free(game);
 }
 
@@ -65,6 +78,7 @@ void	free_exit(t_game *game, int line, char *file, char *error)
 			ft_putstr_fd("\n", 2);
 		}
 		ft_putstr_fd(RESET, 2);
+		exit(1);
 	}
-	exit(1);
+	exit(0);
 }

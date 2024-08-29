@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/26 16:34:38 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/29 17:40:57 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define CUB3D_H
 
 # include "../libft/include/libft.h"
+# include "../mlx/mlx.h"
+# include <X11/keysym.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <stdbool.h>
@@ -55,6 +57,18 @@
 # define E_MISSPOS "Missing player starting position"
 # define E_CLOSE "Map is not closed"
 # define E_NOMAP "No map found bg"
+# define E_INITMLX "Could not iniate the mlx pointer"
+# define E_MLXWIN "Could not creat the mlx window"
+
+# define WINAME "CACA3D"
+# define WINX 320
+# define WINY 240
+
+typedef struct s_mlx
+{
+	void	*mlx_ptr;
+	void	*mlx_win;
+}			t_mlx;
 
 typedef struct s_game
 {
@@ -73,6 +87,7 @@ typedef struct s_game
 	int		floor[3];
 	int		fd;
 	char	player_dir;
+	t_mlx	*mlx;
 }			t_game;
 
 t_game		*parsing(char *file);
@@ -85,5 +100,8 @@ void		print_tabsquare(char **tab);
 void		free_taboftab(char **tab);
 bool		look_like_a_map_line(char *line);
 void		print_tabint(int *tab, int len);
+void		init_mlx(t_game *game);
+void		init_mlx2(t_mlx *mlx);
+int			key_hook(int keycode, t_game *game);
 
 #endif

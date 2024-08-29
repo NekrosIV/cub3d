@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/26 16:42:28 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/29 18:02:50 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,28 @@ t_game	*init_game(void)
 	game->map_column = -1;
 	game->player_dir = '0';
 	game->cpy_map = NULL;
+	game->mlx = NULL;
 	return (game);
+}
+int	key_hook(int keycode, t_game *game)
+{
+	if (keycode == XK_Escape)
+		free_exit(game, 0, NULL, "End of the game");
+	// else if (keycode == XK_Up)
+	// 	key_up(game);
+	// else if (keycode == XK_Down)
+	// 	key_down(game);
+	// else if (keycode == XK_Left)
+	// 	key_left(game);
+	// else if (keycode == XK_Right)
+	// 	key_right(game);
+	return (0);
+}
+int	loop_hook(t_game *game)
+{
+	(void)game;
+	// printf("yo\n");
+	return (0);
 }
 
 int	main(int ac, char **av)
@@ -48,5 +69,12 @@ int	main(int ac, char **av)
 	if (ac != 2)
 		return (1);
 	game = parsing(av[1]);
+	print_struct(game);
+	init_mlx(game);
+	if (game->mlx->mlx_ptr)
+		printf("we have it\n");
+	mlx_loop_hook(game->mlx->mlx_ptr, loop_hook, game);
+	mlx_hook(game->mlx->mlx_win, 02, (1L << 0), key_hook, game);
+	mlx_loop(game->mlx->mlx_ptr);
 	return (0);
 }

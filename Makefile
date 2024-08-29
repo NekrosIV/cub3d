@@ -8,7 +8,8 @@ MLXDIR := ./mlx
 FILES := cub3d.c \
 		parsing/parsing.c \
 		error/exit.c \
-		utils.c
+		init_mlx/init_mlx.c \
+		utils.c 
 
 SRCS_DIR := ./src
 OBJS_DIR := ./poubelle

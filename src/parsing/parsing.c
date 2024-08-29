@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/26 17:53:35 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/29 17:23:25 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -493,7 +493,5 @@ t_game	*parsing(char *file)
 		free_exit(NULL, 0, NULL, E_FILE);
 	game = init_game();
 	read_file(file, game);
-	print_struct(game);
-	free_exit(game, 0, NULL, NULL);
 	return (game);
 }

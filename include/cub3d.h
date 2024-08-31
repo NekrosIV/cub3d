@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/29 17:40:57 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/08/31 18:09:31 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <X11/keysym.h>
 # include <errno.h>
 # include <fcntl.h>
+# include <math.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -61,8 +62,15 @@
 # define E_MLXWIN "Could not creat the mlx window"
 
 # define WINAME "CACA3D"
-# define WINX 320
-# define WINY 240
+# define WINX 2000
+# define WINY 1500
+# define PI 3.14159265358979323846
+# define NO 1.57079632679489661923
+# define SO (3 * PI) / 2
+# define WE PI * 1
+# define EA 0
+# define SPEED_M 30
+# define SPEED_C 20
 
 typedef struct s_mlx
 {
@@ -74,8 +82,8 @@ typedef struct s_game
 {
 	char	**map;
 	char	**cpy_map;
-	int		pos_x;
-	int		pos_y;
+	double	pos_x;
+	double	pos_y;
 	int		map_pos;
 	int		map_rows;
 	int		map_column;
@@ -87,6 +95,9 @@ typedef struct s_game
 	int		floor[3];
 	int		fd;
 	char	player_dir;
+	double	dirangle;
+	double	playerdirX;
+	double	playerdirY;
 	t_mlx	*mlx;
 }			t_game;
 

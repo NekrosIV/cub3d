@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/31 18:08:52 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/01 13:54:09 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,9 +182,11 @@ void	draw_arrow(t_game *game)
 	first_diry = start_y + length * -sin(game->dirangle);
 	while (i < WINX)
 	{
-		end_x = start_x + length * cos(game->dirangle + (i - WINX / 2.0) * fov
+		end_x = start_x + length * cos(game->dirangle + (i - WINX / 2.0)
+		*fov
 				/ WINX);
-		end_y = start_y + length * -sin(game->dirangle + (i - WINX / 2.0) * fov
+		end_y = start_y + length * -sin(game->dirangle + (i - WINX / 2.0)
+			*fov
 				/ WINX);
 		if (first_dirx == end_x)
 		{

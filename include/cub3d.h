@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/31 18:09:31 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/01 13:16:09 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,43 @@
 # define SO (3 * PI) / 2
 # define WE PI * 1
 # define EA 0
-# define SPEED_M 30
-# define SPEED_C 20
+# define SPEED_M 5
+# define SPEED_C 0.015
 
 typedef struct s_mlx
 {
 	void	*mlx_ptr;
 	void	*mlx_win;
 }			t_mlx;
+
+typedef struct s_ray
+{
+	double	posX;
+	double	posY;
+	int		mapX;
+	int		mapY;
+	double	orientation;
+	double	dirX;
+	double	diry;
+	double	dist;
+	double	deltaX;
+	double	deltaY;
+	double	hit;
+	int		stepX;
+	int		stepY;
+
+}			t_ray;
+
+typedef struct s_player
+{
+	double	posX;
+	double	posY;
+	int		mapX;
+	int		mapY;
+	double	orientation;
+	double	dirX;
+	double	diry;
+}			t_player;
 
 typedef struct s_game
 {

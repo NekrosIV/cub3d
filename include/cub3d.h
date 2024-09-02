@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/02 15:35:03 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/02 18:40:10 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@
 # define E_MLXWIN "Could not creat the mlx window"
 
 # define WINAME "GOAT3D"
-# define WINX 1920
-# define WINY 1080
+# define WINX 300
+# define WINY 300
 # define MIN_DIM ((WINX) < (WINY) ? (WINX) : (WINY))
 # define PI 3.14159265358979323846
 # define NO 1.57079632679489661923

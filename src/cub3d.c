@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/02 17:12:23 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/02 18:31:57 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,17 +159,16 @@ void	draw_arrow(t_game *game)
 	int		start_x;
 	int		start_y;
 	int		length;
-	int		arrow_width;
 	double	end_x;
 	double	end_y;
 	double	first_dirx;
 	double	first_diry;
-	double	fov;
 	int		i;
 	void	*img_ptr;
 	char	*data;
 	double	ray;
-	double offset;
+	double	offset;
+	double	fov;
 
 	int bpp, size_line, endian;
 	img_ptr = mlx_new_image(game->mlx->mlx_ptr, MIN_DIM / 3, MIN_DIM / 3);
@@ -177,28 +176,26 @@ void	draw_arrow(t_game *game)
 	start_x = game->pos_x;
 	start_y = game->pos_y;
 	length = WINX / 2 * 0.7;
-	arrow_width = 100;
 	fov = 0.66;
 	i = 0;
 	first_dirx = start_x + length * cos(game->dirangle);
 	first_diry = start_y + length * -sin(game->dirangle);
-	ray = game->dirangle + PI / 2;
-	offset = PI / (WINX);
+	ray = game->dirangle - fov / 2;
+	offset = (fov) / WINX;
 	while (i < WINX)
 	{
-		if (i != 0)
-			ray += offset;
 		end_x = start_x + length * cos(ray);
 		end_y = start_y + length * -sin(ray);
-		if (first_dirx == end_x)
+		if (fabs(ray - game->dirangle) < 0.01)
 		{
 			draw_ray_in_data(data, size_line, bpp, start_x, start_y, (int)end_x,
 				(int)end_y, 0x0000FF);
 		}
-		else
+		else if (i % 1 == 0)
 			draw_ray_in_data(data, size_line, bpp, start_x, start_y, (int)end_x,
 				(int)end_y, 255255255);
-		i += 10;
+		i += 1;
+		ray += (offset * 1);
 	}
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win, img_ptr, 0,
 		0);

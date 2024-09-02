@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/01 13:16:09 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/02 15:35:03 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,10 @@
 # define E_INITMLX "Could not iniate the mlx pointer"
 # define E_MLXWIN "Could not creat the mlx window"
 
-# define WINAME "CACA3D"
-# define WINX 2000
-# define WINY 1500
+# define WINAME "GOAT3D"
+# define WINX 1920
+# define WINY 1080
+# define MIN_DIM ((WINX) < (WINY) ? (WINX) : (WINY))
 # define PI 3.14159265358979323846
 # define NO 1.57079632679489661923
 # define SO (3 * PI) / 2

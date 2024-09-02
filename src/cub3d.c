@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/02 17:05:42 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/02 17:12:23 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	draw_ray_in_data(char *data, int size_line, int bpp, int x0, int y0,
 	err = dx + dy;
 	while (1)
 	{
-		if (x0 >= 0 && x0 < WINX && y0 >= 0 && y0 < WINY)
+		if (x0 >= 0 && x0 < MIN_DIM / 3 && y0 >= 0 && y0 < MIN_DIM / 3)
 		{
 			// Calculer l'index du pixel dans la mémoire tampon
 			pixel_index = y0 * size_line + x0 * (bpp / 8);
@@ -172,11 +172,11 @@ void	draw_arrow(t_game *game)
 	double offset;
 
 	int bpp, size_line, endian;
-	img_ptr = mlx_new_image(game->mlx->mlx_ptr, WINX, WINY);
+	img_ptr = mlx_new_image(game->mlx->mlx_ptr, MIN_DIM / 3, MIN_DIM / 3);
 	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
 	start_x = game->pos_x;
 	start_y = game->pos_y;
-	length = 5000;
+	length = WINX / 2 * 0.7;
 	arrow_width = 100;
 	fov = 0.66;
 	i = 0;
@@ -208,7 +208,7 @@ void	draw_arrow(t_game *game)
 int	key_hook(int keycode, t_game *game)
 {
 	if (keycode == XK_Escape)
-		free_exit(game, 0, NULL, "End of the game");
+		free_exit(game, 0, NULL, "EOG");
 	else if (keycode == XK_Up)
 	{
 		game->pos_x += cos(game->dirangle) * SPEED_M;
@@ -267,8 +267,6 @@ int	main(int ac, char **av)
 	print_struct(game);
 	init_player(game);
 	init_mlx(game);
-	if (game->mlx->mlx_ptr)
-		printf("we have it\n");
 	mlx_loop_hook(game->mlx->mlx_ptr, loop_hook, game);
 	mlx_hook(game->mlx->mlx_win, 02, (1L << 0), key_hook, game);
 	mlx_loop(game->mlx->mlx_ptr);

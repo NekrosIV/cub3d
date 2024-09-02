@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:18:57 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/29 17:49:30 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/02 15:23:51 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,22 +63,25 @@ void	free_exit(t_game *game, int line, char *file, char *error)
 		free_everything(game);
 	if (error)
 	{
-		ft_putstr_fd(RED, 2);
-		ft_putstr_fd("Error: ", 2);
-		ft_putendl_fd(error, 2);
-		if (file)
+		if (ft_strncmp(error, "EOG", 3))
 		{
-			ft_putstr_fd("In file: ", 2);
-			ft_putstr_fd(file, 2);
-			if (line > 0)
+			ft_putstr_fd(RED "Error: ", 2);
+			ft_putendl_fd(error, 2);
+			if (file)
 			{
-				ft_putstr_fd(":", 2);
-				ft_putnbr_fd(line, 2);
+				ft_putstr_fd("In file: ", 2);
+				ft_putstr_fd(file, 2);
+				if (line > 0)
+				{
+					ft_putstr_fd(":", 2);
+					ft_putnbr_fd(line, 2);
+				}
+				ft_putstr_fd("\n" RESET, 2);
 			}
-			ft_putstr_fd("\n", 2);
+			exit(1);
 		}
-		ft_putstr_fd(RESET, 2);
-		exit(1);
+		else
+			ft_putstr_fd(GREEN "End of the game\n" RESET, 1);
 	}
 	exit(0);
 }

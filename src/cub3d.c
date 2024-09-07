@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/02 18:31:57 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/07 18:42:55 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ t_game	*init_game(void)
 	game->floor[2] = -1;
 	game->pos_x = -1;
 	game->pos_y = -1;
+	game->map_max_x = -1;
+	game->map_max_y = -1;
 	game->map_pos = -1;
 	game->map_rows = -1;
 	game->map = NULL;
@@ -96,8 +98,8 @@ t_game	*init_game(void)
 // 	}
 // }
 
-void	draw_ray_in_data(char *data, int size_line, int bpp, int x0, int y0,
-		int x1, int y1, int color)
+void	draw_ray_in_data(t_game *game, char *data, int size_line, int bpp,
+		int x0, int y0, int x1, int y1, int color)
 {
 	int	dx;
 	int	sx;
@@ -107,6 +109,11 @@ void	draw_ray_in_data(char *data, int size_line, int bpp, int x0, int y0,
 	int	e2;
 	int	pixel_index;
 
+	(void)game;
+	// y0 *= (WINY / game->map_max_y);
+	// y1 *= (WINY / game->map_max_y);
+	// x0 *= (WINX / game->map_max_x);
+	// x1 *= (WINX / game->map_max_x);
 	dx = abs(x1 - x0);
 	sx = x0 < x1 ? 1 : -1;
 	dy = -abs(y1 - y0);
@@ -114,7 +121,7 @@ void	draw_ray_in_data(char *data, int size_line, int bpp, int x0, int y0,
 	err = dx + dy;
 	while (1)
 	{
-		if (x0 >= 0 && x0 < MIN_DIM / 3 && y0 >= 0 && y0 < MIN_DIM / 3)
+		if (x0 >= 0 && x0 < WINX && y0 >= 0 && y0 < WINY)
 		{
 			// Calculer l'index du pixel dans la mémoire tampon
 			pixel_index = y0 * size_line + x0 * (bpp / 8);
@@ -154,7 +161,7 @@ int	init_player(t_game *game)
 	return (0);
 }
 
-void	draw_arrow(t_game *game)
+void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 {
 	int		start_x;
 	int		start_y;
@@ -164,17 +171,12 @@ void	draw_arrow(t_game *game)
 	double	first_dirx;
 	double	first_diry;
 	int		i;
-	void	*img_ptr;
-	char	*data;
 	double	ray;
 	double	offset;
 	double	fov;
 
-	int bpp, size_line, endian;
-	img_ptr = mlx_new_image(game->mlx->mlx_ptr, MIN_DIM / 3, MIN_DIM / 3);
-	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
-	start_x = game->pos_x;
-	start_y = game->pos_y;
+	start_x = game->pos_x * (WINX / game->map_max_x);
+	start_y = game->pos_y * (WINY / game->map_max_y);
 	length = WINX / 2 * 0.7;
 	fov = 0.66;
 	i = 0;
@@ -188,43 +190,76 @@ void	draw_arrow(t_game *game)
 		end_y = start_y + length * -sin(ray);
 		if (fabs(ray - game->dirangle) < 0.01)
 		{
-			draw_ray_in_data(data, size_line, bpp, start_x, start_y, (int)end_x,
-				(int)end_y, 0x0000FF);
+			draw_ray_in_data(game, data, size_line, bpp, start_x, start_y,
+				(int)end_x, (int)end_y, 0x0000FF);
 		}
 		else if (i % 1 == 0)
-			draw_ray_in_data(data, size_line, bpp, start_x, start_y, (int)end_x,
-				(int)end_y, 255255255);
+			draw_ray_in_data(game, data, size_line, bpp, start_x, start_y,
+				(int)end_x, (int)end_y, 255255255);
 		i += 1;
 		ray += (offset * 1);
 	}
-	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win, img_ptr, 0,
-		0);
-	mlx_destroy_image(game->mlx->mlx_ptr, img_ptr);
 }
 
 int	key_hook(int keycode, t_game *game)
 {
+	double	new_x;
+	double	new_y;
+	double	flag;
+
 	if (keycode == XK_Escape)
 		free_exit(game, 0, NULL, "EOG");
 	else if (keycode == XK_Up)
 	{
-		game->pos_x += cos(game->dirangle) * SPEED_M;
-		game->pos_y -= sin(game->dirangle) * SPEED_M;
+		new_x = (game->pos_x + cos(game->dirangle) * SPEED_M);
+		new_y = (game->pos_y - sin(game->dirangle) * SPEED_M);
+		printf("pos_x = %f | new_x = %f\n", game->pos_x, new_x);
+		printf("pos_y = %f | new_y = %f\n", game->pos_y, new_y);
+		if (game->map[(int)new_y][(int)new_x] == '0')
+		{
+			game->pos_x += cos(game->dirangle) * SPEED_M;
+			game->pos_y -= sin(game->dirangle) * SPEED_M;
+		}
+		else if (game->map[(int)new_y][(int)new_x] == '1')
+		{
+			flag = new_x - (int)new_x;
+			game->pos_x = new_x;
+			flag = new_y - (int)new_y;
+			if (game->dirangle >= 0 && game->dirangle <= PI)
+				game->pos_y = new_y + (1 - flag);
+			else
+				game->pos_y = new_y - (flag + 0.0001);
+		}
 	}
 	else if (keycode == XK_Down)
 	{
-		game->pos_x -= game->playerdirX * SPEED_M;
-		game->pos_y += game->playerdirY * SPEED_M;
+		new_y = (game->pos_y + sin(game->dirangle) * SPEED_M);
+		new_x = (game->pos_x - cos(game->dirangle) * SPEED_M);
+		if (game->map[(int)new_y][(int)new_x] == '0')
+		{
+			game->pos_x -= cos(game->dirangle) * SPEED_M;
+			game->pos_y += sin(game->dirangle) * SPEED_M;
+		}
 	}
 	else if (keycode == XK_Right)
 	{
-		game->pos_x += cos(game->dirangle - NO) * SPEED_M;
-		game->pos_y -= sin(game->dirangle - NO) * SPEED_M;
+		new_x = (game->pos_x + cos(game->dirangle - NO) * SPEED_M);
+		new_y = (game->pos_y - sin(game->dirangle - NO) * SPEED_M);
+		if (game->map[(int)new_y][(int)new_x] == '0')
+		{
+			game->pos_x += cos(game->dirangle - NO) * SPEED_M;
+			game->pos_y -= sin(game->dirangle - NO) * SPEED_M;
+		}
 	}
 	else if (keycode == XK_Left)
 	{
-		game->pos_x += cos(game->dirangle + NO) * SPEED_M;
-		game->pos_y -= sin(game->dirangle + NO) * SPEED_M;
+		new_x = (game->pos_x + (cos(game->dirangle + NO) * SPEED_M));
+		new_y = (game->pos_y - (sin(game->dirangle + NO) * SPEED_M));
+		if (game->map[(int)new_y][(int)new_x] == '0')
+		{
+			game->pos_x += cos(game->dirangle + NO) * SPEED_M;
+			game->pos_y -= sin(game->dirangle + NO) * SPEED_M;
+		}
 	}
 	else if (keycode == XK_a)
 	{
@@ -243,14 +278,77 @@ int	key_hook(int keycode, t_game *game)
 		game->playerdirX = cos(game->dirangle);
 		game->playerdirY = sin(game->dirangle);
 	}
-	draw_arrow(game);
 	return (0);
+}
+
+void	draw_rectangle(char *data, int size_line, int bpp, int x, int y,
+		int width, int height, int color)
+{
+	int	i;
+	int	j;
+	int	pixel_index;
+
+	// Parcours chaque pixel du rectangle
+	for (i = 0; i < width; i++)
+	{
+		for (j = 0; j < height; j++)
+		{
+			// Calcul de l'index du pixel dans le buffer de l'image
+			pixel_index = (y + j) * size_line + (x + i) * (bpp / 8);
+			// Écriture des valeurs de couleur (R, G, B) dans les données
+			data[pixel_index] = (color >> 16) & 0xFF;    // Rouge
+			data[pixel_index + 1] = (color >> 8) & 0xFF; // Vert
+			data[pixel_index + 2] = color & 0xFF;        // Bleu
+		}
+	}
+}
+
+void	draw_map(t_game *game, int bpp, int size_line, char *data)
+{
+	int	tile_width;
+	int	tile_height;
+	int	map_x;
+	int	map_y;
+	int	screen_x;
+	int	screen_y;
+	int	color;
+
+	map_y = 0;
+	tile_width = WINX / game->map_max_x;
+	tile_height = WINY / game->map_max_y;
+	while (map_y < game->map_max_y)
+	{
+		map_x = 0;
+		while (game->map[map_y][map_x] && map_x < game->map_max_x)
+		{
+			screen_x = map_x * tile_width;
+			screen_y = map_y * tile_height;
+			if (game->map[map_y][map_x] == '1')
+				color = 0xFFFFFF;
+			else
+				color = 0x000000;
+			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
+				tile_height, color);
+			map_x++;
+		}
+		map_y++;
+	}
+	draw_arrow(game, bpp, size_line, data);
 }
 
 int	loop_hook(t_game *game)
 {
+	void	*img_ptr;
+	char	*data;
+
+	int bpp, size_line, endian;
+	img_ptr = mlx_new_image(game->mlx->mlx_ptr, WINX, WINY);
+	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
 	// mlx_clear_window(game->mlx->mlx_ptr, game->mlx->mlx_win);
-	draw_arrow(game);
+	draw_map(game, bpp, size_line, data);
+	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win, img_ptr, 0,
+		0);
+	mlx_destroy_image(game->mlx->mlx_ptr, img_ptr);
 	return (0);
 }
 
@@ -261,7 +359,6 @@ int	main(int ac, char **av)
 	if (ac != 2)
 		return (1);
 	game = parsing(av[1]);
-	print_struct(game);
 	init_player(game);
 	init_mlx(game);
 	mlx_loop_hook(game->mlx->mlx_ptr, loop_hook, game);

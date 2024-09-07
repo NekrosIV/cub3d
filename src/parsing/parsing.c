@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/08/30 17:40:25 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/06 13:57:10 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,7 +347,6 @@ void	pre_pars_map(t_game *game)
 	int	y;
 
 	y = 0;
-	// print_tabsquare(game->map);
 	while (game->map[y])
 	{
 		x = 0;
@@ -383,14 +382,10 @@ void	pars_map(t_game *game)
 		while (game->map[y][x])
 		{
 			if ((y == 0 || (y == game->map_rows - 1)) && game->map[y][x] != '1')
-			{
 				free_exit(game, 0, NULL, E_CLOSE);
-			}
 			if ((x == 0 || game->map[y][x + 1] == '\0')
 				&& game->map[y][x] != '1')
-			{
 				free_exit(game, 0, NULL, E_CLOSE);
-			}
 			x++;
 		}
 		y++;
@@ -432,6 +427,19 @@ void	pre_flood_fill(t_game *game)
 		y++;
 	}
 }
+void	get_max_x_y(t_game *game)
+{
+	int	y;
+
+	y = 0;
+	while (game->map[y])
+	{
+		if ((int)ft_strlen(game->map[y]) > game->map_max_x)
+			game->map_max_x = ft_strlen(game->map[y]);
+		y++;
+	}
+	game->map_max_y = y;
+}
 
 void	init_map(t_game *game, char *file)
 {
@@ -459,7 +467,7 @@ void	init_map(t_game *game, char *file)
 		i++;
 	}
 	(close(game->fd), pre_pars_map(game), replace_space_in_map(game));
-	(pars_map(game), pre_flood_fill(game));
+	(pars_map(game), get_max_x_y(game), pre_flood_fill(game));
 }
 
 void	read_file(char *file, t_game *game)
@@ -493,7 +501,7 @@ t_game	*parsing(char *file)
 		free_exit(NULL, 0, NULL, E_FILE);
 	game = init_game();
 	read_file(file, game);
-	game->pos_x *= 32;
-	game->pos_y *= 32;
+	print_struct(game);
+	game->map[(int)game->pos_y][(int)game->pos_x] = '0';
 	return (game);
 }

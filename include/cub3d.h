@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/02 18:40:10 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/07 17:04:42 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,15 +62,16 @@
 # define E_MLXWIN "Could not creat the mlx window"
 
 # define WINAME "GOAT3D"
-# define WINX 300
-# define WINY 300
-# define MIN_DIM ((WINX) < (WINY) ? (WINX) : (WINY))
+# define WINX 1250
+# define WINY 600
+# define MIN_X_OR_Y ((WINX) < (WINY) ? (WINX) : (WINY))
+# define MIN_DIM MIN_X_OR_Y / 4
 # define PI 3.14159265358979323846
 # define NO 1.57079632679489661923
 # define SO (3 * PI) / 2
 # define WE PI * 1
 # define EA 0
-# define SPEED_M 5
+# define SPEED_M 0.2
 # define SPEED_C 0.015
 
 typedef struct s_mlx
@@ -114,6 +115,8 @@ typedef struct s_game
 	char	**cpy_map;
 	double	pos_x;
 	double	pos_y;
+	int		map_max_x;
+	int		map_max_y;
 	int		map_pos;
 	int		map_rows;
 	int		map_column;

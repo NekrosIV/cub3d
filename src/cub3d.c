@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/07 18:42:55 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/08 16:15:53 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,18 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	double	ray;
 	double	offset;
 	double	fov;
+	int		stepX;
+	int		stepY;
+	double	deltaX;
+	double	deltaY;
+	double	sidedistX;
+	double	sidedistY;
+	int		raymapX;
+	int		raymapY;
+	double	ray_dX;
+	double	ray_dY;
+	int		ray_hit;
+	int		last_hit;
 
 	start_x = game->pos_x * (WINX / game->map_max_x);
 	start_y = game->pos_y * (WINY / game->map_max_y);
@@ -186,6 +198,63 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	offset = (fov) / WINX;
 	while (i < WINX)
 	{
+		ray_dX = cos(ray);
+		ray_dY = sin(ray);
+		if (ray_dY < 0.01 && ray_dY > -0.01)
+			deltaY = 1e30;
+		else
+			deltaY = 1 / ray_dY;
+		if (ray_dX < 0.01 && ray_dX > -0.01)
+			deltaX = 1e30;
+		else
+			deltaX = 1 / ray_dX;
+		raymapX = (int)game->pos_x;
+		raymapY = (int)game->pos_y;
+		deltaX = fabs(deltaX);
+		deltaY = fabs(deltaY);
+		if (cos(ray > 0.0))
+		{
+			stepX = 1;
+			sidedistX = ((double)(raymapX + 1) - game->pos_x) * deltaX;
+		}
+		else
+		{
+			stepX = -1;
+			sidedistX = (game->pos_x - (double)raymapX) * deltaX;
+		}
+		if (sin(ray) > 0.0)
+		{
+			stepY = -1;
+			sidedistY = (game->pos_y - (double)raymapY) * deltaY;
+		}
+		else
+		{
+			stepY = 1;
+			sidedistY = ((double)(raymapY + 1) - game->pos_y) * deltaY;
+		}
+		ray_hit = 0;
+		while (ray_hit == 0)
+		{
+			if (sidedistX < sidedistY)
+			{
+				raymapX += stepX;
+				sidedistX += deltaX;
+				last_hit = 0;
+			}
+			else
+			{
+				raymapY += stepY;
+				sidedistY += deltaY;
+				last_hit = 1;
+			}
+			if (game->map[raymapY][raymapY] != '0')
+				ray_hit = 1;
+		}
+		if (last_hit)
+			length = sidedistY - deltaY;
+		else
+			length = sidedistX - deltaX;
+		length = length * 20;
 		end_x = start_x + length * cos(ray);
 		end_y = start_y + length * -sin(ray);
 		if (fabs(ray - game->dirangle) < 0.01)
@@ -222,13 +291,25 @@ int	key_hook(int keycode, t_game *game)
 		}
 		else if (game->map[(int)new_y][(int)new_x] == '1')
 		{
-			flag = new_x - (int)new_x;
-			game->pos_x = new_x;
-			flag = new_y - (int)new_y;
-			if (game->dirangle >= 0 && game->dirangle <= PI)
-				game->pos_y = new_y + (1 - flag);
-			else
-				game->pos_y = new_y - (flag + 0.0001);
+			if (game->map[(int)game->pos_y][(int)new_x] == '0')
+			{
+				game->pos_x = new_x;
+				flag = new_y - (int)new_y;
+				if (game->playerdirY > 0)
+					game->pos_y = new_y + (1 - flag);
+				else
+					game->pos_y = new_y - (flag + 0.0001);
+			}
+			else if (game->map[(int)new_y][(int)game->pos_x] == '0')
+			{
+				flag = new_x - (int)new_x;
+				if (game->playerdirX < 0)
+					game->pos_x = new_x + (1 - flag);
+				else
+					game->pos_x = new_x - (flag + 0.0001);
+				flag = new_y - (int)new_y;
+				game->pos_y = new_y;
+			}
 		}
 	}
 	else if (keycode == XK_Down)
@@ -274,7 +355,7 @@ int	key_hook(int keycode, t_game *game)
 	{
 		game->dirangle -= SPEED_C; // Tourner vers la droite
 		if (game->dirangle < 0)
-			game->dirangle -= 2 * PI;
+			game->dirangle += 2 * PI;
 		game->playerdirX = cos(game->dirangle);
 		game->playerdirY = sin(game->dirangle);
 	}
@@ -352,6 +433,12 @@ int	loop_hook(t_game *game)
 	return (0);
 }
 
+int	india(t_game *game)
+{
+	free_exit(game, 0, NULL, "EOG");
+	return (0);
+}
+
 int	main(int ac, char **av)
 {
 	t_game	*game;
@@ -362,6 +449,7 @@ int	main(int ac, char **av)
 	init_player(game);
 	init_mlx(game);
 	mlx_loop_hook(game->mlx->mlx_ptr, loop_hook, game);
+	mlx_hook(game->mlx->mlx_win, 17, 0, india, game);
 	mlx_hook(game->mlx->mlx_win, 02, (1L << 0), key_hook, game);
 	mlx_loop(game->mlx->mlx_ptr);
 	return (0);

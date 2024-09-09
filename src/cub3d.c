@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/09 20:51:21 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/09 21:02:22 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -394,7 +394,7 @@ void	draw_map(t_game *game, int bpp, int size_line, char *data)
 			screen_x = map_x * tile_width;
 			screen_y = map_y * tile_height;
 			if (game->map[map_y][map_x] == '1')
-				color = 0xFFFFFF;
+				color = 0xFF0000;
 			else
 				color = 0x000000;
 			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
@@ -580,9 +580,9 @@ void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)
 			screen_y = map_y * tile_height;
 			if (map_x == game->map_max_x - 1 || map_y == game->map_max_y - 1
 				|| map_x == 0 || map_y == 0)
-				color = 0xFF0000;
+				color = 0xFF00FF;
 			else if (game->map[map_y][map_x] == '1')
-				color = 0xFFFFFF;
+				color = 0xFF0000;
 			else
 				color = 0x000000;
 			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,

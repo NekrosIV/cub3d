@@ -6,11 +6,14 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/08 16:15:53 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/09 20:51:21 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	mini_draw_map(t_game *game, int bpp, int size_line, char *data);
+void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data);
 
 t_game	*init_game(void)
 {
@@ -165,11 +168,9 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 {
 	int		start_x;
 	int		start_y;
-	int		length;
+	double	length;
 	double	end_x;
 	double	end_y;
-	double	first_dirx;
-	double	first_diry;
 	int		i;
 	double	ray;
 	double	offset;
@@ -186,33 +187,34 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	double	ray_dY;
 	int		ray_hit;
 	int		last_hit;
+	int		tile_width;
+	int		tile_height;
 
+	tile_width = WINX / game->map_max_x;
+	tile_height = WINY / game->map_max_y;
 	start_x = game->pos_x * (WINX / game->map_max_x);
 	start_y = game->pos_y * (WINY / game->map_max_y);
-	length = WINX / 2 * 0.7;
-	fov = 0.66;
+	fov = 0.6000000000;
+	// 1.27080;
+	// 1.30812;
 	i = 0;
-	first_dirx = start_x + length * cos(game->dirangle);
-	first_diry = start_y + length * -sin(game->dirangle);
 	ray = game->dirangle - fov / 2;
 	offset = (fov) / WINX;
 	while (i < WINX)
 	{
 		ray_dX = cos(ray);
 		ray_dY = sin(ray);
-		if (ray_dY < 0.01 && ray_dY > -0.01)
+		if (ray_dY < 0.00001 && ray_dY > -0.00001)
 			deltaY = 1e30;
 		else
-			deltaY = 1 / ray_dY;
-		if (ray_dX < 0.01 && ray_dX > -0.01)
+			deltaY = 1.0 / fabs(ray_dY);
+		if (ray_dX < 0.00001 && ray_dX > -0.00001)
 			deltaX = 1e30;
 		else
-			deltaX = 1 / ray_dX;
+			deltaX = 1.0 / fabs(ray_dX);
 		raymapX = (int)game->pos_x;
 		raymapY = (int)game->pos_y;
-		deltaX = fabs(deltaX);
-		deltaY = fabs(deltaY);
-		if (cos(ray > 0.0))
+		if (cos(ray) > 0.0)
 		{
 			stepX = 1;
 			sidedistX = ((double)(raymapX + 1) - game->pos_x) * deltaX;
@@ -247,101 +249,88 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 				sidedistY += deltaY;
 				last_hit = 1;
 			}
-			if (game->map[raymapY][raymapY] != '0')
+			if (game->map[raymapY][raymapX] != '0')
 				ray_hit = 1;
 		}
 		if (last_hit)
-			length = sidedistY - deltaY;
+			length = (sidedistY - deltaY) * (double)tile_height;
 		else
-			length = sidedistX - deltaX;
-		length = length * 20;
-		end_x = start_x + length * cos(ray);
-		end_y = start_y + length * -sin(ray);
+			length = (sidedistX - deltaX) * (double)tile_width;
+		end_x = start_x + (int)(length * cos(ray));
+		end_y = start_y + (int)(length * -sin(ray));
 		if (fabs(ray - game->dirangle) < 0.01)
 		{
 			draw_ray_in_data(game, data, size_line, bpp, start_x, start_y,
 				(int)end_x, (int)end_y, 0x0000FF);
 		}
 		else if (i % 1 == 0)
+		{
 			draw_ray_in_data(game, data, size_line, bpp, start_x, start_y,
 				(int)end_x, (int)end_y, 255255255);
+		}
 		i += 1;
-		ray += (offset * 1);
+		ray += offset;
+	}
+}
+
+void	movements(t_game *game, double angleshift)
+{
+	double	new_x;
+	double	new_y;
+	double	new_dir;
+
+	new_dir = game->dirangle + angleshift;
+	new_x = (game->pos_x + cos(new_dir) * SPEED_M);
+	new_y = (game->pos_y - sin(new_dir) * SPEED_M);
+	if (game->map[(int)new_y][(int)new_x] == '0')
+	{
+		game->pos_x += cos(new_dir) * SPEED_M;
+		game->pos_y -= sin(new_dir) * SPEED_M;
+	}
+	else
+	{
+		if (game->map[(int)game->pos_y][(int)new_x] == '0')
+		{
+			game->pos_x = new_x;
+			if (sin(new_dir) > 0)
+				game->pos_y = (double)((int)game->pos_y) + 0.01;
+			else
+				game->pos_y = (double)((int)game->pos_y + 1) - 0.01;
+		}
+		else if (game->map[(int)new_y][(int)game->pos_x] == '0')
+		{
+			game->pos_y = new_y;
+			if (cos(new_dir) > 0)
+				game->pos_x = (double)((int)game->pos_x + 1) - 0.01;
+			else
+				game->pos_x = (double)((int)game->pos_x) + 0.01;
+		}
+		else
+		{
+			if (cos(new_dir) > 0)
+				game->pos_x = (double)((int)game->pos_x + 1) - 0.01;
+			else
+				game->pos_x = (double)((int)game->pos_x) + 0.01;
+			if (sin(new_dir) > 0)
+				game->pos_y = (double)((int)game->pos_y) + 0.01;
+			else
+				game->pos_y = (double)((int)game->pos_y + 1) - 0.01;
+		}
 	}
 }
 
 int	key_hook(int keycode, t_game *game)
 {
-	double	new_x;
-	double	new_y;
-	double	flag;
-
 	if (keycode == XK_Escape)
 		free_exit(game, 0, NULL, "EOG");
 	else if (keycode == XK_Up)
-	{
-		new_x = (game->pos_x + cos(game->dirangle) * SPEED_M);
-		new_y = (game->pos_y - sin(game->dirangle) * SPEED_M);
-		printf("pos_x = %f | new_x = %f\n", game->pos_x, new_x);
-		printf("pos_y = %f | new_y = %f\n", game->pos_y, new_y);
-		if (game->map[(int)new_y][(int)new_x] == '0')
-		{
-			game->pos_x += cos(game->dirangle) * SPEED_M;
-			game->pos_y -= sin(game->dirangle) * SPEED_M;
-		}
-		else if (game->map[(int)new_y][(int)new_x] == '1')
-		{
-			if (game->map[(int)game->pos_y][(int)new_x] == '0')
-			{
-				game->pos_x = new_x;
-				flag = new_y - (int)new_y;
-				if (game->playerdirY > 0)
-					game->pos_y = new_y + (1 - flag);
-				else
-					game->pos_y = new_y - (flag + 0.0001);
-			}
-			else if (game->map[(int)new_y][(int)game->pos_x] == '0')
-			{
-				flag = new_x - (int)new_x;
-				if (game->playerdirX < 0)
-					game->pos_x = new_x + (1 - flag);
-				else
-					game->pos_x = new_x - (flag + 0.0001);
-				flag = new_y - (int)new_y;
-				game->pos_y = new_y;
-			}
-		}
-	}
+		movements(game, 0);
 	else if (keycode == XK_Down)
-	{
-		new_y = (game->pos_y + sin(game->dirangle) * SPEED_M);
-		new_x = (game->pos_x - cos(game->dirangle) * SPEED_M);
-		if (game->map[(int)new_y][(int)new_x] == '0')
-		{
-			game->pos_x -= cos(game->dirangle) * SPEED_M;
-			game->pos_y += sin(game->dirangle) * SPEED_M;
-		}
-	}
+		movements(game, PI);
 	else if (keycode == XK_Right)
-	{
-		new_x = (game->pos_x + cos(game->dirangle - NO) * SPEED_M);
-		new_y = (game->pos_y - sin(game->dirangle - NO) * SPEED_M);
-		if (game->map[(int)new_y][(int)new_x] == '0')
-		{
-			game->pos_x += cos(game->dirangle - NO) * SPEED_M;
-			game->pos_y -= sin(game->dirangle - NO) * SPEED_M;
-		}
-	}
+		movements(game, -NO);
 	else if (keycode == XK_Left)
-	{
-		new_x = (game->pos_x + (cos(game->dirangle + NO) * SPEED_M));
-		new_y = (game->pos_y - (sin(game->dirangle + NO) * SPEED_M));
-		if (game->map[(int)new_y][(int)new_x] == '0')
-		{
-			game->pos_x += cos(game->dirangle + NO) * SPEED_M;
-			game->pos_y -= sin(game->dirangle + NO) * SPEED_M;
-		}
-	}
+		movements(game, NO);
 	else if (keycode == XK_a)
 	{
 		game->dirangle += SPEED_C; // Tourner vers la gauche
@@ -427,6 +416,7 @@ int	loop_hook(t_game *game)
 	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
 	// mlx_clear_window(game->mlx->mlx_ptr, game->mlx->mlx_win);
 	draw_map(game, bpp, size_line, data);
+	mini_draw_map(game, bpp, size_line, data);
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win, img_ptr, 0,
 		0);
 	mlx_destroy_image(game->mlx->mlx_ptr, img_ptr);
@@ -453,4 +443,153 @@ int	main(int ac, char **av)
 	mlx_hook(game->mlx->mlx_win, 02, (1L << 0), key_hook, game);
 	mlx_loop(game->mlx->mlx_ptr);
 	return (0);
+}
+
+// ////////////////////////////////////////////////////////////
+
+void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
+{
+	int		start_x;
+	int		start_y;
+	double	length;
+	double	end_x;
+	double	end_y;
+	int		i;
+	double	ray;
+	double	offset;
+	double	fov;
+	int		stepX;
+	int		stepY;
+	double	deltaX;
+	double	deltaY;
+	double	sidedistX;
+	double	sidedistY;
+	int		raymapX;
+	int		raymapY;
+	double	ray_dX;
+	double	ray_dY;
+	int		ray_hit;
+	int		last_hit;
+	int		tile_width;
+	int		tile_height;
+	int		nb_ray;
+
+	nb_ray = MIN_DIM;
+	tile_width = nb_ray / game->map_max_x;
+	tile_height = nb_ray / game->map_max_y;
+	start_x = game->pos_x * (nb_ray / game->map_max_x);
+	start_y = game->pos_y * (nb_ray / game->map_max_y);
+	fov = 0.6000000000;
+	// 1.27080;
+	// 1.30812;
+	i = 0;
+	ray = game->dirangle - fov / 2;
+	offset = (fov) / nb_ray;
+	while (i < nb_ray)
+	{
+		ray_dX = cos(ray);
+		ray_dY = sin(ray);
+		if (ray_dY < 0.00001 && ray_dY > -0.00001)
+			deltaY = 1e30;
+		else
+			deltaY = 1.0 / fabs(ray_dY);
+		if (ray_dX < 0.00001 && ray_dX > -0.00001)
+			deltaX = 1e30;
+		else
+			deltaX = 1.0 / fabs(ray_dX);
+		raymapX = (int)game->pos_x;
+		raymapY = (int)game->pos_y;
+		if (cos(ray) > 0.0)
+		{
+			stepX = 1;
+			sidedistX = ((double)(raymapX + 1) - game->pos_x) * deltaX;
+		}
+		else
+		{
+			stepX = -1;
+			sidedistX = (game->pos_x - (double)raymapX) * deltaX;
+		}
+		if (sin(ray) > 0.0)
+		{
+			stepY = -1;
+			sidedistY = (game->pos_y - (double)raymapY) * deltaY;
+		}
+		else
+		{
+			stepY = 1;
+			sidedistY = ((double)(raymapY + 1) - game->pos_y) * deltaY;
+		}
+		ray_hit = 0;
+		while (ray_hit == 0)
+		{
+			if (sidedistX < sidedistY)
+			{
+				raymapX += stepX;
+				sidedistX += deltaX;
+				last_hit = 0;
+			}
+			else
+			{
+				raymapY += stepY;
+				sidedistY += deltaY;
+				last_hit = 1;
+			}
+			if (game->map[raymapY][raymapX] != '0')
+				ray_hit = 1;
+		}
+		if (last_hit)
+			length = (sidedistY - deltaY) * (double)tile_height;
+		else
+			length = (sidedistX - deltaX) * (double)tile_width;
+		end_x = start_x + (int)(length * cos(ray));
+		end_y = start_y + (int)(length * -sin(ray));
+		if (fabs(ray - game->dirangle) < 0.01)
+		{
+			draw_ray_in_data(game, data, size_line, bpp, start_x, start_y,
+				(int)end_x, (int)end_y, 0x0000FF);
+		}
+		else if (i % 1 == 0)
+		{
+			draw_ray_in_data(game, data, size_line, bpp, start_x, start_y,
+				(int)end_x, (int)end_y, 255255255);
+		}
+		i += 1;
+		ray += offset;
+	}
+}
+
+void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)
+{
+	int tile_width;
+	int tile_height;
+	int map_x;
+	int map_y;
+	int screen_x;
+	int screen_y;
+	int color;
+
+	map_y = 0;
+	tile_width = MIN_DIM / game->map_max_x;
+	tile_height = MIN_DIM / game->map_max_y;
+	while (map_y < game->map_max_y)
+	{
+		map_x = 0;
+		while (game->map[map_y][map_x] && map_x < game->map_max_x)
+		{
+			screen_x = map_x * tile_width;
+			screen_y = map_y * tile_height;
+			if (map_x == game->map_max_x - 1 || map_y == game->map_max_y - 1
+				|| map_x == 0 || map_y == 0)
+				color = 0xFF0000;
+			else if (game->map[map_y][map_x] == '1')
+				color = 0xFFFFFF;
+			else
+				color = 0x000000;
+			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
+				tile_height, color);
+			map_x++;
+		}
+		map_y++;
+	}
+	mini_draw_arrow(game, bpp, size_line, data);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/09 20:48:42 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/10 17:38:05 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@
 # define WINX 1250
 # define WINY 1250
 # define MIN_X_OR_Y ((WINX) < (WINY) ? (WINX) : (WINY))
-# define MIN_DIM MIN_X_OR_Y / 6
+# define MIN_DIM MIN_X_OR_Y / 5
 # define PI 3.14159265358979323846
 # define NO 1.57079632679489661923
 # define SO (3 * PI) / 2

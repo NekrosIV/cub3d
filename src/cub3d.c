@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/09 21:02:22 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/10 19:25:41 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,9 +194,7 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	tile_height = WINY / game->map_max_y;
 	start_x = game->pos_x * (WINX / game->map_max_x);
 	start_y = game->pos_y * (WINY / game->map_max_y);
-	fov = 0.6000000000;
-	// 1.27080;
-	// 1.30812;
+	fov = 0.660;
 	i = 0;
 	ray = game->dirangle - fov / 2;
 	offset = (fov) / WINX;
@@ -263,7 +261,7 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 			draw_ray_in_data(game, data, size_line, bpp, start_x, start_y,
 				(int)end_x, (int)end_y, 0x0000FF);
 		}
-		else if (i % 1 == 0)
+		else if (i % 100 == 0)
 		{
 			draw_ray_in_data(game, data, size_line, bpp, start_x, start_y,
 				(int)end_x, (int)end_y, 255255255);
@@ -479,9 +477,7 @@ void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	tile_height = nb_ray / game->map_max_y;
 	start_x = game->pos_x * (nb_ray / game->map_max_x);
 	start_y = game->pos_y * (nb_ray / game->map_max_y);
-	fov = 0.6000000000;
-	// 1.27080;
-	// 1.30812;
+	fov = 0.660;
 	i = 0;
 	ray = game->dirangle - fov / 2;
 	offset = (fov) / nb_ray;
@@ -541,6 +537,8 @@ void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
 			length = (sidedistY - deltaY) * (double)tile_height;
 		else
 			length = (sidedistX - deltaX) * (double)tile_width;
+		if (length > 50)
+			length = 50;
 		end_x = start_x + (int)(length * cos(ray));
 		end_y = start_y + (int)(length * -sin(ray));
 		if (fabs(ray - game->dirangle) < 0.01)
@@ -560,36 +558,91 @@ void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
 
 void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)
 {
-	int tile_width;
-	int tile_height;
-	int map_x;
-	int map_y;
-	int screen_x;
-	int screen_y;
+	int tile_width = MIN_DIM / 9;
+		// Taille de chaque case en pixels sur la MINmap
+	int tile_height = MIN_DIM / 9;
+	int view_radius = 4;       
+		// Nombre de cases visibles de chaque côté du joueur (total 9x9)
+	int player_x = game->pos_x; // Coordonnée X du joueur
+	int player_y = game->pos_y; // Coordonnée Y du joueur
+
+	// Définir les limites de la vue centrée sur le joueur
+	int start_x = player_x - view_radius; // Coin supérieur gauche X
+	int start_y = player_y - view_radius; // Coin supérieur gauche Y
+	
 	int color;
 
-	map_y = 0;
-	tile_width = MIN_DIM / game->map_max_x;
-	tile_height = MIN_DIM / game->map_max_y;
-	while (map_y < game->map_max_y)
+	// Limiter pour s'assurer que les coordonnées restent dans les bornes de la carte
+	if (start_x < 0)
+		start_x = 0;
+	if (start_y < 0)
+		start_y = 0;
+	if (start_x + 9 > game->map_max_x)
+		start_x = game->map_max_x - 9;
+	if (start_y + 9 > game->map_max_y)
+		start_y = game->map_max_y - 9;
+
+	// Dessiner uniquement les cases dans la fenêtre 9x9 centrée autour du joueur
+	for (int map_y = start_y; map_y < start_y + 9; map_y++)
 	{
-		map_x = 0;
-		while (game->map[map_y][map_x] && map_x < game->map_max_x)
+		for (int map_x = start_x; map_x < start_x + 9; map_x++)
 		{
-			screen_x = map_x * tile_width;
-			screen_y = map_y * tile_height;
-			if (map_x == game->map_max_x - 1 || map_y == game->map_max_y - 1
-				|| map_x == 0 || map_y == 0)
-				color = 0xFF00FF;
-			else if (game->map[map_y][map_x] == '1')
-				color = 0xFF0000;
+			// Calcul des positions de chaque case sur la MINmap
+			int screen_x = (map_x - start_x) * tile_width;
+				// Position relative dans la MINmap
+			int screen_y = (map_y - start_y) * tile_height;
+
+			// Déterminer la couleur selon le type de case
+			if (game->map[map_y][map_x] == '1') // Par exemple, mur
+				color = 0xFF0000;               // Rouge pour les murs
 			else
-				color = 0x000000;
+				color = 0x000000; // Noir pour le sol ou autres cases
+
+			// Dessiner la case sur la MINmap
 			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
 				tile_height, color);
-			map_x++;
 		}
-		map_y++;
 	}
+
+	// Dessiner le joueur au centre de la minimap
+	// int player_minimap_x = (view_radius)*tile_width; // Le joueur est centré
+	// int player_minimap_y = (view_radius)*tile_height;
 	mini_draw_arrow(game, bpp, size_line, data);
 }
+// {
+// 	int tile_width;
+// 	int tile_height;
+// 	int map_x;
+// 	int map_y;
+// 	int screen_x;
+// 	int screen_y;
+// 	int color;
+
+// 	map_y = 0;
+// 	tile_width = MIN_DIM / 9;
+// 	tile_height = MIN_DIM/ 9;
+// 	// tile_width = MIN_DIM / game->map_max_x;
+// 	// tile_height = MIN_DIM / game->map_max_y;
+// 	int i;
+// 	while (map_y < game->map_max_y)
+// 	{
+// 		map_x = 0;
+// 		while (game->map[map_y][map_x] && map_x < game->map_max_x)
+// 		{
+// 			screen_x = map_x * tile_width;
+// 			screen_y = map_y * tile_height;
+// 			if (map_x == game->map_max_x - 1 || map_y == game->map_max_y - 1
+// 				|| map_x == 0 || map_y == 0)
+// 				color = 0xFF00FF;
+// 			else if (game->map[map_y][map_x] == '1')
+// 				color = 0xFF0000;
+// 			else
+// 				color = 0x000000;
+// 			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
+// 				tile_height, color);
+// 			map_x++;
+// 		}
+// 		map_y++;
+// 	}
+// 	mini_draw_arrow(game, bpp, size_line, data);
+// }

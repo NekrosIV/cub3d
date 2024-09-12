@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/10 19:25:41 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/12 21:38:44 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,6 +371,28 @@ void	draw_rectangle(char *data, int size_line, int bpp, int x, int y,
 	}
 }
 
+void	draw_rectangle_with_lines(char *data, int size_line, int bpp, int x, int y,
+		int width, int height, int color)
+{
+	int	i;
+	int	j;
+	int	pixel_index;
+
+	// Parcours chaque pixel du rectangle
+	for (i = 1; i < width; i++)
+	{
+		for (j = 1; j < height; j++)
+		{
+			// Calcul de l'index du pixel dans le buffer de l'image
+			pixel_index = (y + j) * size_line + (x + i) * (bpp / 8);
+			// Écriture des valeurs de couleur (R, G, B) dans les données
+			data[pixel_index] = (color >> 16) & 0xFF;    // Rouge
+			data[pixel_index + 1] = (color >> 8) & 0xFF; // Vert
+			data[pixel_index + 2] = color & 0xFF;        // Bleu
+		}
+	}
+}
+
 void	draw_map(t_game *game, int bpp, int size_line, char *data)
 {
 	int	tile_width;
@@ -391,12 +413,14 @@ void	draw_map(t_game *game, int bpp, int size_line, char *data)
 		{
 			screen_x = map_x * tile_width;
 			screen_y = map_y * tile_height;
+			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
+				tile_height, 0x677179);
 			if (game->map[map_y][map_x] == '1')
 				color = 0xFF0000;
 			else
 				color = 0x000000;
-			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
-				tile_height, color);
+			draw_rectangle(data, size_line, bpp, screen_x, screen_y,
+				tile_width, tile_height, color);
 			map_x++;
 		}
 		map_y++;
@@ -557,92 +581,122 @@ void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
 }
 
 void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)
-{
-	int tile_width = MIN_DIM / 9;
-		// Taille de chaque case en pixels sur la MINmap
-	int tile_height = MIN_DIM / 9;
-	int view_radius = 4;       
-		// Nombre de cases visibles de chaque côté du joueur (total 9x9)
-	int player_x = game->pos_x; // Coordonnée X du joueur
-	int player_y = game->pos_y; // Coordonnée Y du joueur
 
-	// Définir les limites de la vue centrée sur le joueur
-	int start_x = player_x - view_radius; // Coin supérieur gauche X
-	int start_y = player_y - view_radius; // Coin supérieur gauche Y
-	
+{
+	int tile_width;
+	int tile_height;
+	int map_x;
+	int map_y;
+	int screen_x;
+	int screen_y;
 	int color;
 
-	// Limiter pour s'assurer que les coordonnées restent dans les bornes de la carte
-	if (start_x < 0)
-		start_x = 0;
-	if (start_y < 0)
-		start_y = 0;
-	if (start_x + 9 > game->map_max_x)
-		start_x = game->map_max_x - 9;
-	if (start_y + 9 > game->map_max_y)
-		start_y = game->map_max_y - 9;
-
-	// Dessiner uniquement les cases dans la fenêtre 9x9 centrée autour du joueur
-	for (int map_y = start_y; map_y < start_y + 9; map_y++)
+	map_y = 0;
+	// tile_width = MIN_DIM / 9;
+	// tile_height = MIN_DIM / 9;
+	tile_width = MIN_DIM / game->map_max_x;
+	tile_height = MIN_DIM / game->map_max_y;
+	while (map_y < game->map_max_y)
 	{
-		for (int map_x = start_x; map_x < start_x + 9; map_x++)
+		map_x = 0;
+		while (game->map[map_y][map_x] && map_x < game->map_max_x)
 		{
-			// Calcul des positions de chaque case sur la MINmap
-			int screen_x = (map_x - start_x) * tile_width;
-				// Position relative dans la MINmap
-			int screen_y = (map_y - start_y) * tile_height;
-
-			// Déterminer la couleur selon le type de case
-			if (game->map[map_y][map_x] == '1') // Par exemple, mur
-				color = 0xFF0000;               // Rouge pour les murs
+			screen_x = map_x * tile_width;
+			screen_y = map_y * tile_height;
+			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
+				tile_height, 0x677179);
+			if (map_x == game->map_max_x - 1 || map_y == game->map_max_y - 1
+				|| map_x == 0 || map_y == 0)
+				color = 0x677179;
+			else if (game->map[map_y][map_x] == '1')
+				color = 0xFF0000;
 			else
-				color = 0x000000; // Noir pour le sol ou autres cases
-
-			// Dessiner la case sur la MINmap
+				color = 0x000000;
 			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
 				tile_height, color);
+			map_x++;
 		}
+		map_y++;
 	}
-
-	// Dessiner le joueur au centre de la minimap
-	// int player_minimap_x = (view_radius)*tile_width; // Le joueur est centré
-	// int player_minimap_y = (view_radius)*tile_height;
 	mini_draw_arrow(game, bpp, size_line, data);
 }
-// {
-// 	int tile_width;
-// 	int tile_height;
-// 	int map_x;
-// 	int map_y;
-// 	int screen_x;
-// 	int screen_y;
-// 	int color;
 
-// 	map_y = 0;
+// {
+// 	int	tile_width;
+// 	int	tile_height;
+// 	int	view_radius;
+// 	int	color;
+// 	int	screen_x;
+// 	int	screen_y;
+
 // 	tile_width = MIN_DIM / 9;
-// 	tile_height = MIN_DIM/ 9;
-// 	// tile_width = MIN_DIM / game->map_max_x;
-// 	// tile_height = MIN_DIM / game->map_max_y;
-// 	int i;
-// 	while (map_y < game->map_max_y)
+// 	// Taille de chaque case en pixels sur la MINmap
+// 	tile_height = MIN_DIM / 9;
+// 	view_radius = 4;
+// 	// Nombre de cases visibles de chaque côté du joueur
+// 	int player_x = (int)game->pos_x; // Coordonnée X du joueur
+// 	int player_y = (int)game->pos_y; // Coordonnée Y du joueur
+// 	// Définir les limites de la vue centrée sur le joueur
+// 	int start_x = player_x - view_radius; // Coin supérieur gauche X
+// 	int start_y = player_y - view_radius; // Coin supérieur gauche Y
+// 	if (start_x < 0)
+// 		start_x = 0;
+// 	if (start_y < 0)
+// 		start_y = 0;
+// 	if (start_x + 9 > game->map_max_x)
+// 		start_x = game->map_max_x - 9;
+// 	if (start_y + 9 > game->map_max_y)
+// 		start_y = game->map_max_y - 9;
+// 	// Dessiner uniquement les cases dans la fenêtre 9x9 centrée autour du joueur
+// 	for (int map_y = start_y; map_y < start_y + 9; map_y++)
 // 	{
-// 		map_x = 0;
-// 		while (game->map[map_y][map_x] && map_x < game->map_max_x)
+// 		for (int map_x = start_x; map_x < start_x + 9; map_x++)
 // 		{
-// 			screen_x = map_x * tile_width;
-// 			screen_y = map_y * tile_height;
-// 			if (map_x == game->map_max_x - 1 || map_y == game->map_max_y - 1
-// 				|| map_x == 0 || map_y == 0)
-// 				color = 0xFF00FF;
-// 			else if (game->map[map_y][map_x] == '1')
-// 				color = 0xFF0000;
+// 			// Calcul des positions de chaque case sur la MINmap
+// 			screen_x = (map_x - start_x) * tile_width;
+// 			// Position relative dans la MINmap
+// 			screen_y = (map_y - start_y) * tile_height;
+// 			// Déterminer la couleur selon le type de case
+// 			if (game->map[map_y][map_x] == '1') // Par exemple, mur
+// 				color = 0xFF0000;               // Rouge pour les murs
 // 			else
-// 				color = 0x000000;
+// 				color = 0x000000; // Noir pour le sol ou autres cases
+// 			// Dessiner la case sur la MINmap
 // 			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
 // 				tile_height, color);
-// 			map_x++;
 // 		}
-// 		map_y++;
 // 	}
+// 	// Dessiner le joueur au centre de la minimap
+// 	// int player_minimap_x = (view_radius)*tile_width; // Le joueur est centré
+// 	// int player_minimap_y = (view_radius)*tile_height;
 // 	mini_draw_arrow(game, bpp, size_line, data);
+// }
+
+// void	draw_minimap(t_game *game, int bpp, int size_line, char *data)
+// {
+// 	t_player	*player;
+// 	int			tile_width;
+// 	int			tile_height;
+// 	int			view_radius;
+// 	int			color;
+// 	int			screen_x;
+// 	int			screen_y;
+// 	int			start_x;
+// 	int			start_y;
+
+// 	tile_width = MIN_DIM / 9;
+// 	// Taille de chaque case en pixels sur la MINmap
+// 	tile_height = MIN_DIM / 9;
+// 	view_radius = 4;
+// 	start_x = player->posX - view_radius;
+// 	start_y = player->posY - view_radius;
+// 	while (start_x < player->posX + view_radius)
+// 	{
+// 		while (start_y < player->posY + (double)view_radius)
+// 		{
+
+// 			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
+// 				tile_height, color);
+// 		}
+// 	}
 // }

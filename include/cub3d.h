@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/10 17:38:05 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/12 21:40:21 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@
 # define E_MLXWIN "Could not creat the mlx window"
 
 # define WINAME "GOAT3D"
-# define WINX 1250
-# define WINY 1250
+# define WINX 1200
+# define WINY 1200
 # define MIN_X_OR_Y ((WINX) < (WINY) ? (WINX) : (WINY))
 # define MIN_DIM MIN_X_OR_Y / 5
 # define PI 3.14159265358979323846

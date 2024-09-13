@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/12 21:40:21 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/13 19:25:45 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,17 +62,19 @@
 # define E_MLXWIN "Could not creat the mlx window"
 
 # define WINAME "GOAT3D"
-# define WINX 1200
-# define WINY 1200
+# define WINX 1500
+# define WINY 1100
 # define MIN_X_OR_Y ((WINX) < (WINY) ? (WINX) : (WINY))
 # define MIN_DIM MIN_X_OR_Y / 5
 # define PI 3.14159265358979323846
 # define NO 1.57079632679489661923
 # define SO (3 * PI) / 2
 # define WE PI * 1
+# define TILE_SIZE 20
+# define BIG_TILE_SIZE 50
 # define EA 0
 # define SPEED_M 0.2
-# define SPEED_C 0.015
+# define SPEED_C 0.055
 
 typedef struct s_mlx
 {
@@ -147,5 +149,7 @@ void		print_tabint(int *tab, int len);
 void		init_mlx(t_game *game);
 void		init_mlx2(t_mlx *mlx);
 int			key_hook(int keycode, t_game *game);
+void	draw_rectangle(char *data, int size_line, int bpp, int x, int y,
+		int width, int height, int color, int win_width, int win_height);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/13 19:26:22 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/13 20:41:09 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,33 @@ t_game	*init_game(void)
 // 		}
 // 	}
 // }
+void draw_filled_circle(t_game *game, char *data, int size_line, int bpp, int start_x, int start_y, int radius, int color) 
+{
+	(void)game;
+    int x;
+	int y;
+    int pixel_index;
+
+    // Dessiner le cercle rempli en utilisant l'algorithme de Bresenham
+    for (y = -radius; y <= radius; y++) {
+        for (x = -radius; x <= radius; x++) {
+            if (x * x + y * y <= radius * radius) {
+                int px = start_x + x;
+                int py = start_y + y;
+
+                // Assurer que les coordonnées sont dans les limites de la fenêtre
+                if (px >= 0 && px < WINX && py >= 0 && py < WINY) {
+                    // Calculer l'index du pixel dans la mémoire tampon
+                    pixel_index = py * size_line + px * (bpp / 8);
+                    // Stocker la couleur (supposant un format RGB avec 32 bits par pixel)
+                    data[pixel_index] = color & 0xFF;         // Rouge
+                    data[pixel_index + 1] = (color >> 8) & 0xFF; // Vert
+                    data[pixel_index + 2] = (color >> 16) & 0xFF; // Bleu
+                }
+            }
+        }
+    }
+}
 
 void	draw_ray_in_data(t_game *game, char *data, int size_line, int bpp,
 		int x0, int y0, int x1, int y1, int color)
@@ -318,7 +345,7 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 		i++;
 		ray += offset;
 	}
-	
+	draw_filled_circle(game, data, size_line, bpp, start_x, start_y, 6, 255255255);
 }
 
 void	draw_map(t_game *game, int bpp, int size_line, char *data)
@@ -870,8 +897,8 @@ void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
 			length = (sidedistX - deltaX) * (double)tile_width;
 
 		// Limiter la longueur des rayons
-		if (length > 50)
-			length = 50;
+		if (length > MIN_DIM / 2.0f)
+			length = MIN_DIM / 2.0f;
 
 		// Calcul des coordonnées de fin du rayon
 		end_x = start_x + (int)(length * cos(ray));
@@ -881,13 +908,13 @@ void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
 		if (fabs(ray - game->dirangle) < 0.01)
 			draw_ray_in_data(game, data, size_line, bpp, (int)start_x, (int)start_y, (int)end_x, (int)end_y, 0xFF0000);
 		else if (i % 1 == 0)
-			draw_ray_in_data(game, data, size_line, bpp, (int)start_x, (int)start_y, (int)end_x, (int)end_y, 255255255);
+			draw_ray_in_data(game, data, size_line, bpp, (int)start_x, (int)start_y, (int)end_x, (int)end_y, 0x000000);
 
 		// Passer au prochain rayon
 		i++;
 		ray += offset;
 	}
-	
+	draw_filled_circle(game, data, size_line, bpp, start_x, start_y, 4, 0x000000);
 }
 
 void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)
@@ -972,9 +999,9 @@ void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)
 				// (int)tile_height, 0x0000FF,WINX,WINY);
 				// Déterminer la couleur en fonction du contenu de la carte
 				if (game->map[map_y][map_x] == '1')  // Mur
-					color = 0x0000FF;  // Bleu pour les murs
+					color = 0x000000;  // Bleu pour les murs
 				else
-					color = 0x000000;  // Noir pour les espaces vides
+					color = 0xFFFFFF;  // Noir pour les espaces vides
 
 				// Dessiner la case avec les coordonnées en flottant
 				draw_rectangle(data, size_line, bpp, (int)screen_x, (int)screen_y, (int)tile_width, (int)tile_height, color, MIN_DIM,MIN_DIM);

@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/14 21:31:35 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/14 22:24:28 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,18 +307,21 @@ void	movements(t_game *game, double angleshift)
 	int flag;
 
 	new_dir = game->dirangle + angleshift;
-	new_x = (game->pos_x + cos(new_dir) * SPEED_M);
-	new_y = (game->pos_y - sin(new_dir) * SPEED_M);
+	new_x = game->pos_x + cos(new_dir) * SPEED_M;
+	new_y = game->pos_y - sin(new_dir) * SPEED_M;
 	stepx = (int)game->pos_x - (int)new_x;
 	stepy = (int)game->pos_y - (int)new_y;
 	flag = 1;
+	printf("new_x = %f,  new_y = %f\n", new_x, new_y);
 	if (stepx && stepy)
 	{
 		if (game->map[(int)game->pos_y][(int)new_x] != '0')
-			flag =0;
-		if(game->map[(int)new_x][(int)game->pos_x] !='0')
+		{
+			printf("\n");
 			flag = 0;
-			
+		}
+		if(game->map[(int)new_y][(int)game->pos_x] !='0')
+			flag = 0;
 	}
 	if (game->map[(int)new_y][(int)new_x] == '0' && flag)
 	{

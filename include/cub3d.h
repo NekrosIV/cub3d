@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/14 18:52:18 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/14 21:30:02 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@
 # define TILE_SIZE 21
 # define BIG_TILE_SIZE 50
 # define EA 0
-# define SPEED_M 0.5
-# define SPEED_C 0.085
+# define SPEED_M 0.2
+# define SPEED_C 0.06
 
 typedef struct s_mlx
 {
@@ -109,6 +109,12 @@ typedef struct s_player
 	double	orientation;
 	double	dirX;
 	double	diry;
+	double 	up;
+	double	down;
+	double	right;
+	double	left;
+	double	side_r;
+	double	side_l;
 }			t_player;
 
 typedef struct s_game
@@ -133,6 +139,12 @@ typedef struct s_game
 	double	dirangle;
 	double	playerdirX;
 	double	playerdirY;
+	double 	up;
+	double	down;
+	double	right;
+	double	left;
+	double	side_r;
+	double	side_l;
 	t_mlx	*mlx;
 }			t_game;
 

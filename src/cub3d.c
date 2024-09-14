@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/14 18:56:30 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/14 21:31:35 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,62 +44,14 @@ t_game	*init_game(void)
 	game->player_dir = '0';
 	game->cpy_map = NULL;
 	game->mlx = NULL;
+	game->left = false;
+	game->right = false;
+	game->up = false;
+	game->down = false;
+	game->side_l = false;
+	game->side_r = false;
 	return (game);
 }
-// int	key_hook(int keycode, t_game *game)
-// {
-// 	if (keycode == XK_Escape)
-// 		free_exit(game, 0, NULL, "End of the game");
-// 	// else if (keycode == XK_Up)
-// 	// 	key_up(game);
-// 	// else if (keycode == XK_Down)
-// 	// 	key_down(game);
-// 	// else if (keycode == XK_Left)
-// 	// 	key_left(game);
-// 	// else if (keycode == XK_Right)
-// 	// 	key_right(game);
-// 	return (0);
-// }
-// int	loop_hook(t_game *game)
-// {
-// 	(void)game;
-// 	// printf("yo\n");
-// 	return (0);
-// }
-
-// void	draw_line(void *mlx_ptr, void *win_ptr, int x0, int y0, int x1, int y1,
-// 		int color)
-// {
-// 	int	dx;
-// 	int	sx;
-// 	int	dy;
-// 	int	sy;
-// 	int	err;
-// 	int	e2;
-
-// 	dx = abs(x1 - x0);
-// 	sx = x0 < x1 ? 1 : -1;
-// 	dy = -abs(y1 - y0);
-// 	sy = y0 < y1 ? 1 : -1;
-// 	err = dx + dy;
-// 	while (1)
-// 	{
-// 		mlx_pixel_put(mlx_ptr, win_ptr, x0, y0, color);
-// 		if (x0 == x1 && y0 == y1)
-// 			break ;
-// 		e2 = 2 * err;
-// 		if (e2 >= dy)
-// 		{
-// 			err += dy;
-// 			x0 += sx;
-// 		}
-// 		if (e2 <= dx)
-// 		{
-// 			err += dx;
-// 			y0 += sy;
-// 		}
-// 	}
-// }
 
 void	draw_ray_in_data(t_game *game, char *data, int size_line, int bpp,
 		int x0, int y0, int x1, int y1, int color)
@@ -314,19 +266,64 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	}
 }
 
+void	draw_rectangle(char *data, int size_line, int bpp, int x, int y,
+		int width, int height, int color, int win_width, int win_height)
+{
+	int	i;
+	int	j;
+	int	pixel_index;
+
+	// Parcours chaque pixel du rectangle
+	for (i = 0; i < width; i++)
+	{
+		// Vérifier si le pixel x est dans les limites de la fenêtre
+		if ((x + i) < 0 || (x + i) >= win_width)
+			continue; // Sauter les pixels hors limites en largeur
+
+		for (j = 0; j < height; j++)
+		{
+			// Vérifier si le pixel y est dans les limites de la fenêtre
+			if ((y + j) < 0 || (y + j) >= win_height)
+				continue; // Sauter les pixels hors limites en hauteur
+
+			// Calcul de l'index du pixel dans le buffer de l'image
+			pixel_index = (y + j) * size_line + (x + i) * (bpp / 8);
+
+			// Écriture des valeurs de couleur (R, G, B) dans les données
+			data[pixel_index] = color & 0xFF;    // Rouge
+			data[pixel_index + 1] = (color >> 8) & 0xFF; // Vert
+			data[pixel_index + 2] = (color >> 16) & 0xFF;        // Bleu
+		}
+	}
+}
+
 void	movements(t_game *game, double angleshift)
 {
 	double	new_x;
 	double	new_y;
 	double	new_dir;
+	int stepx;
+	int stepy;
+	int flag;
 
 	new_dir = game->dirangle + angleshift;
 	new_x = (game->pos_x + cos(new_dir) * SPEED_M);
 	new_y = (game->pos_y - sin(new_dir) * SPEED_M);
-	if (game->map[(int)new_y][(int)new_x] == '0')
+	stepx = (int)game->pos_x - (int)new_x;
+	stepy = (int)game->pos_y - (int)new_y;
+	flag = 1;
+	if (stepx && stepy)
 	{
-		game->pos_x += cos(new_dir) * SPEED_M;
-		game->pos_y -= sin(new_dir) * SPEED_M;
+		if (game->map[(int)game->pos_y][(int)new_x] != '0')
+			flag =0;
+		if(game->map[(int)new_x][(int)game->pos_x] !='0')
+			flag = 0;
+			
+	}
+	if (game->map[(int)new_y][(int)new_x] == '0' && flag)
+	{
+		game->pos_x =new_x;
+		game->pos_y = new_y;
 	}
 	else
 	{
@@ -360,19 +357,17 @@ void	movements(t_game *game, double angleshift)
 	}
 }
 
-int	key_hook(int keycode, t_game *game)
+void direction(t_game *game, char side)
 {
-	if (keycode == XK_Escape)
-		free_exit(game, 0, NULL, "EOG");
-	else if (keycode == XK_Up)
-		movements(game, 0);
-	else if (keycode == XK_Down)
-		movements(game, PI);
-	else if (keycode == XK_Right)
-		movements(game, -NO);
-	else if (keycode == XK_Left)
-		movements(game, NO);
-	else if (keycode == XK_a)
+	if (side == 'd')
+	{
+		game->dirangle -= SPEED_C; // Tourner vers la droite
+		if (game->dirangle < 0)
+			game->dirangle += 2 * PI;
+		game->playerdirX = cos(game->dirangle);
+		game->playerdirY = sin(game->dirangle);
+	}
+	else 
 	{
 		game->dirangle += SPEED_C; // Tourner vers la gauche
 		// game->dirangle = fmod(game->dirangle, 2 * PI);
@@ -381,102 +376,95 @@ int	key_hook(int keycode, t_game *game)
 		game->playerdirX = cos(game->dirangle);
 		game->playerdirY = sin(game->dirangle);
 	}
-	else if (keycode == XK_d)
+}
+
+void	check_moves(t_game *game)
+{
+	if (game->up == true)
+		movements(game, 0);
+	if (game->down == true)
+		movements(game, PI);
+	if (game->right == true)
+		movements(game, -NO);
+	if (game->left == true)
+		movements(game, NO);
+	if (game->side_l == true)
+		direction(game, 'a');
+	if (game->side_r == true)
+		direction(game, 'd');
+}
+
+int	key_hook(int keycode, t_game *game)
+{
+	if (keycode == XK_Escape)
+		free_exit(game, 0, NULL, "EOG");
+	else if (keycode == XK_Up)
 	{
-		game->dirangle -= SPEED_C; // Tourner vers la droite
-		if (game->dirangle < 0)
-			game->dirangle += 2 * PI;
-		game->playerdirX = cos(game->dirangle);
-		game->playerdirY = sin(game->dirangle);
+		// movements(game, 0);
+		game->up = true;
+	}
+	else if (keycode == XK_Down)
+	{	
+		// movements(game, PI);
+		game->down = true;
+	}
+	else if (keycode == XK_Right)
+	{	
+		// movements(game, -NO);
+		game->right = true;
+	}
+	else if (keycode == XK_Left)
+	{	
+		// movements(game, NO);
+		game->left = true;
+	}
+	else if (keycode == XK_a)
+	{	
+		// direction(game, 'a');
+		game->side_l = true;
+	}
+	else if (keycode == XK_d)
+	{	
+		// direction(game, 'd');
+		game->side_r = true;
 	}
 	return (0);
 }
-void	draw_rectangle(char *data, int size_line, int bpp, int x, int y,
-		int width, int height, int color, int win_width, int win_height)
+
+int	key_release(int keycode, t_game *game)
 {
-	int	i;
-	int	j;
-	int	pixel_index;
-
-	// Parcours chaque pixel du rectangle
-	for (i = 0; i < width; i++)
+	if (keycode == XK_Up)
 	{
-		// Vérifier si le pixel x est dans les limites de la fenêtre
-		if ((x + i) < 0 || (x + i) >= win_width)
-			continue; // Sauter les pixels hors limites en largeur
-
-		for (j = 0; j < height; j++)
-		{
-			// Vérifier si le pixel y est dans les limites de la fenêtre
-			if ((y + j) < 0 || (y + j) >= win_height)
-				continue; // Sauter les pixels hors limites en hauteur
-
-			// Calcul de l'index du pixel dans le buffer de l'image
-			pixel_index = (y + j) * size_line + (x + i) * (bpp / 8);
-
-			// Écriture des valeurs de couleur (R, G, B) dans les données
-			data[pixel_index] = color & 0xFF;    // Rouge
-			data[pixel_index + 1] = (color >> 8) & 0xFF; // Vert
-			data[pixel_index + 2] = (color >> 16) & 0xFF;        // Bleu
-		}
+		// movements(game, 0);
+		game->up = false;
 	}
+	else if (keycode == XK_Down)
+	{	
+		// movements(game, PI);
+		game->down = false;
+	}
+	else if (keycode == XK_Right)
+	{	
+		// movements(game, -NO);
+		game->right = false;
+	}
+	else if (keycode == XK_Left)
+	{	
+		// movements(game, NO);
+		game->left = false;
+	}
+	else if (keycode == XK_a)
+	{	
+		// direction(game, 'a');
+		game->side_l = false;
+	}
+	else if (keycode == XK_d)
+	{	
+		// direction(game, 'd');
+		game->side_r = false;
+	}
+	return (0);
 }
-
-
-// void	draw_rectangle_with_lines(char *data, int size_line, int bpp, int x,
-// 		int y, int width, int height, int color)
-// {
-// 	int	i;
-// 	int	j;
-// 	int	pixel_index;
-
-// 	// Parcours chaque pixel du rectangle
-// 	for (i = 1; i < width; i++)
-// 	{
-// 		for (j = 1; j < height; j++)
-// 		{
-// 			// Calcul de l'index du pixel dans le buffer de l'image
-// 			pixel_index = (y + j) * size_line + (x + i) * (bpp / 8);
-// 			// Écriture des valeurs de couleur (R, G, B) dans les données
-// 			data[pixel_index] = (color >> 16) & 0xFF;    // Rouge
-// 			data[pixel_index + 1] = (color >> 8) & 0xFF; // Vert
-// 			data[pixel_index + 2] = color & 0xFF;        // Bleu
-// 		}
-// 	}
-// }
-
-// void	draw_map(t_game *game, int bpp, int size_line, char *data)
-// {
-// 	int	tile_width;
-// 	int	tile_height;
-// 	int	map_x;
-// 	int	map_y;
-// 	int	screen_x;
-// 	int	screen_y;
-// 	int	color;
-
-// 	map_y = 0;
-// 	tile_width = WINX / game->map_max_x;
-// 	tile_height = WINY / game->map_max_y;
-// 	while (map_y < game->map_max_y)
-// 	{
-// 		map_x = 0;
-// 		while (game->map[map_y][map_x] && map_x < game->map_max_x)
-// 		{
-// 			screen_x = map_x * tile_width;
-// 			screen_y = map_y * tile_height;
-// 			if (game->map[map_y][map_x] == '1')
-// 				color = 0xFF0000;
-// 			else
-// 				color = 0x000000;
-// 			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
-// 				tile_height, color,WINX,WINY);
-// 			map_x++;
-// 		}
-// 		map_y++;
-// 	}
-// 	draw_arrow(game, bpp, size_line, data);
-// }
 
 int	loop_hook(t_game *game)
 {
@@ -488,6 +476,7 @@ int	loop_hook(t_game *game)
 	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
 	// mlx_clear_window(game->mlx->mlx_ptr, game->mlx->mlx_win);
 	// draw_map(game, bpp, size_line, data);
+	check_moves(game);
 	draw_arrow(game, bpp, size_line, data);
 	mini_draw_map(game, bpp, size_line, data);
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win, img_ptr, 0,
@@ -514,6 +503,7 @@ int	main(int ac, char **av)
 	mlx_loop_hook(game->mlx->mlx_ptr, loop_hook, game);
 	mlx_hook(game->mlx->mlx_win, 17, 0, india, game);
 	mlx_hook(game->mlx->mlx_win, 02, (1L << 0), key_hook, game);
+	mlx_hook(game->mlx->mlx_win, 03, (1L << 1), key_release, game);
 	mlx_loop(game->mlx->mlx_ptr);
 	return (0);
 }
@@ -766,7 +756,7 @@ void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)
 				if (game->map[map_y][map_x] == '1')  // Mur
 					color = 0x000000;  // Bleu pour les murs
 				else
-					color = 0xFFFF00;  // Noir pour les espaces vides
+					color = 0xFFFFFF;  // Noir pour les espaces vides
 
 				// Dessiner la case avec les coordonnées en flottant
 				draw_rectangle(data, size_line, bpp, (int)screen_x, (int)screen_y, (int)tile_width, (int)tile_height, color, MIN_DIM,MIN_DIM);
@@ -779,3 +769,113 @@ void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)
 }
 
 
+// void	draw_rectangle_with_lines(char *data, int size_line, int bpp, int x,
+// 		int y, int width, int height, int color)
+// {
+// 	int	i;
+// 	int	j;
+// 	int	pixel_index;
+
+// 	// Parcours chaque pixel du rectangle
+// 	for (i = 1; i < width; i++)
+// 	{
+// 		for (j = 1; j < height; j++)
+// 		{
+// 			// Calcul de l'index du pixel dans le buffer de l'image
+// 			pixel_index = (y + j) * size_line + (x + i) * (bpp / 8);
+// 			// Écriture des valeurs de couleur (R, G, B) dans les données
+// 			data[pixel_index] = (color >> 16) & 0xFF;    // Rouge
+// 			data[pixel_index + 1] = (color >> 8) & 0xFF; // Vert
+// 			data[pixel_index + 2] = color & 0xFF;        // Bleu
+// 		}
+// 	}
+// }
+
+// void	draw_map(t_game *game, int bpp, int size_line, char *data)
+// {
+// 	int	tile_width;
+// 	int	tile_height;
+// 	int	map_x;
+// 	int	map_y;
+// 	int	screen_x;
+// 	int	screen_y;
+// 	int	color;
+
+// 	map_y = 0;
+// 	tile_width = WINX / game->map_max_x;
+// 	tile_height = WINY / game->map_max_y;
+// 	while (map_y < game->map_max_y)
+// 	{
+// 		map_x = 0;
+// 		while (game->map[map_y][map_x] && map_x < game->map_max_x)
+// 		{
+// 			screen_x = map_x * tile_width;
+// 			screen_y = map_y * tile_height;
+// 			if (game->map[map_y][map_x] == '1')
+// 				color = 0xFF0000;
+// 			else
+// 				color = 0x000000;
+// 			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
+// 				tile_height, color,WINX,WINY);
+// 			map_x++;
+// 		}
+// 		map_y++;
+// 	}
+// 	draw_arrow(game, bpp, size_line, data);
+// }
+
+
+// int	key_hook(int keycode, t_game *game)
+// {
+// 	if (keycode == XK_Escape)
+// 		free_exit(game, 0, NULL, "End of the game");
+// 	// else if (keycode == XK_Up)
+// 	// 	key_up(game);
+// 	// else if (keycode == XK_Down)
+// 	// 	key_down(game);
+// 	// else if (keycode == XK_Left)
+// 	// 	key_left(game);
+// 	// else if (keycode == XK_Right)
+// 	// 	key_right(game);
+// 	return (0);
+// }
+// int	loop_hook(t_game *game)
+// {
+// 	(void)game;
+// 	// printf("yo\n");
+// 	return (0);
+// }
+
+// void	draw_line(void *mlx_ptr, void *win_ptr, int x0, int y0, int x1, int y1,
+// 		int color)
+// {
+// 	int	dx;
+// 	int	sx;
+// 	int	dy;
+// 	int	sy;
+// 	int	err;
+// 	int	e2;
+
+// 	dx = abs(x1 - x0);
+// 	sx = x0 < x1 ? 1 : -1;
+// 	dy = -abs(y1 - y0);
+// 	sy = y0 < y1 ? 1 : -1;
+// 	err = dx + dy;
+// 	while (1)
+// 	{
+// 		mlx_pixel_put(mlx_ptr, win_ptr, x0, y0, color);
+// 		if (x0 == x1 && y0 == y1)
+// 			break ;
+// 		e2 = 2 * err;
+// 		if (e2 >= dy)
+// 		{
+// 			err += dy;
+// 			x0 += sx;
+// 		}
+// 		if (e2 <= dx)
+// 		{
+// 			err += dx;
+// 			y0 += sy;
+// 		}
+// 	}
+// }

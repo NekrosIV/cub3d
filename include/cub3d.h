@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/14 17:35:25 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/14 18:52:18 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@
 
 # define WINAME "GOAT3D"
 # define WINX 1500
-# define WINY 1100
+# define WINY 1200
 # define MIN_X_OR_Y ((WINX) < (WINY) ? (WINX) : (WINY))
 # define MIN_DIM MIN_X_OR_Y / 4
 # define PI 3.14159265358979323846

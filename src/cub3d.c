@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/14 17:42:03 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/14 18:56:30 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,33 @@ int	init_player(t_game *game)
 	game->playerdirY = sin(game->dirangle);
 	return (0);
 }
+void draw_filled_circle(t_game *game, char *data, int size_line, int bpp, int start_x, int start_y, int radius, int color) 
+{
+	(void)game;
+    int x;
+	int y;
+    int pixel_index;
+
+    // Dessiner le cercle rempli en utilisant l'algorithme de Bresenham
+    for (y = -radius; y <= radius; y++) {
+        for (x = -radius; x <= radius; x++) {
+            if (x * x + y * y <= radius * radius) {
+                int px = start_x + x;
+                int py = start_y + y;
+
+                // Assurer que les coordonnées sont dans les limites de la fenêtre
+                if (px >= 0 && px < WINX && py >= 0 && py < WINY) {
+                    // Calculer l'index du pixel dans la mémoire tampon
+                    pixel_index = py * size_line + px * (bpp / 8);
+                    // Stocker la couleur (supposant un format RGB avec 32 bits par pixel)
+                    data[pixel_index] = color & 0xFF;         // Rouge
+                    data[pixel_index + 1] = (color >> 8) & 0xFF; // Vert
+                    data[pixel_index + 2] = (color >> 16) & 0xFF; // Bleu
+                }
+            }
+        }
+    }
+}
 
 void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 {
@@ -190,7 +217,7 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	int wall_color;
 	double	perp_length;  // Corrected length for fisheye effect
 	
-	fov = 0.660;
+	fov = 1;
 	i = 0;
 	ray = game->dirangle + fov / 2;
 	offset = (fov) / WINX;
@@ -251,7 +278,7 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 		else
 			length = (sidedistX - deltaX);
 		// *** Correction du fisheye ***
-		perp_length = length * cos(ray - game->dirangle); // Correction de la distance
+		perp_length = fabs(length * cos(ray - game->dirangle)); // Correction de la distance
 
 		// Calcul de la hauteur de la ligne à dessiner en fonction de la distance perpendiculaire
 		double line_h = WINY / perp_length;
@@ -267,17 +294,17 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 				
 		if (last_hit == 1) {  
 			if (stepY == -1)
-				wall_color = 0x00FF00;  // Mur Ouest (vert)
+				wall_color = 0xFFFFFF;  // Mur Ouest (vert)
 			else
-				wall_color = 0xFFFF00;  // Mur Est (jaune)
+				wall_color = 0xF0F0F0;  // Mur Est (jaune)
 		} else {  
 			if (stepX == -1)
-				wall_color = 255255255;  
+				wall_color = 0xFFFFF0;  
 			else
-				wall_color = 0xFF0000;  
+				wall_color = 0xF8F8FF;  
 		}
 		// Dessiner le rayon
-		draw_ray_in_data(game, data, size_line, bpp, i, 0, i,(int) start_y, 0x0000FF);
+		draw_ray_in_data(game, data, size_line, bpp, i, 0, i,(int) start_y, 0x000000);
 		draw_ray_in_data(game, data, size_line, bpp, i, (int)start_y, i, (int)end_y, wall_color);
 		draw_ray_in_data(game, data, size_line, bpp, i, (int)end_y, i, WINY, 0x000000);
 
@@ -646,7 +673,7 @@ void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
 		if (fabs(ray - game->dirangle) < 0.01)
 			draw_ray_in_data(game, data, size_line, bpp, (int)start_x, (int)start_y, (int)end_x, (int)end_y, 0xFF0000);
 		else if (i % 1 == 0)
-			draw_ray_in_data(game, data, size_line, bpp, (int)start_x, (int)start_y, (int)end_x, (int)end_y, 255255255);
+			draw_ray_in_data(game, data, size_line, bpp, (int)start_x, (int)start_y, (int)end_x, (int)end_y, 0x000000);
 
 		// Passer au prochain rayon
 		i++;
@@ -737,9 +764,9 @@ void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)
 				// (int)tile_height, 0x0000FF,WINX,WINY);
 				// Déterminer la couleur en fonction du contenu de la carte
 				if (game->map[map_y][map_x] == '1')  // Mur
-					color = 0x0000FF;  // Bleu pour les murs
+					color = 0x000000;  // Bleu pour les murs
 				else
-					color = 0x000000;  // Noir pour les espaces vides
+					color = 0xFFFF00;  // Noir pour les espaces vides
 
 				// Dessiner la case avec les coordonnées en flottant
 				draw_rectangle(data, size_line, bpp, (int)screen_x, (int)screen_y, (int)tile_width, (int)tile_height, color, MIN_DIM,MIN_DIM);

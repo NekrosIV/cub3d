@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/14 16:07:18 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/14 17:35:25 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,16 +65,16 @@
 # define WINX 1500
 # define WINY 1100
 # define MIN_X_OR_Y ((WINX) < (WINY) ? (WINX) : (WINY))
-# define MIN_DIM MIN_X_OR_Y / 5
+# define MIN_DIM MIN_X_OR_Y / 4
 # define PI 3.14159265358979323846
 # define NO 1.57079632679489661923
 # define SO (3 * PI) / 2
 # define WE PI * 1
-# define TILE_SIZE 20
+# define TILE_SIZE 21
 # define BIG_TILE_SIZE 50
 # define EA 0
-# define SPEED_M 0.2
-# define SPEED_C 0.055
+# define SPEED_M 0.5
+# define SPEED_C 0.085
 
 typedef struct s_mlx
 {

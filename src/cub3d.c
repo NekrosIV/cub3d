@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/14 15:19:55 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/14 17:42:03 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,15 +263,16 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 			end_y = WINY - 1;
 			start_y = 0;
 		}
+
 				
 		if (last_hit == 1) {  
 			if (stepY == -1)
-				wall_color = 0xFF00FF;  
+				wall_color = 0x00FF00;  // Mur Ouest (vert)
 			else
-				wall_color = 0xFFFF00;  
+				wall_color = 0xFFFF00;  // Mur Est (jaune)
 		} else {  
 			if (stepX == -1)
-				wall_color = 0x00FFFF;  
+				wall_color = 255255255;  
 			else
 				wall_color = 0xFF0000;  
 		}
@@ -651,7 +652,7 @@ void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
 		i++;
 		ray += offset;
 	}
-	
+	draw_filled_circle(game, data, size_line, bpp, start_x, start_y, 4, 0x000000);
 }
 
 void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)

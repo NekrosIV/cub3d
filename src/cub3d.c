@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/13 19:26:22 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/14 15:19:55 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,10 +163,11 @@ int	init_player(t_game *game)
 	game->playerdirY = sin(game->dirangle);
 	return (0);
 }
+
 void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 {
-	float	start_x;
-	float	start_y;
+	// int		start_x;
+	int		start_y;
 	double	length;
 	double	end_x;
 	double	end_y;
@@ -186,342 +187,104 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	double	ray_dY;
 	int		ray_hit;
 	int		last_hit;
-	int		nb_ray;
-
-	// Taille de la mini-map
-	nb_ray = WINX;
+	int wall_color;
+	double	perp_length;  // Corrected length for fisheye effect
 	
-	// Taille des cases dans la mini-map
-	float tile_width = BIG_TILE_SIZE;
-	float tile_height = BIG_TILE_SIZE;
-
-	// Début des coordonnées du joueur dans la mini-map (float)
-	float player_x = game->pos_x;
-	float player_y = game->pos_y;
-
-	// Calcul des offsets (flottants)
-	float offset_x = 0.0f;
-	float offset_y = 0.0f;
-
-	int map_pixel_width = game->map_max_x * tile_width;
-	int map_pixel_height = game->map_max_y * tile_height;
-
-	// Appliquer les mêmes calculs d'offset que dans mini_draw_map
-	if (map_pixel_width > WINX)
-	{
-		if (player_x * tile_width < WINX / 2.0f)
-			offset_x = 0.0f;
-		else if (player_x * tile_width > map_pixel_width - WINX / 2.0f)
-			offset_x = WINX - map_pixel_width;
-		else
-			offset_x = (WINX / 2.0f) - player_x * tile_width;
-	}
-
-	if (map_pixel_height > WINY)
-	{
-		if (player_y * tile_height < WINY / 2.0f)
-			offset_y = 0.0f;
-		else if (player_y * tile_height > map_pixel_height - WINY / 2.0f)
-			offset_y = WINY - map_pixel_height;
-		else
-			offset_y = (WINY / 2.0f) - player_y * tile_height;
-	}
-
-	// Position initiale du joueur dans la mini-carte
-	start_x = player_x * tile_width + offset_x;
-	start_y = player_y * tile_height + offset_y;
-
-	// Champ de vision (fov)
 	fov = 0.660;
 	i = 0;
-	ray = game->dirangle - fov / 2.0;
-	offset = (fov) / nb_ray;
-
-	// Boucle de tir des rayons
-	while (i < nb_ray)
+	ray = game->dirangle + fov / 2;
+	offset = (fov) / WINX;
+	while (i < WINX)
 	{
 		ray_dX = cos(ray);
 		ray_dY = sin(ray);
-
-		// Calcul des directions de rayons
-		deltaX = (ray_dX == 0) ? 1e30 : 1.0 / fabs(ray_dX);
-		deltaY = (ray_dY == 0) ? 1e30 : 1.0 / fabs(ray_dY);
-
+		if (ray_dY < 0.00001 && ray_dY > -0.00001)
+			deltaY = 1e30;
+		else
+			deltaY = 1.0 / fabs(ray_dY);
+		if (ray_dX < 0.00001 && ray_dX > -0.00001)
+			deltaX = 1e30;
+		else
+			deltaX = 1.0 / fabs(ray_dX);
 		raymapX = (int)game->pos_x;
 		raymapY = (int)game->pos_y;
-
-		// Vérification des limites de la carte
-		if (raymapX < 0 || raymapX >= game->map_max_x || raymapY < 0 || raymapY >= game->map_max_y)
+		if (cos(ray) > 0.0)
 		{
-			// Si on sort des limites de la carte, on arrête le rayon
-			break;
-		}
-
-		// Détermination de l'étape et des distances sur les axes X et Y
-		if (ray_dX > 0.0) {
 			stepX = 1;
 			sidedistX = ((double)(raymapX + 1) - game->pos_x) * deltaX;
-		} else {
+		}
+		else
+		{
 			stepX = -1;
 			sidedistX = (game->pos_x - (double)raymapX) * deltaX;
 		}
-		if (ray_dY > 0.0) {
+		if (sin(ray) > 0.0)
+		{
 			stepY = -1;
 			sidedistY = (game->pos_y - (double)raymapY) * deltaY;
-		} else {
+		}
+		else
+		{
 			stepY = 1;
 			sidedistY = ((double)(raymapY + 1) - game->pos_y) * deltaY;
 		}
-
-		// Détection des collisions du rayon avec les murs
 		ray_hit = 0;
 		while (ray_hit == 0)
 		{
-			// Vérification des limites avant de continuer
-			if (raymapX < 0 || raymapX >= game->map_max_x || raymapY < 0 || raymapY >= game->map_max_y)
+			if (sidedistX < sidedistY)
 			{
-				ray_hit = 1;
-				break;
-			}
-
-			if (sidedistX < sidedistY) {
 				raymapX += stepX;
 				sidedistX += deltaX;
 				last_hit = 0;
-			} else {
+			}
+			else
+			{
 				raymapY += stepY;
 				sidedistY += deltaY;
 				last_hit = 1;
 			}
-
-			// Si le rayon touche un mur (tout sauf '0'), on arrête
 			if (game->map[raymapY][raymapX] != '0')
 				ray_hit = 1;
 		}
-
-		// Calcul de la longueur du rayon
 		if (last_hit)
-			length = (sidedistY - deltaY) * (double)tile_height;
+			length = (sidedistY - deltaY);
 		else
-			length = (sidedistX - deltaX) * (double)tile_width;
-		// Calcul des coordonnées de fin du rayon
-		end_x = start_x + (int)(length * cos(ray));
-		end_y = start_y + (int)(length * -sin(ray));
+			length = (sidedistX - deltaX);
+		// *** Correction du fisheye ***
+		perp_length = length * cos(ray - game->dirangle); // Correction de la distance
 
+		// Calcul de la hauteur de la ligne à dessiner en fonction de la distance perpendiculaire
+		double line_h = WINY / perp_length;
+		end_x = i ;
+		start_y = (WINY/2)-(line_h/2) ;
+		end_y = (WINY/2)+(line_h/2) ;
+		if (end_y >= WINY)
+		{
+			end_y = WINY - 1;
+			start_y = 0;
+		}
+				
+		if (last_hit == 1) {  
+			if (stepY == -1)
+				wall_color = 0xFF00FF;  
+			else
+				wall_color = 0xFFFF00;  
+		} else {  
+			if (stepX == -1)
+				wall_color = 0x00FFFF;  
+			else
+				wall_color = 0xFF0000;  
+		}
 		// Dessiner le rayon
-		if (fabs(ray - game->dirangle) < 0.01)
-			draw_ray_in_data(game, data, size_line, bpp, (int)start_x, (int)start_y, (int)end_x, (int)end_y, 0xFF0000);
-		else if (i % 1 == 0)
-			draw_ray_in_data(game, data, size_line, bpp, (int)start_x, (int)start_y, (int)end_x, (int)end_y, 255255255);
+		draw_ray_in_data(game, data, size_line, bpp, i, 0, i,(int) start_y, 0x0000FF);
+		draw_ray_in_data(game, data, size_line, bpp, i, (int)start_y, i, (int)end_y, wall_color);
+		draw_ray_in_data(game, data, size_line, bpp, i, (int)end_y, i, WINY, 0x000000);
 
 		// Passer au prochain rayon
 		i++;
-		ray += offset;
+		ray -= offset;
 	}
-	
 }
-
-void	draw_map(t_game *game, int bpp, int size_line, char *data)
-{
-	float	tile_width = BIG_TILE_SIZE;
-	float	tile_height = BIG_TILE_SIZE;
-	int		map_x;
-	int		map_y;
-	float	screen_x;
-	float	screen_y;
-	int		color;
-	int line_size;
-
-	// Position du joueur en cases (float)
-	float player_x = game->pos_x;
-	float player_y = game->pos_y;
-
-	// Taille de la carte en pixels (float)
-	float map_pixel_width = game->map_max_x * tile_width;
-	float map_pixel_height = game->map_max_y * tile_height;
-
-	// Calculer l'offset par rapport à la fenêtre (float)
-	float offset_x = 0.0f;
-	float offset_y = 0.0f;
-
-	// Si la carte est plus large que la fenêtre, centrer la carte autour du joueur
-	if (map_pixel_width > WINX)
-	{
-		if (player_x * tile_width < WINX / 2.0f)
-		{
-			// Si le joueur est près du bord gauche, fixer l'offset à 0
-			offset_x = 0.0f;
-		}
-		else if (player_x * tile_width > map_pixel_width - WINX / 2.0f)
-		{
-			// Si le joueur est près du bord droit, fixer l'offset pour aligner le bord droit
-			offset_x = WINX - map_pixel_width;
-		}
-		else
-		{
-			// Sinon, centrer le joueur dans la fenêtre
-			offset_x = (WINX / 2.0f) - player_x * tile_width;
-		}
-	}
-
-	// Si la carte est plus haute que la fenêtre, centrer la carte autour du joueur
-	if (map_pixel_height > WINY)
-	{
-		if (player_y * tile_height < WINY / 2.0f)
-		{
-			// Si le joueur est près du bord haut, fixer l'offset à 0
-			offset_y = 0.0f;
-		}
-		else if (player_y * tile_height > map_pixel_height - WINY / 2.0f)
-		{
-			// Si le joueur est près du bord bas, fixer l'offset pour aligner le bord bas
-			offset_y = WINY - map_pixel_height;
-		}
-		else
-		{
-			// Sinon, centrer le joueur dans la fenêtre
-			offset_y = (WINY / 2.0f) - player_y * tile_height;
-		}
-	}
-
-	// Parcourir toutes les cases de la carte
-	for (map_y = 0; map_y < game->map_max_y; map_y++)
-	{
-		line_size = (int)ft_strlen(game->map[map_y]);
-		for (map_x = 0; map_x < line_size; map_x++)
-		{
-			// Calculer où dessiner la case sur l'écran (en flottant)
-			screen_x = map_x * tile_width + offset_x;
-			screen_y = map_y * tile_height + offset_y;
-			// draw_rectangle(data, size_line, bpp, (int)screen_x, (int)screen_y, (int)tile_width,
-			// 	(int)tile_height, 0x0000FF,WINX,WINY);
-			// Ne dessiner que si une partie de la case est visible à l'écran (même partiellement)
-			if (screen_x + tile_width > 0 && screen_x < WINX && 
-			    screen_y + tile_height > 0 && screen_y < WINY)
-			{
-				// draw_rectangle(data, size_line, bpp, (int)screen_x, (int)screen_y, (int)tile_width,
-				// (int)tile_height, 0x0000FF,WINX,WINY);
-				// Déterminer la couleur en fonction du contenu de la carte
-				if (game->map[map_y][map_x] == '1')  // Mur
-					color = 0x0000FF;  // Bleu pour les murs
-				else
-					color = 0x000000;  // Noir pour les espaces vides
-
-				// Dessiner la case avec les coordonnées en flottant
-				draw_rectangle(data, size_line, bpp, (int)screen_x, (int)screen_y, (int)tile_width, (int)tile_height, color, WINX,WINY);
-			}
-		}
-	}
-
-	// Dessiner la flèche du joueur au centre de l'écran
-	draw_arrow(game, bpp, size_line, data);
-}
-// void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
-// {
-// 	int		start_x;
-// 	int		start_y;
-// 	double	length;
-// 	double	end_x;
-// 	double	end_y;
-// 	int		i;
-// 	double	ray;
-// 	double	offset;
-// 	double	fov;
-// 	int		stepX;
-// 	int		stepY;
-// 	double	deltaX;
-// 	double	deltaY;
-// 	double	sidedistX;
-// 	double	sidedistY;
-// 	int		raymapX;
-// 	int		raymapY;
-// 	double	ray_dX;
-// 	double	ray_dY;
-// 	int		ray_hit;
-// 	int		last_hit;
-// 	int		tile_width;
-// 	int		tile_height;
-
-// 	tile_width = WINX / game->map_max_x;
-// 	tile_height = WINY / game->map_max_y;
-// 	start_x = game->pos_x * (WINX / game->map_max_x);
-// 	start_y = game->pos_y * (WINY / game->map_max_y);
-// 	fov = 0.660;
-// 	i = 0;
-// 	ray = game->dirangle - fov / 2;
-// 	offset = (fov) / WINX;
-// 	while (i < WINX)
-// 	{
-// 		ray_dX = cos(ray);
-// 		ray_dY = sin(ray);
-// 		if (ray_dY < 0.00001 && ray_dY > -0.00001)
-// 			deltaY = 1e30;
-// 		else
-// 			deltaY = 1.0 / fabs(ray_dY);
-// 		if (ray_dX < 0.00001 && ray_dX > -0.00001)
-// 			deltaX = 1e30;
-// 		else
-// 			deltaX = 1.0 / fabs(ray_dX);
-// 		raymapX = (int)game->pos_x;
-// 		raymapY = (int)game->pos_y;
-// 		if (cos(ray) > 0.0)
-// 		{
-// 			stepX = 1;
-// 			sidedistX = ((double)(raymapX + 1) - game->pos_x) * deltaX;
-// 		}
-// 		else
-// 		{
-// 			stepX = -1;
-// 			sidedistX = (game->pos_x - (double)raymapX) * deltaX;
-// 		}
-// 		if (sin(ray) > 0.0)
-// 		{
-// 			stepY = -1;
-// 			sidedistY = (game->pos_y - (double)raymapY) * deltaY;
-// 		}
-// 		else
-// 		{
-// 			stepY = 1;
-// 			sidedistY = ((double)(raymapY + 1) - game->pos_y) * deltaY;
-// 		}
-// 		ray_hit = 0;
-// 		while (ray_hit == 0)
-// 		{
-// 			if (sidedistX < sidedistY)
-// 			{
-// 				raymapX += stepX;
-// 				sidedistX += deltaX;
-// 				last_hit = 0;
-// 			}
-// 			else
-// 			{
-// 				raymapY += stepY;
-// 				sidedistY += deltaY;
-// 				last_hit = 1;
-// 			}
-// 			if (game->map[raymapY][raymapX] != '0')
-// 				ray_hit = 1;
-// 		}
-// 		if (last_hit)
-// 			length = (sidedistY - deltaY) * (double)tile_height;
-// 		else
-// 			length = (sidedistX - deltaX) * (double)tile_width;
-// 		end_x = start_x + (int)(length * cos(ray));
-// 		end_y = start_y + (int)(length * -sin(ray));
-// 		if (fabs(ray - game->dirangle) < 0.01)
-// 		{
-// 			draw_ray_in_data(game, data, size_line, bpp, start_x, start_y,
-// 				(int)end_x, (int)end_y, 0x0000FF);
-// 		}
-// 		else if (i % 100 == 0)
-// 		{
-// 			draw_ray_in_data(game, data, size_line, bpp, start_x, start_y,
-// 				(int)end_x, (int)end_y, 255255255);
-// 		}
-// 		i += 1;
-// 		ray += offset;
-// 	}
-// }
 
 void	movements(t_game *game, double angleshift)
 {
@@ -696,7 +459,8 @@ int	loop_hook(t_game *game)
 	img_ptr = mlx_new_image(game->mlx->mlx_ptr, WINX, WINY);
 	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
 	// mlx_clear_window(game->mlx->mlx_ptr, game->mlx->mlx_win);
-	draw_map(game, bpp, size_line, data);
+	// draw_map(game, bpp, size_line, data);
+	draw_arrow(game, bpp, size_line, data);
 	mini_draw_map(game, bpp, size_line, data);
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win, img_ptr, 0,
 		0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/14 22:25:25 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/15 19:10:28 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,90 +78,101 @@
 
 typedef struct s_mlx
 {
-	void	*mlx_ptr;
-	void	*mlx_win;
-}			t_mlx;
+	void		*mlx_ptr;
+	void		*mlx_win;
+}				t_mlx;
+
+typedef struct s_textures
+{
+	void		*img;
+	int			h;
+	int			w;
+	int			bpp;
+	char		*data;
+}				t_texture;
 
 typedef struct s_ray
 {
-	double	posX;
-	double	posY;
-	int		mapX;
-	int		mapY;
-	double	orientation;
-	double	dirX;
-	double	diry;
-	double	dist;
-	double	deltaX;
-	double	deltaY;
-	double	hit;
-	int		stepX;
-	int		stepY;
+	double		posX;
+	double		posY;
+	int			mapX;
+	int			mapY;
+	double		orientation;
+	double		dirX;
+	double		diry;
+	double		dist;
+	double		deltaX;
+	double		deltaY;
+	double		hit;
+	int			stepX;
+	int			stepY;
 
-}			t_ray;
+}				t_ray;
 
 typedef struct s_player
 {
-	double	posX;
-	double	posY;
-	int		mapX;
-	int		mapY;
-	double	orientation;
-	double	dirX;
-	double	diry;
-	double 	up;
-	double	down;
-	double	right;
-	double	left;
-	double	side_r;
-	double	side_l;
-}			t_player;
+	double		posX;
+	double		posY;
+	int			mapX;
+	int			mapY;
+	double		orientation;
+	double		dirX;
+	double		diry;
+	double		up;
+	double		down;
+	double		right;
+	double		left;
+	double		side_r;
+	double		side_l;
+}				t_player;
 
 typedef struct s_game
 {
-	char	**map;
-	char	**cpy_map;
-	double	pos_x;
-	double	pos_y;
-	int		map_max_x;
-	int		map_max_y;
-	int		map_pos;
-	int		map_rows;
-	int		map_column;
-	char	*no;
-	char	*so;
-	char	*we;
-	char	*ea;
-	int		ceiling[3];
-	int		floor[3];
-	int		fd;
-	char	player_dir;
-	double	dirangle;
-	double	playerdirX;
-	double	playerdirY;
-	double 	up;
-	double	down;
-	double	right;
-	double	left;
-	double	side_r;
-	double	side_l;
-	t_mlx	*mlx;
-}			t_game;
+	char		**map;
+	char		**cpy_map;
+	double		pos_x;
+	double		pos_y;
+	int			map_max_x;
+	int			map_max_y;
+	int			map_pos;
+	int			map_rows;
+	int			map_column;
+	char		*no;
+	char		*so;
+	char		*we;
+	char		*ea;
+	int			ceiling[3];
+	int			floor[3];
+	int			fd;
+	char		player_dir;
+	double		dirangle;
+	double		playerdirX;
+	double		playerdirY;
+	double		up;
+	double		down;
+	double		right;
+	double		left;
+	double		side_r;
+	double		side_l;
+	t_mlx		*mlx;
+	t_texture	gun;
+}				t_game;
 
-t_game		*parsing(char *file);
-void		read_file(char *file, t_game *game);
-void		free_exit(t_game *game, int line, char *file, char *error);
-t_game		*init_game(void);
-char		*get_texture_path(char *line, t_game *game);
-void		print_struct(t_game *game);
-void		print_tabsquare(char **tab);
-void		free_taboftab(char **tab);
-bool		look_like_a_map_line(char *line);
-void		print_tabint(int *tab, int len);
-void		init_mlx(t_game *game);
-void		init_mlx2(t_mlx *mlx);
-int			key_hook(int keycode, t_game *game);
-void	draw_rectangle(char *data, int size_line, int bpp, int x, int y,
-		int width, int height, int color, int win_width, int win_height);
-
+t_game			*parsing(char *file);
+void			read_file(char *file, t_game *game);
+void			free_exit(t_game *game, int line, char *file, char *error);
+t_game			*init_game(void);
+char			*get_texture_path(char *line, t_game *game);
+void			print_struct(t_game *game);
+void			print_tabsquare(char **tab);
+void			free_taboftab(char **tab);
+bool			look_like_a_map_line(char *line);
+void			print_tabint(int *tab, int len);
+void			init_mlx(t_game *game);
+void			init_mlx2(t_mlx *mlx);
+int				key_hook(int keycode, t_game *game);
+void			draw_rectangle(char *data, int size_line, int bpp, int x, int y,
+					int width, int height, int color, int win_width,
+					int win_height);
+void	draw_gun(t_game *game, char *data, int bpp);
 #endif

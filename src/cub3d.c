@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/14 22:24:28 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/15 19:49:28 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,8 +307,14 @@ void	movements(t_game *game, double angleshift)
 	int flag;
 
 	new_dir = game->dirangle + angleshift;
-	new_x = game->pos_x + cos(new_dir) * SPEED_M;
-	new_y = game->pos_y - sin(new_dir) * SPEED_M;
+	double safetyx = 0.1;
+	double safetyy = 0.1;
+	if (cos(new_dir)<0)
+		safetyx = -0.1;
+	if (sin(new_dir)>0)
+		safetyy = -0.1;
+	new_x = game->pos_x + (cos(new_dir) * SPEED_M ) + safetyx;
+	new_y = game->pos_y - (sin(new_dir) * SPEED_M )+ safetyy;
 	stepx = (int)game->pos_x - (int)new_x;
 	stepy = (int)game->pos_y - (int)new_y;
 	flag = 1;
@@ -317,7 +323,6 @@ void	movements(t_game *game, double angleshift)
 	{
 		if (game->map[(int)game->pos_y][(int)new_x] != '0')
 		{
-			printf("\n");
 			flag = 0;
 		}
 		if(game->map[(int)new_y][(int)game->pos_x] !='0')
@@ -325,14 +330,14 @@ void	movements(t_game *game, double angleshift)
 	}
 	if (game->map[(int)new_y][(int)new_x] == '0' && flag)
 	{
-		game->pos_x =new_x;
-		game->pos_y = new_y;
+		game->pos_x =new_x-safetyx;
+		game->pos_y = new_y-safetyy;
 	}
 	else
 	{
 		if (game->map[(int)game->pos_y][(int)new_x] == '0')
 		{
-			game->pos_x = new_x;
+			game->pos_x = new_x-safetyx;
 			if (sin(new_dir) > 0)
 				game->pos_y = (double)((int)game->pos_y) + 0.01;
 			else
@@ -482,11 +487,81 @@ int	loop_hook(t_game *game)
 	check_moves(game);
 	draw_arrow(game, bpp, size_line, data);
 	mini_draw_map(game, bpp, size_line, data);
+	draw_gun(game,data,bpp);
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win, img_ptr, 0,
 		0);
 	mlx_destroy_image(game->mlx->mlx_ptr, img_ptr);
 	return (0);
 }
+
+void	draw_gun(t_game *game, char *data, int bpp)
+{
+	t_texture	*gun;
+	int			x;
+	int			y;
+	int			resetx;
+	double			x_img;
+	double			y_img;
+
+	gun = &game->gun;
+	int ignore = *((int *)gun->data);
+	x_img = 0;
+	y_img = 0;
+	(void)bpp;
+	resetx = WINX/4;
+	y = WINY - WINY/4;
+	double ratiox =  (2*gun->w)/(double)WINX;
+	double ratioy = (gun->h)/(double)(WINY/4.0);
+	x = resetx;
+	// printf("%d %d %d %d\n",x,y,x_img,y_img);
+	while (y < WINY)
+	{
+		while (x < 3*WINX/4)
+		{
+			if (*((int *)gun->data + (int)x_img + (int)y_img*(gun->w)) != ignore)
+				*((int *)data + x + y*WINX) = *((int *)gun->data + (int)x_img + (int)y_img*(gun->w));
+			x_img += ratiox;
+			x++;
+		}
+		y_img +=ratioy;
+		x_img = 0;
+		x = resetx;
+		y++;
+	}
+}
+
+// void draw_gun(t_game *game, char *data, int bpp)
+// {
+//     t_texture   *gun;
+//     int         x;
+//     int         y;
+//     int         resetx;
+//     int         x_img;
+//     int         y_img;
+
+//     gun = &game->gun;
+//     (void)bpp;
+//     resetx = (WINX / 2) - (gun->w / 2); // Center the gun horizontally
+//     y = WINY - gun->h;                  // Draw the gun at the bottom of the window
+//     y_img = 0;                          // Start at the top of the texture
+
+//     // Ensure we don't go out of bounds on the screen
+//     while (y < WINY && y_img < gun->h)
+//     {
+//         x = resetx;
+//         x_img = 0;
+//         while (x < (resetx + gun->w) && x_img < gun->w)
+//         {
+//             // Draw pixel from gun texture to screen buffer
+//             *((int *)data + x + y * WINX) = *((int *)gun->data + x_img + y_img * gun->w);
+//             x++;
+//             x_img++;
+//         }
+//         y++;
+//         y_img++;
+//     }
+// }
+
 
 int	india(t_game *game)
 {
@@ -510,6 +585,8 @@ int	main(int ac, char **av)
 	mlx_loop(game->mlx->mlx_ptr);
 	return (0);
 }
+
+
 
 
 void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
@@ -769,6 +846,7 @@ void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)
 
 	// Dessiner la flèche du joueur au centre de l'écran
 	mini_draw_arrow(game, bpp, size_line, data);
+	
 }
 
 

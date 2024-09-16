@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/16 17:26:25 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/16 19:14:34 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <sys/time.h>
 # include <unistd.h>
 
 # define BLACK "\1\e[1;90m\2"
@@ -76,8 +77,8 @@
 # define SPEED_M 0.2
 # define SPEED_C 0.06
 # define WALL_TEXT_CARRE 64
-#define FLOOR 0x8B4513
-#define SKY 0x87CEEB
+# define FLOOR 0x8B4513
+# define SKY 0x87CEEB
 
 typedef struct s_mlx
 {
@@ -92,7 +93,10 @@ typedef struct s_textures
 	int			w;
 	int			bpp;
 	char		*data;
-	int frame;
+	int			frame;
+	int			animating;
+	double		last_time;
+	double		frame_delay;
 }				t_texture;
 
 typedef struct s_ray
@@ -181,5 +185,7 @@ void			draw_gun(t_game *game, char *data, int bpp);
 void			movements(t_game *game, double angle_shift);
 void			direction(t_game *game, char side);
 void			check_moves(t_game *game);
+double			get_current_time(void);
+void			update_gun_animation(t_game *game);
 
 #endif

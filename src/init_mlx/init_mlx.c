@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/16 16:35:46 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/16 19:15:09 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,9 @@ void	init_mlx(t_game *game)
 	game->wall[3].data = mlx_get_data_addr(game->wall[3].img, &game->wall[3].bpp,
 			&fakex, &fakey);
 	game->gun->frame = 0;
+	game->gun->animating = 0;
+	game->gun->frame_delay = 0.050;
+	game->gun->last_time = get_current_time();
 	// mlx_hook(game->mlx->mlx_ptr, 02, (1L << 0), key_hook, game);
 	// mlx_loop(game->mlx->mlx_ptr);
 }

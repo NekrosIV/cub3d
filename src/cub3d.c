@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/16 18:28:44 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/16 19:12:38 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,20 +265,20 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 
 				
 		if (last_hit == 1) {  
-			if (ray_dX > 0)
+			if (stepY == -1)
 			{
 				wall = 0;  
 				pos_texture = (game->player.posX) + (perp_length*ray_dX);
 			}
 			else
 			{
-				pos_texture = (game->player.posX) + (perp_length*ray_dX);
+				pos_texture = (game->player.posX) - (perp_length*ray_dX);
 				wall = 1; 
 			}
 			pos_texture -= floor(pos_texture);
 
 		} else {  
-			if (ray_dY >0)
+			if (stepX == -1)
 			{
 				wall = 2;  
 				pos_texture = (game->player.posY) + (perp_length*ray_dY);
@@ -286,7 +286,7 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 			}
 			else
 			{
-				pos_texture = (game->player.posY) + (perp_length*ray_dY);
+				pos_texture = (game->player.posY) - (perp_length*ray_dY);
 				wall = 3;  
 			}
 			pos_texture -= floor(pos_texture);
@@ -372,11 +372,10 @@ int	key_hook(int keycode, t_game *game)
 	else if (keycode == XK_d)
 		game->player.side_r = true;
 	if (keycode == XK_p)
-		{
-			game->gun->frame +=1;
-			if (game->gun->frame > 3)
-				game->gun->frame = 0;
-		}
+	{
+		if(game->gun->animating == 0)
+			game->gun->animating = 1;
+	}
 		
 	return (0);
 }
@@ -411,6 +410,7 @@ int	loop_hook(t_game *game)
 	check_moves(game);
 	draw_arrow(game, bpp, size_line, data);
 	mini_draw_map(game, bpp, size_line, data);
+	update_gun_animation(game);
 	draw_gun(game,data,bpp);
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win, img_ptr, 0,
 		0);
@@ -453,6 +453,36 @@ void	draw_gun(t_game *game, char *data, int bpp)
 		y++;
 	}
 }
+double get_current_time()
+{
+    struct timeval time;
+    gettimeofday(&time, NULL);
+    return (double)time.tv_sec + (double)time.tv_usec / 1000000.0;
+}
+void update_gun_animation(t_game *game)
+{
+    if (game->gun->animating == 0)
+        return; 
+
+    double current_time = get_current_time();
+    
+    if (current_time - game->gun->last_time >= game->gun->frame_delay)
+    {
+        
+        game->gun->frame += 1;
+        
+        if ( game->gun->frame  > 3)
+        {
+           
+             game->gun->frame  = 0;
+            game->gun->animating = 0;
+        }
+        
+    
+        game->gun->last_time = current_time;
+    }
+}
+
 
 int	india(t_game *game)
 {

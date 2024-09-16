@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/16 15:49:30 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/16 16:23:40 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,11 +178,13 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	double	ray_dY;
 	int		ray_hit;
 	int		last_hit;
-	int wall_color;
-	double	perp_length;  // Corrected length for fisheye effect
+	double	perp_length;
 	
 	fov = 1;
 	i = 0;
+	int wall = 0;
+	(void)bpp;
+	(void)size_line;
 	ray = game->player.dirangle + fov / 2;
 	offset = (fov) / WINX;
 	while (i < WINX)
@@ -249,6 +251,9 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 		end_x = i ;
 		start_y = (WINY/2)-(line_h/2) ;
 		end_y = (WINY/2)+(line_h/2) ;
+		double ratio;
+		ratio = WINY/line_h;
+		double pos_texture;
 		if (end_y >= WINY)
 		{
 			end_y = WINY - 1;
@@ -258,25 +263,56 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 				
 		if (last_hit == 1) {  
 			if (stepY == -1)
-				wall_color = 0xFFFFFF;  // Mur Ouest (vert)
+			{
+				wall = 0;  // Mur Ouest (vert)
+				pos_texture = fabs((fabs(game->player.posY - (double)((int)game->player.posY))) + (perp_length/ray_dY));
+			}
 			else
-				wall_color = 0xF0F0F0;  // Mur Est (jaune)
+			{
+				pos_texture = fabs((fabs(game->player.posY - (double)((int)game->player.posY))) - (perp_length/ray_dY));
+				wall = 1;  // Mur Est (jaune)
+			}
 		} else {  
 			if (stepX == -1)
-				wall_color = 0xFFFFF0;  
+			{
+				wall = 2;  
+				pos_texture = fabs((fabs(game->player.posX - (double)((int)game->player.posX)))  - (perp_length/ray_dX));
+
+			}
 			else
-				wall_color = 0xF8F8FF;  
+			{
+				pos_texture = fabs((fabs(game->player.posX - (double)((int)game->player.posX))) + (perp_length/ray_dY));
+				wall = 3;  
+			}
 		}
 		// Dessiner le rayon
-		draw_ray_in_data(game, data, size_line, bpp, i, 0, i,(int) start_y, 0x000000);
-		draw_ray_in_data(game, data, size_line, bpp, i, (int)start_y, i, (int)end_y, wall_color);
-		draw_ray_in_data(game, data, size_line, bpp, i, (int)end_y, i, WINY, 0x000000);
-
+		int y = WINY-1;
+		pos_texture = floor(fabs(pos_texture));
+		pos_texture *= 64;
+		double y_wall = 0;
+		if (pos_texture > 63)
+		{
+			printf("t as mal clcule\n");
+			pos_texture = 63.0;
+		}
+		while(y >= 0)
+		{
+			while (y > end_y)
+				*(int *)(data + i + y--*WINX) = SKY;
+			while(y >= start_y)
+			{
+				*(int *)(data + i + y--*WINX) = *(int*) (game->gun[wall].data +(int)pos_texture + (int)y_wall); 
+				y_wall += ratio;
+			}
+			while (y >= 0)
+				*(int *)(data + i + y--*WINX) = FLOOR; 
+		}
 		// Passer au prochain rayon
 		i++;
 		ray -= offset;
 	}
 }
+
 
 void	draw_rectangle(char *data, int size_line, int bpp, int x, int y,
 		int width, int height, int color, int win_width, int win_height)

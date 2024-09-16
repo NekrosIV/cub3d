@@ -9,6 +9,7 @@ FILES := cub3d.c \
 		parsing/parsing.c \
 		error/exit.c \
 		init_mlx/init_mlx.c \
+		player/player_move.c \
 		utils.c 
 
 SRCS_DIR := ./src

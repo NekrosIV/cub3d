@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/14 20:06:59 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/16 12:48:16 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,8 +357,8 @@ void	pre_pars_map(t_game *game)
 			if (game->player_dir == '0' && check_play_pos(game->map[y][x]))
 			{
 				game->player_dir = game->map[y][x];
-				game->pos_y = y;
-				game->pos_x = x;
+				game->player.posY = y;
+				game->player.posX = x;
 			}
 			else if (game->player_dir != '0' && check_play_pos(game->map[y][x]))
 				free_exit(game, 0, NULL, E_MULTIPOS);
@@ -414,7 +414,7 @@ void	pre_flood_fill(t_game *game)
 	int	x;
 
 	y = 0;
-	flood_fill(game, game->cpy_map, game->pos_x, game->pos_y);
+	flood_fill(game, game->cpy_map, game->player.posX, game->player.posY);
 	while (game->cpy_map[y])
 	{
 		x = 0;
@@ -502,6 +502,6 @@ t_game	*parsing(char *file)
 	game = init_game();
 	read_file(file, game);
 	print_struct(game);
-	game->map[(int)game->pos_y][(int)game->pos_x] = '0';
+	game->map[(int)game->player.posY][(int)game->player.posX] = '0';
 	return (game);
 }

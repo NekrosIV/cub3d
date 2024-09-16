@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/15 19:49:28 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/16 15:49:30 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,25 @@
 
 void	mini_draw_map(t_game *game, int bpp, int size_line, char *data);
 void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data);
+
+t_player init_player_struct()
+{
+	t_player player;
+
+	player.posX = -1.0;
+	player.posY = -1.0;
+
+	player.dirangle = -1.0;
+	player.playerdirX = -1.0;
+	player.playerdirY = -1.0;
+	player.up = false;
+	player.down = false;
+	player.right = false;
+	player.left = false;
+	player.side_r = false;
+	player.side_l = false;
+	return(player);
+}
 
 t_game	*init_game(void)
 {
@@ -32,8 +51,6 @@ t_game	*init_game(void)
 	game->floor[0] = -1;
 	game->floor[1] = -1;
 	game->floor[2] = -1;
-	game->pos_x = -1;
-	game->pos_y = -1;
 	game->map_max_x = -1;
 	game->map_max_y = -1;
 	game->map_pos = -1;
@@ -44,12 +61,7 @@ t_game	*init_game(void)
 	game->player_dir = '0';
 	game->cpy_map = NULL;
 	game->mlx = NULL;
-	game->left = false;
-	game->right = false;
-	game->up = false;
-	game->down = false;
-	game->side_l = false;
-	game->side_r = false;
+	game->player = init_player_struct();
 	return (game);
 }
 
@@ -104,15 +116,15 @@ void	draw_ray_in_data(t_game *game, char *data, int size_line, int bpp,
 int	init_player(t_game *game)
 {
 	if (game->player_dir == 'N')
-		game->dirangle = NO;
+		game->player.dirangle = NO;
 	if (game->player_dir == 'S')
-		game->dirangle = SO;
+		game->player.dirangle = SO;
 	if (game->player_dir == 'E')
-		game->dirangle = EA;
+		game->player.dirangle = EA;
 	if (game->player_dir == 'W')
-		game->dirangle = WE;
-	game->playerdirX = cos(game->dirangle);
-	game->playerdirY = sin(game->dirangle);
+		game->player.dirangle = WE;
+	game->playerdirX = cos(game->player.dirangle);
+	game->playerdirY = sin(game->player.dirangle);
 	return (0);
 }
 void draw_filled_circle(t_game *game, char *data, int size_line, int bpp, int start_x, int start_y, int radius, int color) 
@@ -171,7 +183,7 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	
 	fov = 1;
 	i = 0;
-	ray = game->dirangle + fov / 2;
+	ray = game->player.dirangle + fov / 2;
 	offset = (fov) / WINX;
 	while (i < WINX)
 	{
@@ -185,27 +197,27 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 			deltaX = 1e30;
 		else
 			deltaX = 1.0 / fabs(ray_dX);
-		raymapX = (int)game->pos_x;
-		raymapY = (int)game->pos_y;
+		raymapX = (int)game->player.posX;
+		raymapY = (int)game->player.posY;
 		if (cos(ray) > 0.0)
 		{
 			stepX = 1;
-			sidedistX = ((double)(raymapX + 1) - game->pos_x) * deltaX;
+			sidedistX = ((double)(raymapX + 1) - game->player.posX) * deltaX;
 		}
 		else
 		{
 			stepX = -1;
-			sidedistX = (game->pos_x - (double)raymapX) * deltaX;
+			sidedistX = (game->player.posX - (double)raymapX) * deltaX;
 		}
 		if (sin(ray) > 0.0)
 		{
 			stepY = -1;
-			sidedistY = (game->pos_y - (double)raymapY) * deltaY;
+			sidedistY = (game->player.posY - (double)raymapY) * deltaY;
 		}
 		else
 		{
 			stepY = 1;
-			sidedistY = ((double)(raymapY + 1) - game->pos_y) * deltaY;
+			sidedistY = ((double)(raymapY + 1) - game->player.posY) * deltaY;
 		}
 		ray_hit = 0;
 		while (ray_hit == 0)
@@ -230,7 +242,7 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 		else
 			length = (sidedistX - deltaX);
 		// *** Correction du fisheye ***
-		perp_length = fabs(length * cos(ray - game->dirangle)); // Correction de la distance
+		perp_length = fabs(length * cos(ray - game->player.dirangle)); // Correction de la distance
 
 		// Calcul de la hauteur de la ligne à dessiner en fonction de la distance perpendiculaire
 		double line_h = WINY / perp_length;
@@ -297,180 +309,40 @@ void	draw_rectangle(char *data, int size_line, int bpp, int x, int y,
 	}
 }
 
-void	movements(t_game *game, double angleshift)
-{
-	double	new_x;
-	double	new_y;
-	double	new_dir;
-	int stepx;
-	int stepy;
-	int flag;
-
-	new_dir = game->dirangle + angleshift;
-	double safetyx = 0.1;
-	double safetyy = 0.1;
-	if (cos(new_dir)<0)
-		safetyx = -0.1;
-	if (sin(new_dir)>0)
-		safetyy = -0.1;
-	new_x = game->pos_x + (cos(new_dir) * SPEED_M ) + safetyx;
-	new_y = game->pos_y - (sin(new_dir) * SPEED_M )+ safetyy;
-	stepx = (int)game->pos_x - (int)new_x;
-	stepy = (int)game->pos_y - (int)new_y;
-	flag = 1;
-	printf("new_x = %f,  new_y = %f\n", new_x, new_y);
-	if (stepx && stepy)
-	{
-		if (game->map[(int)game->pos_y][(int)new_x] != '0')
-		{
-			flag = 0;
-		}
-		if(game->map[(int)new_y][(int)game->pos_x] !='0')
-			flag = 0;
-	}
-	if (game->map[(int)new_y][(int)new_x] == '0' && flag)
-	{
-		game->pos_x =new_x-safetyx;
-		game->pos_y = new_y-safetyy;
-	}
-	else
-	{
-		if (game->map[(int)game->pos_y][(int)new_x] == '0')
-		{
-			game->pos_x = new_x-safetyx;
-			if (sin(new_dir) > 0)
-				game->pos_y = (double)((int)game->pos_y) + 0.01;
-			else
-				game->pos_y = (double)((int)game->pos_y + 1) - 0.01;
-		}
-		else if (game->map[(int)new_y][(int)game->pos_x] == '0')
-		{
-			game->pos_y = new_y;
-			if (cos(new_dir) > 0)
-				game->pos_x = (double)((int)game->pos_x + 1) - 0.01;
-			else
-				game->pos_x = (double)((int)game->pos_x) + 0.01;
-		}
-		else
-		{
-			if (cos(new_dir) > 0)
-				game->pos_x = (double)((int)game->pos_x + 1) - 0.01;
-			else
-				game->pos_x = (double)((int)game->pos_x) + 0.01;
-			if (sin(new_dir) > 0)
-				game->pos_y = (double)((int)game->pos_y) + 0.01;
-			else
-				game->pos_y = (double)((int)game->pos_y + 1) - 0.01;
-		}
-	}
-}
-
-void direction(t_game *game, char side)
-{
-	if (side == 'd')
-	{
-		game->dirangle -= SPEED_C; // Tourner vers la droite
-		if (game->dirangle < 0)
-			game->dirangle += 2 * PI;
-		game->playerdirX = cos(game->dirangle);
-		game->playerdirY = sin(game->dirangle);
-	}
-	else 
-	{
-		game->dirangle += SPEED_C; // Tourner vers la gauche
-		// game->dirangle = fmod(game->dirangle, 2 * PI);
-		if (game->dirangle > 2 * PI)
-			game->dirangle = game->dirangle - (2 * PI);
-		game->playerdirX = cos(game->dirangle);
-		game->playerdirY = sin(game->dirangle);
-	}
-}
-
-void	check_moves(t_game *game)
-{
-	if (game->up == true)
-		movements(game, 0);
-	if (game->down == true)
-		movements(game, PI);
-	if (game->right == true)
-		movements(game, -NO);
-	if (game->left == true)
-		movements(game, NO);
-	if (game->side_l == true)
-		direction(game, 'a');
-	if (game->side_r == true)
-		direction(game, 'd');
-}
 
 int	key_hook(int keycode, t_game *game)
 {
 	if (keycode == XK_Escape)
 		free_exit(game, 0, NULL, "EOG");
 	else if (keycode == XK_Up)
-	{
-		// movements(game, 0);
-		game->up = true;
-	}
+		game->player.up = true;
 	else if (keycode == XK_Down)
-	{	
-		// movements(game, PI);
-		game->down = true;
-	}
+		game->player.down = true;
 	else if (keycode == XK_Right)
-	{	
-		// movements(game, -NO);
-		game->right = true;
-	}
+		game->player.right = true;
 	else if (keycode == XK_Left)
-	{	
-		// movements(game, NO);
-		game->left = true;
-	}
+		game->player.left = true;
 	else if (keycode == XK_a)
-	{	
-		// direction(game, 'a');
-		game->side_l = true;
-	}
+		game->player.side_l = true;
 	else if (keycode == XK_d)
-	{	
-		// direction(game, 'd');
-		game->side_r = true;
-	}
+		game->player.side_r = true;
 	return (0);
 }
 
 int	key_release(int keycode, t_game *game)
 {
 	if (keycode == XK_Up)
-	{
-		// movements(game, 0);
-		game->up = false;
-	}
+		game->player.up = false;
 	else if (keycode == XK_Down)
-	{	
-		// movements(game, PI);
-		game->down = false;
-	}
+		game->player.down = false;
 	else if (keycode == XK_Right)
-	{	
-		// movements(game, -NO);
-		game->right = false;
-	}
+		game->player.right = false;
 	else if (keycode == XK_Left)
-	{	
-		// movements(game, NO);
-		game->left = false;
-	}
+		game->player.left = false;
 	else if (keycode == XK_a)
-	{	
-		// direction(game, 'a');
-		game->side_l = false;
-	}
+		game->player.side_l = false;
 	else if (keycode == XK_d)
-	{	
-		// direction(game, 'd');
-		game->side_r = false;
-	}
+		game->player.side_r = false;
 	return (0);
 }
 
@@ -503,15 +375,15 @@ void	draw_gun(t_game *game, char *data, int bpp)
 	double			x_img;
 	double			y_img;
 
-	gun = &game->gun;
+	gun = &game->gun[0];
 	int ignore = *((int *)gun->data);
 	x_img = 0;
 	y_img = 0;
 	(void)bpp;
 	resetx = WINX/4;
-	y = WINY - WINY/4;
+	y = WINY - WINY/2;
 	double ratiox =  (2*gun->w)/(double)WINX;
-	double ratioy = (gun->h)/(double)(WINY/4.0);
+	double ratioy = (gun->h)/(double)(WINY/2.0);
 	x = resetx;
 	// printf("%d %d %d %d\n",x,y,x_img,y_img);
 	while (y < WINY)
@@ -529,39 +401,6 @@ void	draw_gun(t_game *game, char *data, int bpp)
 		y++;
 	}
 }
-
-// void draw_gun(t_game *game, char *data, int bpp)
-// {
-//     t_texture   *gun;
-//     int         x;
-//     int         y;
-//     int         resetx;
-//     int         x_img;
-//     int         y_img;
-
-//     gun = &game->gun;
-//     (void)bpp;
-//     resetx = (WINX / 2) - (gun->w / 2); // Center the gun horizontally
-//     y = WINY - gun->h;                  // Draw the gun at the bottom of the window
-//     y_img = 0;                          // Start at the top of the texture
-
-//     // Ensure we don't go out of bounds on the screen
-//     while (y < WINY && y_img < gun->h)
-//     {
-//         x = resetx;
-//         x_img = 0;
-//         while (x < (resetx + gun->w) && x_img < gun->w)
-//         {
-//             // Draw pixel from gun texture to screen buffer
-//             *((int *)data + x + y * WINX) = *((int *)gun->data + x_img + y_img * gun->w);
-//             x++;
-//             x_img++;
-//         }
-//         y++;
-//         y_img++;
-//     }
-// }
-
 
 int	india(t_game *game)
 {
@@ -622,8 +461,8 @@ void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	float tile_height = TILE_SIZE;
 
 	// Début des coordonnées du joueur dans la mini-map (float)
-	float player_x = game->pos_x;
-	float player_y = game->pos_y;
+	float player_x = game->player.posX;
+	float player_y = game->player.posY;
 
 	// Calcul des offsets (flottants)
 	float offset_x = 0.0f;
@@ -660,7 +499,7 @@ void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	// Champ de vision (fov)
 	fov = 0.660;
 	i = 0;
-	ray = game->dirangle - fov / 2.0;
+	ray = game->player.dirangle - fov / 2.0;
 	offset = (fov) / nb_ray;
 
 	// Boucle de tir des rayons
@@ -673,8 +512,8 @@ void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
 		deltaX = (ray_dX == 0) ? 1e30 : 1.0 / fabs(ray_dX);
 		deltaY = (ray_dY == 0) ? 1e30 : 1.0 / fabs(ray_dY);
 
-		raymapX = (int)game->pos_x;
-		raymapY = (int)game->pos_y;
+		raymapX = (int)game->player.posX;
+		raymapY = (int)game->player.posY;
 
 		// Vérification des limites de la carte
 		if (raymapX < 0 || raymapX >= game->map_max_x || raymapY < 0 || raymapY >= game->map_max_y)
@@ -686,17 +525,17 @@ void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
 		// Détermination de l'étape et des distances sur les axes X et Y
 		if (ray_dX > 0.0) {
 			stepX = 1;
-			sidedistX = ((double)(raymapX + 1) - game->pos_x) * deltaX;
+			sidedistX = ((double)(raymapX + 1) - game->player.posX) * deltaX;
 		} else {
 			stepX = -1;
-			sidedistX = (game->pos_x - (double)raymapX) * deltaX;
+			sidedistX = (game->player.posX - (double)raymapX) * deltaX;
 		}
 		if (ray_dY > 0.0) {
 			stepY = -1;
-			sidedistY = (game->pos_y - (double)raymapY) * deltaY;
+			sidedistY = (game->player.posY - (double)raymapY) * deltaY;
 		} else {
 			stepY = 1;
-			sidedistY = ((double)(raymapY + 1) - game->pos_y) * deltaY;
+			sidedistY = ((double)(raymapY + 1) - game->player.posY) * deltaY;
 		}
 
 		// Détection des collisions du rayon avec les murs
@@ -740,7 +579,7 @@ void	mini_draw_arrow(t_game *game, int bpp, int size_line, char *data)
 		end_y = start_y + (int)(length * -sin(ray));
 
 		// Dessiner le rayon
-		if (fabs(ray - game->dirangle) < 0.01)
+		if (fabs(ray - game->player.dirangle) < 0.01)
 			draw_ray_in_data(game, data, size_line, bpp, (int)start_x, (int)start_y, (int)end_x, (int)end_y, 0xFF0000);
 		else if (i % 1 == 0)
 			draw_ray_in_data(game, data, size_line, bpp, (int)start_x, (int)start_y, (int)end_x, (int)end_y, 0x000000);
@@ -764,8 +603,8 @@ void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)
 	int line_size;
 
 	// Position du joueur en cases (float)
-	float player_x = game->pos_x;
-	float player_y = game->pos_y;
+	float player_x = game->player.posX;
+	float player_y = game->player.posY;
 
 	// Taille de la carte en pixels (float)
 	float map_pixel_width = game->map_max_x * tile_width;
@@ -845,8 +684,7 @@ void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)
 	}
 
 	// Dessiner la flèche du joueur au centre de l'écran
-	mini_draw_arrow(game, bpp, size_line, data);
-	
+	mini_draw_arrow(game, bpp, size_line, data);	
 }
 
 

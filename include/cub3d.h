@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/15 19:10:28 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/16 15:24:04 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,9 @@
 # define EA 0
 # define SPEED_M 0.2
 # define SPEED_C 0.06
+# define WALL_TEXT_CARRE 64
+# define FLOOR 0xFF8B4513
+# define SKY 0xFF87CEEB
 
 typedef struct s_mlx
 {
@@ -97,7 +100,7 @@ typedef struct s_ray
 	double		posY;
 	int			mapX;
 	int			mapY;
-	double		orientation;
+	double		dirangle;
 	double		dirX;
 	double		diry;
 	double		dist;
@@ -113,25 +116,29 @@ typedef struct s_player
 {
 	double		posX;
 	double		posY;
-	int			mapX;
-	int			mapY;
-	double		orientation;
-	double		dirX;
-	double		diry;
-	double		up;
-	double		down;
-	double		right;
-	double		left;
-	double		side_r;
-	double		side_l;
+	double		dirangle;
+	double		playerdirX;
+	double		playerdirY;
+	double		new_x;
+	double		new_y;
+	double		new_dir;
+	int			stepx;
+	int			stepy;
+	int			flag;
+	double		safetyx;
+	double		safetyy;
+	bool		up;
+	bool		down;
+	bool		right;
+	bool		left;
+	bool		side_r;
+	bool		side_l;
 }				t_player;
 
 typedef struct s_game
 {
 	char		**map;
 	char		**cpy_map;
-	double		pos_x;
-	double		pos_y;
 	int			map_max_x;
 	int			map_max_y;
 	int			map_pos;
@@ -145,17 +152,12 @@ typedef struct s_game
 	int			floor[3];
 	int			fd;
 	char		player_dir;
-	double		dirangle;
 	double		playerdirX;
 	double		playerdirY;
-	double		up;
-	double		down;
-	double		right;
-	double		left;
-	double		side_r;
-	double		side_l;
 	t_mlx		*mlx;
-	t_texture	gun;
+	t_texture	gun[4];
+	t_texture	wall[4];
+	t_player	player;
 }				t_game;
 
 t_game			*parsing(char *file);
@@ -174,5 +176,9 @@ int				key_hook(int keycode, t_game *game);
 void			draw_rectangle(char *data, int size_line, int bpp, int x, int y,
 					int width, int height, int color, int win_width,
 					int win_height);
-void	draw_gun(t_game *game, char *data, int bpp);
+void			draw_gun(t_game *game, char *data, int bpp);
+void			movements(t_game *game, double angle_shift);
+void			direction(t_game *game, char side);
+void			check_moves(t_game *game);
+
 #endif

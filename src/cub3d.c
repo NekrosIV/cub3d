@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/16 16:23:40 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/16 18:28:44 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ void draw_filled_circle(t_game *game, char *data, int size_line, int bpp, int st
 void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 {
 	// int		start_x;
-	int		start_y;
+	double		start_y;
 	double	length;
 	double	end_x;
 	double	end_y;
@@ -179,6 +179,10 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	int		ray_hit;
 	int		last_hit;
 	double	perp_length;
+	int y;
+	double y_wall;
+	double line_h;
+	double ratio;
 	
 	fov = 1;
 	i = 0;
@@ -247,14 +251,13 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 		perp_length = fabs(length * cos(ray - game->player.dirangle)); // Correction de la distance
 
 		// Calcul de la hauteur de la ligne à dessiner en fonction de la distance perpendiculaire
-		double line_h = WINY / perp_length;
-		end_x = i ;
-		start_y = (WINY/2)-(line_h/2) ;
-		end_y = (WINY/2)+(line_h/2) ;
-		double ratio;
-		ratio = WINY/line_h;
+		line_h = WINY / perp_length;
+		start_y = (WINY/2.0)-(line_h/2.0) ;
+		end_y = (WINY/2.0)+(line_h/2.0) ;
+		ratio = 64.0 / line_h;
+		(void)end_x;
 		double pos_texture;
-		if (end_y >= WINY)
+		if (end_y > WINY-1)
 		{
 			end_y = WINY - 1;
 			start_y = 0;
@@ -262,52 +265,58 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 
 				
 		if (last_hit == 1) {  
-			if (stepY == -1)
+			if (ray_dX > 0)
 			{
-				wall = 0;  // Mur Ouest (vert)
-				pos_texture = fabs((fabs(game->player.posY - (double)((int)game->player.posY))) + (perp_length/ray_dY));
+				wall = 0;  
+				pos_texture = (game->player.posX) + (perp_length*ray_dX);
 			}
 			else
 			{
-				pos_texture = fabs((fabs(game->player.posY - (double)((int)game->player.posY))) - (perp_length/ray_dY));
-				wall = 1;  // Mur Est (jaune)
+				pos_texture = (game->player.posX) + (perp_length*ray_dX);
+				wall = 1; 
 			}
+			pos_texture -= floor(pos_texture);
+
 		} else {  
-			if (stepX == -1)
+			if (ray_dY >0)
 			{
 				wall = 2;  
-				pos_texture = fabs((fabs(game->player.posX - (double)((int)game->player.posX)))  - (perp_length/ray_dX));
+				pos_texture = (game->player.posY) + (perp_length*ray_dY);
 
 			}
 			else
 			{
-				pos_texture = fabs((fabs(game->player.posX - (double)((int)game->player.posX))) + (perp_length/ray_dY));
+				pos_texture = (game->player.posY) + (perp_length*ray_dY);
 				wall = 3;  
 			}
+			pos_texture -= floor(pos_texture);
 		}
+		if (last_hit == 0 && ray_dY < 0)
+			pos_texture = 1.0 - pos_texture;
+		if (last_hit == 1 && ray_dX > 0)
+			pos_texture = 1.0 - pos_texture;		
 		// Dessiner le rayon
-		int y = WINY-1;
-		pos_texture = floor(fabs(pos_texture));
-		pos_texture *= 64;
-		double y_wall = 0;
-		if (pos_texture > 63)
-		{
-			printf("t as mal clcule\n");
+		y = WINY-1;
+		pos_texture *= 64.0;
+		y_wall = 0.0;
+		if (pos_texture > 63.0)
 			pos_texture = 63.0;
-		}
-		while(y >= 0)
+		while (y > (int)end_y)
 		{
-			while (y > end_y)
-				*(int *)(data + i + y--*WINX) = SKY;
-			while(y >= start_y)
-			{
-				*(int *)(data + i + y--*WINX) = *(int*) (game->gun[wall].data +(int)pos_texture + (int)y_wall); 
-				y_wall += ratio;
-			}
-			while (y >= 0)
-				*(int *)(data + i + y--*WINX) = FLOOR; 
+			*((int *)data + i + y*WINX) = FLOOR;
+			y--;
 		}
-		// Passer au prochain rayon
+		while(y >= (int)start_y)
+		{
+			*((int *)data + i + y*WINX) = *((int*)game->wall[wall].data +(int)pos_texture + (int)y_wall*64); 
+			y_wall += ratio;
+			y--;
+		}
+		while (y >= 0)
+		{
+			*((int *)data + i + y*WINX) = SKY;
+			y--;
+		}
 		i++;
 		ray -= offset;
 	}
@@ -362,6 +371,13 @@ int	key_hook(int keycode, t_game *game)
 		game->player.side_l = true;
 	else if (keycode == XK_d)
 		game->player.side_r = true;
+	if (keycode == XK_p)
+		{
+			game->gun->frame +=1;
+			if (game->gun->frame > 3)
+				game->gun->frame = 0;
+		}
+		
 	return (0);
 }
 
@@ -411,7 +427,7 @@ void	draw_gun(t_game *game, char *data, int bpp)
 	double			x_img;
 	double			y_img;
 
-	gun = &game->gun[0];
+	gun = &game->gun[game->gun->frame];
 	int ignore = *((int *)gun->data);
 	x_img = 0;
 	y_img = 0;

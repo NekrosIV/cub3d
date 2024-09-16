@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/16 15:26:35 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/16 16:35:46 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	init_mlx(t_game *game)
 			"textures/greystone.xpm", &game->wall[3].w, &game->wall[3].h);
 	game->wall[3].data = mlx_get_data_addr(game->wall[3].img, &game->wall[3].bpp,
 			&fakex, &fakey);
+	game->gun->frame = 0;
 	// mlx_hook(game->mlx->mlx_ptr, 02, (1L << 0), key_hook, game);
 	// mlx_loop(game->mlx->mlx_ptr);
 }

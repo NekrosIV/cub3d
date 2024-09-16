@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/16 15:24:04 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/16 17:26:25 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@
 # define SPEED_M 0.2
 # define SPEED_C 0.06
 # define WALL_TEXT_CARRE 64
-# define FLOOR 0xFF8B4513
-# define SKY 0xFF87CEEB
+#define FLOOR 0x8B4513
+#define SKY 0x87CEEB
 
 typedef struct s_mlx
 {
@@ -92,6 +92,7 @@ typedef struct s_textures
 	int			w;
 	int			bpp;
 	char		*data;
+	int frame;
 }				t_texture;
 
 typedef struct s_ray

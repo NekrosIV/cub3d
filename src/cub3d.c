@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/16 15:49:30 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/16 16:29:12 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -654,147 +654,23 @@ void	mini_draw_map(t_game *game, int bpp, int size_line, char *data)
 		}
 	}
 
-	// Parcourir toutes les cases de la carte
 	for (map_y = 0; map_y < game->map_max_y; map_y++)
 	{
 		line_size = (int)ft_strlen(game->map[map_y]);
 		for (map_x = 0; map_x < line_size; map_x++)
 		{
-			// Calculer où dessiner la case sur l'écran (en flottant)
 			screen_x = map_x * tile_width + offset_x;
 			screen_y = map_y * tile_height + offset_y;
-			// draw_rectangle(data, size_line, bpp, (int)screen_x, (int)screen_y, (int)tile_width,
-			// 	(int)tile_height, 0x0000FF,WINX,WINY);
-			// Ne dessiner que si une partie de la case est visible à l'écran (même partiellement)
 			if (screen_x + tile_width > 0 && screen_x < MIN_DIM && 
 			    screen_y + tile_height > 0 && screen_y < MIN_DIM)
 			{
-				// draw_rectangle(data, size_line, bpp, (int)screen_x, (int)screen_y, (int)tile_width,
-				// (int)tile_height, 0x0000FF,WINX,WINY);
-				// Déterminer la couleur en fonction du contenu de la carte
-				if (game->map[map_y][map_x] == '1')  // Mur
-					color = 0x000000;  // Bleu pour les murs
+				if (game->map[map_y][map_x] == '1')  
+					color = 0x000000;
 				else
-					color = 0xFFFFFF;  // Noir pour les espaces vides
-
-				// Dessiner la case avec les coordonnées en flottant
+					color = 0xFFFFFF;
 				draw_rectangle(data, size_line, bpp, (int)screen_x, (int)screen_y, (int)tile_width, (int)tile_height, color, MIN_DIM,MIN_DIM);
 			}
 		}
 	}
-
-	// Dessiner la flèche du joueur au centre de l'écran
 	mini_draw_arrow(game, bpp, size_line, data);	
 }
-
-
-// void	draw_rectangle_with_lines(char *data, int size_line, int bpp, int x,
-// 		int y, int width, int height, int color)
-// {
-// 	int	i;
-// 	int	j;
-// 	int	pixel_index;
-
-// 	// Parcours chaque pixel du rectangle
-// 	for (i = 1; i < width; i++)
-// 	{
-// 		for (j = 1; j < height; j++)
-// 		{
-// 			// Calcul de l'index du pixel dans le buffer de l'image
-// 			pixel_index = (y + j) * size_line + (x + i) * (bpp / 8);
-// 			// Écriture des valeurs de couleur (R, G, B) dans les données
-// 			data[pixel_index] = (color >> 16) & 0xFF;    // Rouge
-// 			data[pixel_index + 1] = (color >> 8) & 0xFF; // Vert
-// 			data[pixel_index + 2] = color & 0xFF;        // Bleu
-// 		}
-// 	}
-// }
-
-// void	draw_map(t_game *game, int bpp, int size_line, char *data)
-// {
-// 	int	tile_width;
-// 	int	tile_height;
-// 	int	map_x;
-// 	int	map_y;
-// 	int	screen_x;
-// 	int	screen_y;
-// 	int	color;
-
-// 	map_y = 0;
-// 	tile_width = WINX / game->map_max_x;
-// 	tile_height = WINY / game->map_max_y;
-// 	while (map_y < game->map_max_y)
-// 	{
-// 		map_x = 0;
-// 		while (game->map[map_y][map_x] && map_x < game->map_max_x)
-// 		{
-// 			screen_x = map_x * tile_width;
-// 			screen_y = map_y * tile_height;
-// 			if (game->map[map_y][map_x] == '1')
-// 				color = 0xFF0000;
-// 			else
-// 				color = 0x000000;
-// 			draw_rectangle(data, size_line, bpp, screen_x, screen_y, tile_width,
-// 				tile_height, color,WINX,WINY);
-// 			map_x++;
-// 		}
-// 		map_y++;
-// 	}
-// 	draw_arrow(game, bpp, size_line, data);
-// }
-
-
-// int	key_hook(int keycode, t_game *game)
-// {
-// 	if (keycode == XK_Escape)
-// 		free_exit(game, 0, NULL, "End of the game");
-// 	// else if (keycode == XK_Up)
-// 	// 	key_up(game);
-// 	// else if (keycode == XK_Down)
-// 	// 	key_down(game);
-// 	// else if (keycode == XK_Left)
-// 	// 	key_left(game);
-// 	// else if (keycode == XK_Right)
-// 	// 	key_right(game);
-// 	return (0);
-// }
-// int	loop_hook(t_game *game)
-// {
-// 	(void)game;
-// 	// printf("yo\n");
-// 	return (0);
-// }
-
-// void	draw_line(void *mlx_ptr, void *win_ptr, int x0, int y0, int x1, int y1,
-// 		int color)
-// {
-// 	int	dx;
-// 	int	sx;
-// 	int	dy;
-// 	int	sy;
-// 	int	err;
-// 	int	e2;
-
-// 	dx = abs(x1 - x0);
-// 	sx = x0 < x1 ? 1 : -1;
-// 	dy = -abs(y1 - y0);
-// 	sy = y0 < y1 ? 1 : -1;
-// 	err = dx + dy;
-// 	while (1)
-// 	{
-// 		mlx_pixel_put(mlx_ptr, win_ptr, x0, y0, color);
-// 		if (x0 == x1 && y0 == y1)
-// 			break ;
-// 		e2 = 2 * err;
-// 		if (e2 >= dy)
-// 		{
-// 			err += dy;
-// 			x0 += sx;
-// 		}
-// 		if (e2 <= dx)
-// 		{
-// 			err += dx;
-// 			y0 += sy;
-// 		}
-// 	}
-// }

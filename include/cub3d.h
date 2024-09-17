@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/16 19:14:34 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/17 02:37:18 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,11 @@
 # define TILE_SIZE 21
 # define BIG_TILE_SIZE 50
 # define EA 0
-# define SPEED_M 0.2
-# define SPEED_C 0.06
+# define SPEED_M 0.1
+# define SPEED_C 0.04
 # define WALL_TEXT_CARRE 64
-# define FLOOR 0x8B4513
-# define SKY 0x87CEEB
+# define FLOOR 0x000000
+# define SKY 0x000000
 
 typedef struct s_mlx
 {

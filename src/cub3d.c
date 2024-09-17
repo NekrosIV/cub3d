@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/16 19:12:38 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/17 03:14:07 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,7 +249,8 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 			length = (sidedistX - deltaX);
 		// *** Correction du fisheye ***
 		perp_length = fabs(length * cos(ray - game->player.dirangle)); // Correction de la distance
-
+		if (perp_length < 0.1)
+    		perp_length = 0.1;
 		// Calcul de la hauteur de la ligne à dessiner en fonction de la distance perpendiculaire
 		line_h = WINY / perp_length;
 		start_y = (WINY/2.0)-(line_h/2.0) ;
@@ -262,42 +263,35 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 			end_y = WINY - 1;
 			start_y = 0;
 		}
-
-				
-		if (last_hit == 1) {  
+		if (last_hit == 1)
+		{  
 			if (stepY == -1)
-			{
 				wall = 0;  
-				pos_texture = (game->player.posX) + (perp_length*ray_dX);
-			}
 			else
-			{
-				pos_texture = (game->player.posX) - (perp_length*ray_dX);
 				wall = 1; 
-			}
+			pos_texture = (game->player.posX) + (perp_length*ray_dX);
 			pos_texture -= floor(pos_texture);
-
-		} else {  
+		} 
+		else 
+		{  
 			if (stepX == -1)
-			{
 				wall = 2;  
-				pos_texture = (game->player.posY) + (perp_length*ray_dY);
-
-			}
 			else
-			{
-				pos_texture = (game->player.posY) - (perp_length*ray_dY);
 				wall = 3;  
-			}
+			pos_texture = (game->player.posY) - (perp_length*ray_dY);
 			pos_texture -= floor(pos_texture);
 		}
+		int texX;
+		texX = (int)pos_texture * 64;
 		if (last_hit == 0 && ray_dY < 0)
-			pos_texture = 1.0 - pos_texture;
+			texX = 64 - texX - 1;
 		if (last_hit == 1 && ray_dX > 0)
-			pos_texture = 1.0 - pos_texture;		
+			texX = 64 - texX - 1;		
 		// Dessiner le rayon
+		// pos_texture *= 64.0;
+		double step = 1.0 * 64 / line_h;
+		double texPos = (start_y - WINY / 2 + line_h / 2) * step;
 		y = WINY-1;
-		pos_texture *= 64.0;
 		y_wall = 0.0;
 		if (pos_texture > 63.0)
 			pos_texture = 63.0;
@@ -308,8 +302,11 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 		}
 		while(y >= (int)start_y)
 		{
-			*((int *)data + i + y*WINX) = *((int*)game->wall[wall].data +(int)pos_texture + (int)y_wall*64); 
-			y_wall += ratio;
+			int texY = (int)texPos & 63;
+    		texPos += step;
+			int colo = *((int*)game->wall[wall].data + texX + texY * 64);
+			*((int *)data + i + y*WINX) = colo; 
+			// y_wall += ratio;
 			y--;
 		}
 		while (y >= 0)
@@ -432,17 +429,17 @@ void	draw_gun(t_game *game, char *data, int bpp)
 	x_img = 0;
 	y_img = 0;
 	(void)bpp;
-	resetx = WINX/4;
+	resetx = WINX/2;
 	y = WINY - WINY/2;
-	double ratiox =  (2*gun->w)/(double)WINX;
+	double ratiox =  (gun->w)/(double)WINX * 2;
 	double ratioy = (gun->h)/(double)(WINY/2.0);
 	x = resetx;
 	// printf("%d %d %d %d\n",x,y,x_img,y_img);
 	while (y < WINY)
 	{
-		while (x < 3*WINX/4)
+		while (x < WINX)
 		{
-			if (*((int *)gun->data + (int)x_img + (int)y_img*(gun->w)) != ignore)
+			if (x_img < gun->w && y_img < gun->h && *((int *)gun->data + (int)x_img + (int)y_img*(gun->w)) != ignore)
 				*((int *)data + x + y*WINX) = *((int *)gun->data + (int)x_img + (int)y_img*(gun->w));
 			x_img += ratiox;
 			x++;
@@ -457,7 +454,7 @@ double get_current_time()
 {
     struct timeval time;
     gettimeofday(&time, NULL);
-    return (double)time.tv_sec + (double)time.tv_usec / 1000000.0;
+    return ((double)time.tv_sec + (double)time.tv_usec / 1000000.0);
 }
 void update_gun_animation(t_game *game)
 {

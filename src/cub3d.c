@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/17 14:02:33 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/17 17:11:21 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,7 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 	(void)size_line;
 	ray = game->player.dirangle + fov / 2;
 	offset = (fov) / WINX;
+	game->ennemy.i_count = 0;
 	while (i < WINX)
 	{
 		ray_dX = cos(ray);
@@ -240,6 +241,12 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 				sidedistY += deltaY;
 				last_hit = 1;
 			}
+			if (raymapX == game->ennemy.mapX && raymapY == game->ennemy.mapY)
+			{
+				game->ennemy.pixel = i;
+				game->ennemy.i_count += 1;
+			}
+		
 			if (game->map[raymapY][raymapX] != '0')
 				ray_hit = 1;
 		}
@@ -261,42 +268,30 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 			end_y = WINY - 1;
 			start_y = 0;
 		}
-
-				
+	
 		if (last_hit == 1) {  
 			if (stepY == -1)
-			{
 				wall = 0;  
-				pos_texture = (game->player.posX) + (perp_length*ray_dX);
-			}
 			else
-			{
-				pos_texture = (game->player.posX) + (perp_length*ray_dX);
 				wall = 1; 
-			}
+			pos_texture = (game->player.posX) + (perp_length*ray_dX);
 			pos_texture -= floor(pos_texture);
 
 		} else {  
 			if (stepX == -1)
-			{
 				wall = 2;  
-				pos_texture = (game->player.posY) - (perp_length*ray_dY);
-
-			}
 			else
-			{
-				pos_texture = (game->player.posY) - (perp_length*ray_dY);
 				wall = 3;  
-			}
+			pos_texture = (game->player.posY) - (perp_length*ray_dY);
 			pos_texture -= floor(pos_texture);
-		}
-		// if (last_hit == 0 && ray_dY < 0)
-		// 	pos_texture = 1.0 - pos_texture;
-		// if (last_hit == 1 && ray_dX > 0)
-		// 	pos_texture = 1.0 - pos_texture;		
+		}		
 		// Dessiner le rayon
 		y = 0;
 		pos_texture *= 64.0;
+		if (stepX < 0 && last_hit == 0)
+			pos_texture = 64.0 - pos_texture ;
+		if (last_hit == 1 && stepY >0)
+			pos_texture = 64.0 - pos_texture ;
 		y_wall = 0.0;
 		if(line_h > WINY)
 			y_wall = ratio*(line_h-(double)WINY)/2;
@@ -397,7 +392,126 @@ int	key_release(int keycode, t_game *game)
 		game->player.side_r = false;
 	return (0);
 }
+// void draw_bot(t_game *game, int bpp, int size_line, char *data)
+// {
+//     (void)bpp;
+//     (void)size_line;
 
+//     t_enemy *enemy = &game->ennemy; // Corrected spelling of 'enemy'
+//     if (!enemy->i_count)
+//         return;
+
+//     // Calculate distance to enemy
+//     double deltax = enemy->posX - game->player.posX;
+//     double deltay = enemy->posY - game->player.posY;
+//     double delta = sqrt(deltax * deltax + deltay * deltay);
+
+//     // Calculate sprite dimensions on screen
+//     double sprite_height = WINY / delta;
+//     double sprite_width = sprite_height; // Assuming square sprite; adjust if necessary
+
+//     // Calculate sprite screen position
+//     double start_x = enemy->pixel;
+//     double end_x = start_x + sprite_width;
+//     double start_y = (WINY / 2.0) - (sprite_height / 2.0);
+//     double end_y = (WINY / 2.0) + (sprite_height / 2.0);
+
+//     // Clamp positions to screen bounds
+//     if (start_x < 0) start_x = 0;
+//     if (end_x > WINX) end_x = WINX;
+//     if (start_y < 0) start_y = 0;
+//     if (end_y > WINY) end_y = WINY;
+
+//     // Calculate scaling ratios
+//     double x_ratio = 64.0 / sprite_width;
+//     double y_ratio = 64.0 / sprite_height;
+
+//     int texture_width = 64; // Texture width
+//     int texture_height = 64; // Texture height
+
+//     // Loop variables
+//     int current_pixel = (int)start_x;
+//     int end_pixel = (int)end_x;
+//     double x_enemy = 0.0;
+
+//     while (current_pixel < end_pixel && x_enemy < texture_width)
+//     {
+//         double y_img = 0.0;
+//         int y = (int)start_y;
+
+//         while (y < (int)end_y && y < WINY)
+//         {
+//             int texture_x = (int)x_enemy % texture_width;
+//             int texture_y = (int)y_img % texture_height;
+//             int texture_index = (texture_y * texture_width) + texture_x;
+
+//             // Ensure texture index is within bounds
+//             if (texture_index >= 0 && texture_index < (texture_width * texture_height))
+//             {
+//                 // Set pixel color
+//                 *((int *)data + current_pixel + y * WINX) = *((int *)enemy->texture[0][0].data + texture_index);
+//             }
+
+//             y_img += y_ratio;
+//             y++;
+//         }
+
+//         current_pixel++;
+//         x_enemy += x_ratio;
+//     }
+// }
+
+
+
+// void	draw_bot(t_game *game, int bpp, int size_line, char *data)
+// {
+// 	double deltax;
+// 	double deltay;
+// 	t_enemy *enemy = &game->ennemy;
+// 	int pixel;
+// 	if (!enemy->i_count)
+// 		return ;
+// 	printf("i%d,icount%d\n",enemy->pixel,enemy->i_count);
+// 	(void)bpp;
+// 	(void)size_line;
+// 	pixel = enemy->pixel ;	
+// 	deltax = enemy->posX - game->player.posX;
+// 	deltay = enemy->posY - game->player.posY;
+// 	float delta = sqrt((deltax*deltax) + (deltay*deltay));
+// 	double y_len = WINY/delta;
+// 	double y_img = 0;
+// 	double	ratio = 64.0 / y_len;
+// 	if (y_len > 1.0)
+// 		y_img = ratio*(y_len-(double)WINY)/2;
+// 	double start_y = (WINY/2.0)-(y_len/2.0) ;
+// 	double 	end_y = (WINY/2.0)+(y_len/2.0) ;
+// 	double y_enemy;
+// 	double x_enemy;
+// 	x_enemy = 0;
+// 	double x_ratio = WINX/delta;
+// 	x_ratio = 64/x_ratio;
+// 	if (end_y > WINY)
+// 		end_y = WINY -1;
+// 	if (start_y < 0)
+// 		start_y = 0;
+// 	int y = start_y;
+// 	y_img = 0;
+// 	printf("y:%d,starty:%f,endy:%f\n",y,start_y,end_y);
+// 	while(enemy->pixel < enemy->pixel + enemy->i_count && (x_enemy < 64))
+// 	{
+// 		while(y < end_y && y < WINY-1)
+// 		{
+// 			*((int *)data + enemy->pixel + y++*WINX) = *((int*)enemy->texture[0][0].data +(int)x_enemy*64 +(int)y_img*64); 
+// 			y_img += ratio;
+// 		}
+// 		enemy->pixel++;
+// 		x_enemy+= x_ratio;
+// 		y_enemy = 0;
+// 		y = start_y;
+// 	}
+	
+	
+// }
 int	loop_hook(t_game *game)
 {
 	void	*img_ptr;
@@ -411,6 +525,7 @@ int	loop_hook(t_game *game)
 	check_moves(game);
 	draw_arrow(game, bpp, size_line, data);
 	mini_draw_map(game, bpp, size_line, data);
+	// draw_bot( game,  bpp,  size_line,  data);
 	update_gun_animation(game);
 	draw_gun(game,data,bpp);
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win, img_ptr, 0,

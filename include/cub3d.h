@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/17 09:51:22 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/17 15:22:48 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,11 @@
 # define WALL_TEXT_CARRE 64
 # define FLOOR 0x000000
 # define SKY 0x000000
+#define HALT 0
+#define WALK 1
+#define ATTACK 2
+#define DEATH 3
+#define DAMAGE 4
 
 typedef struct s_mlx
 {
@@ -98,6 +103,19 @@ typedef struct s_textures
 	double		last_time;
 	double		frame_delay;
 }				t_texture;
+
+typedef struct s_enemy
+{
+	int			hp;
+	char		name[10];
+	t_texture	texture[5][4];
+	int pixel;
+	int mapX;
+	int mapY;
+	int i_count;
+	double posX;
+	double posY;
+}				t_enemy;
 
 typedef struct s_ray
 {
@@ -163,6 +181,7 @@ typedef struct s_game
 	t_texture	gun[4];
 	t_texture	wall[4];
 	t_player	player;
+	t_enemy 	ennemy;
 }				t_game;
 
 t_game			*parsing(char *file);

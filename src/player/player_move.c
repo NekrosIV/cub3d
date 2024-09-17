@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 13:03:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/16 13:36:55 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/17 16:39:30 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@
 void	initialize_safety_offsets(t_player *player)
 {
 	if (cos(player->new_dir) < 0)
-		player->safetyx = -0.01;
+		player->safetyx = -0.07;
 	else
-		player->safetyx = 0.01;
+		player->safetyx = 0.07;
 	if (sin(player->new_dir) > 0)
-		player->safetyy = -0.01;
+		player->safetyy = -0.07;
 	else
-		player->safetyy = 0.01;
+		player->safetyy = 0.07;
 }
 
 // Fonction pour calculer la nouvelle position potentielle du joueur
@@ -56,17 +56,17 @@ void	check_diagonal_collision(t_game *game, t_player *player)
 void	adjust_player_posX(t_player *player)
 {
 	if (cos(player->new_dir) > 0)
-		player->posX = (double)((int)player->posX + 1) - 0.01;
+		player->posX = (double)((int)player->posX + 1) - 0.07;
 	else
-		player->posX = (double)((int)player->posX) + 0.01;
+		player->posX = (double)((int)player->posX) + 0.07;
 }
 
 void	adjust_player_posY(t_player *player)
 {
 	if (sin(player->new_dir) > 0)
-		player->posY = (double)((int)player->posY) + 0.01;
+		player->posY = (double)((int)player->posY) + 0.07;
 	else
-		player->posY = (double)((int)player->posY + 1) - 0.01;
+		player->posY = (double)((int)player->posY + 1) - 0.07;
 }
 
 // Fonction pour tenter de déplacer le joueur en fonction de la détection des collisions

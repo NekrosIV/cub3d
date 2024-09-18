@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/17 15:58:02 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/18 15:40:29 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,12 @@ void	init_mlx2(t_mlx *mlx)
 
 void	init_mlx(t_game *game)
 {
-	t_mlx	*mlx;
-	int		fakex;
-	int		fakey;
+	t_mlx		*mlx;
+	t_texture	*texture;
+	int			fakex;
+	int			fakey;
 
+	texture = &game->pic;
 	mlx = malloc(sizeof(t_mlx));
 	if (!mlx)
 		free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC);
@@ -91,9 +93,11 @@ void	init_mlx(t_game *game)
 	game->gun->animating = 0;
 	game->gun->frame_delay = 0.050;
 	game->gun->last_time = get_current_time();
-	game->ennemy.mapX = (int)game->player.posX ;
+	game->ennemy.mapX = (int)game->player.posX;
 	game->ennemy.mapY = (int)game->player.posY - 6;
 	game->ennemy.posX = game->player.posX;
 	game->ennemy.posY = game->player.posY - 5.0;
-	// mlx_loop(game->mlx->mlx_ptr);
+	texture->img = mlx_new_image(game->mlx->mlx_ptr, WINX, WINY);
+	texture->data = mlx_get_data_addr(texture->img, &texture->bpp,
+			&texture->size_line, &texture->endian);
 }

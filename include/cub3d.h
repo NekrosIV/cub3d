@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/17 15:22:48 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/18 17:41:31 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@
 # define WALL_TEXT_CARRE 64
 # define FLOOR 0x000000
 # define SKY 0x000000
-#define HALT 0
-#define WALK 1
+#define HALT 1
+#define WALK 0
 #define ATTACK 2
 #define DEATH 3
 #define DAMAGE 4
@@ -102,6 +102,8 @@ typedef struct s_textures
 	int			animating;
 	double		last_time;
 	double		frame_delay;
+	int			size_line;
+	int			endian;
 }				t_texture;
 
 typedef struct s_enemy
@@ -177,6 +179,7 @@ typedef struct s_game
 	char		player_dir;
 	double		playerdirX;
 	double		playerdirY;
+	t_texture	pic;
 	t_mlx		*mlx;
 	t_texture	gun[4];
 	t_texture	wall[4];

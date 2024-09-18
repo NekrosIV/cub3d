@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:18:57 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/02 15:23:51 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/18 15:20:43 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,12 @@ void	free_taboftab(char **tab)
 	}
 	free(tab);
 }
-void	free_mlx(t_mlx *mlx)
+void	free_mlx(t_game *game, t_mlx *mlx)
 {
 	if (mlx->mlx_ptr)
 	{
+		if (game->pic.img)
+			mlx_destroy_image(mlx->mlx_ptr, game->pic.img);
 		if (mlx->mlx_win)
 			mlx_destroy_window(mlx->mlx_ptr, mlx->mlx_win);
 		mlx_destroy_display(mlx->mlx_ptr);
@@ -53,7 +55,7 @@ void	free_everything(t_game *game)
 	if (game->cpy_map)
 		free_taboftab(game->cpy_map);
 	if (game->mlx)
-		free_mlx(game->mlx);
+		free_mlx(game, game->mlx);
 	free(game);
 }
 

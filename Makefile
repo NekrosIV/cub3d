@@ -1,6 +1,6 @@
 NAME := cub3d
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -g3 -MMD -O3
+CFLAGS :=  -g3 -MMD -O3
 MLX_FLAGS = -Lmlx -lmlx -Imlx -lXext -lX11 -lm 
 LIBFTDIR := ./libft
 MLXDIR := ./mlx

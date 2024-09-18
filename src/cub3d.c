@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/17 17:11:21 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/18 18:41:26 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,45 @@ void draw_filled_circle(t_game *game, char *data, int size_line, int bpp, int st
         }
     }
 }
+void draw_crosshair(t_game *game, char *data, int size_line, int bpp, int color) {
+    int x, y;
+    int pixel_index;
+    int line_thickness = (WINX + WINY) / 800; // L'épaisseur des lignes du crosshair
+    int crosshair_size = (WINX + WINY) / 300; // Taille du crosshair (demi-largeur/hauteur des lignes)
+
+    // Calculer le centre de la fenêtre
+    int center_x = WINX / 2;
+    int center_y = WINY / 2;
+
+	(void)game;
+
+    // Dessiner la ligne horizontale du crosshair
+    for (y = center_y - line_thickness / 2; y < center_y + line_thickness / 2; y++) {
+        for (x = center_x - crosshair_size; x < center_x + crosshair_size; x++) {
+            if (x >= 0 && x < WINX && y >= 0 && y < WINY) {
+                pixel_index = y * size_line + x * (bpp / 8);
+                // Dessiner la ligne en blanc (RGB: 255, 255, 255)
+                data[pixel_index] = color & 0xFF;         // Rouge
+                data[pixel_index + 1] = (color >> 8) & 0xFF; // Vert
+                data[pixel_index + 2] = (color >> 16) & 0xFF; // Bleu
+            }
+        }
+    }
+
+    // Dessiner la ligne verticale du crosshair
+    for (x = center_x - line_thickness / 2; x < center_x + line_thickness / 2; x++) {
+        for (y = center_y - crosshair_size; y < center_y + crosshair_size; y++) {
+            if (x >= 0 && x < WINX && y >= 0 && y < WINY) {
+                pixel_index = y * size_line + x * (bpp / 8);
+                	// Dessiner la ligne en blanc (RGB: 255, 255, 255)
+               		data[pixel_index] = color & 0xFF;         // Rouge
+                    data[pixel_index + 1] = (color >> 8) & 0xFF; // Vert
+                    data[pixel_index + 2] = (color >> 16) & 0xFF; // Bleu
+            }
+        }
+    }
+}
+
 
 void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 {
@@ -315,6 +354,7 @@ void	draw_arrow(t_game *game, int bpp, int size_line, char *data)
 		}
 		i++;
 		ray -= offset;
+		
 	}
 }
 
@@ -467,48 +507,41 @@ int	key_release(int keycode, t_game *game)
 // {
 // 	double deltax;
 // 	double deltay;
-// 	t_enemy *enemy = &game->ennemy;
-// 	int pixel;
-// 	if (!enemy->i_count)
-// 		return ;
-// 	printf("i%d,icount%d\n",enemy->pixel,enemy->i_count);
-// 	(void)bpp;
-// 	(void)size_line;
-// 	pixel = enemy->pixel ;	
+// 	t_enemy *enemy;
+
+// 	enemy = &game->ennemy;
 // 	deltax = enemy->posX - game->player.posX;
 // 	deltay = enemy->posY - game->player.posY;
-// 	float delta = sqrt((deltax*deltax) + (deltay*deltay));
-// 	double y_len = WINY/delta;
-// 	double y_img = 0;
-// 	double	ratio = 64.0 / y_len;
-// 	if (y_len > 1.0)
-// 		y_img = ratio*(y_len-(double)WINY)/2;
-// 	double start_y = (WINY/2.0)-(y_len/2.0) ;
-// 	double 	end_y = (WINY/2.0)+(y_len/2.0) ;
-// 	double y_enemy;
-// 	double x_enemy;
-// 	x_enemy = 0;
-// 	double x_ratio = WINX/delta;
-// 	x_ratio = 64/x_ratio;
-// 	if (end_y > WINY)
-// 		end_y = WINY -1;
-// 	if (start_y < 0)
-// 		start_y = 0;
-// 	int y = start_y;
+// 	int			x;
+// 	int			y;
+// 	int			resetx;
+// 	double			x_img;
+// 	double			y_img;
+// 	int ignore = *((int *)enemy[0][0]->data);
+// 	x_img = 0;
 // 	y_img = 0;
-// 	printf("y:%d,starty:%f,endy:%f\n",y,start_y,end_y);
-// 	while(enemy->pixel < enemy->pixel + enemy->i_count && (x_enemy < 64))
+// 	(void)bpp;
+// 	resetx = WINX/2;
+// 	y = WINY - WINY/2;
+// 	double ratiox =  (gun->w)/(double)WINX * 2;
+// 	double ratioy = (gun->h)/(double)(WINY/2.0);
+// 	x = resetx;
+// 	// printf("%d %d %d %d\n",x,y,x_img,y_img);
+// 	while (y < WINY)
 // 	{
-// 		while(y < end_y && y < WINY-1)
+// 		while (x < WINX)
 // 		{
-// 			*((int *)data + enemy->pixel + y++*WINX) = *((int*)enemy->texture[0][0].data +(int)x_enemy*64 +(int)y_img*64); 
-// 			y_img += ratio;
+// 			if (x_img < gun->w && y_img < gun->h && *((int *)gun->data + (int)x_img + (int)y_img*(gun->w)) != ignore)
+// 				*((int *)data + x + y*WINX) = *((int *)gun->data + (int)x_img + (int)y_img*(gun->w));
+// 			x_img += ratiox;
+// 			x++;
 // 		}
-// 		enemy->pixel++;
-// 		x_enemy+= x_ratio;
-// 		y_enemy = 0;
-// 		y = start_y;
+// 		y_img +=ratioy;
+// 		x_img = 0;
+// 		x = resetx;
+// 		y++;
 // 	}
+	
 	
 	
 // }
@@ -516,21 +549,21 @@ int	loop_hook(t_game *game)
 {
 	void	*img_ptr;
 	char	*data;
+	t_texture *texture;
 
+	texture = &game->pic;
 	int bpp, size_line, endian;
-	img_ptr = mlx_new_image(game->mlx->mlx_ptr, WINX, WINY);
-	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
 	// mlx_clear_window(game->mlx->mlx_ptr, game->mlx->mlx_win);
-	// draw_map(game, bpp, size_line, data);
+	// draw_map(game, bpp, size_line, data);&texture->
 	check_moves(game);
-	draw_arrow(game, bpp, size_line, data);
-	mini_draw_map(game, bpp, size_line, data);
+	draw_arrow(game, texture->bpp, texture->size_line, texture->data);
+	mini_draw_map(game, texture->bpp, texture->size_line, texture->data);
 	// draw_bot( game,  bpp,  size_line,  data);
+	draw_crosshair(game, texture->data, texture->size_line, texture->bpp,0xFF1493);
 	update_gun_animation(game);
-	draw_gun(game,data,bpp);
-	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win, img_ptr, 0,
+	draw_gun(game, texture->data, texture->bpp);
+	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win, texture->img, 0,
 		0);
-	mlx_destroy_image(game->mlx->mlx_ptr, img_ptr);
 	return (0);
 }
 

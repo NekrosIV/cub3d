@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/16 12:48:16 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/18 13:44:51 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,8 +253,10 @@ bool	check_if_its_map(t_game *game, char *line)
 void	check_line(t_game *game, char *line)
 {
 	int	i;
+	int f;
 
 	i = 0;
+	f = 0;
 	if (line[0] == '\n')
 		return ;
 	if (!check_if_its_map(game, line))

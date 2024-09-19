@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:18:57 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/18 15:20:43 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/19 18:00:02 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,10 @@ void	free_exit(t_game *game, int line, char *file, char *error)
 			ft_putstr_fd(GREEN "End of the game\n" RESET, 1);
 	}
 	exit(0);
+}
+
+int	india(t_game *game)
+{
+	free_exit(game, 0, NULL, "EOG");
+	return (0);
 }

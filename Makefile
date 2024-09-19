@@ -1,4 +1,4 @@
-NAME := cub3d
+NAME := Cub3d
 CC := cc
 CFLAGS :=  -g3 -MMD -O3
 MLX_FLAGS = -Lmlx -lmlx -Imlx -lXext -lX11 -lm 
@@ -8,8 +8,13 @@ MLXDIR := ./mlx
 FILES := cub3d.c \
 		parsing/parsing.c \
 		error/exit.c \
-		init_mlx/init_mlx.c \
+		init/init_mlx.c \
+		init/init_struct.c \
 		player/player_move.c \
+		minimap/minimap.c \
+		key/key.c \
+		draw/draw.c \
+		draw/raycasting.c \
 		utils.c 
 
 SRCS_DIR := ./src
@@ -96,7 +101,7 @@ clean:
 	@make --silent clean -C ${MLXDIR}
 	@make --silent clean -C ${LIBFTDIR}
 	@rm -rf $(OBJS_DIR)
-	@printf "                                                                                                          \r$(GREEN)$(NAME) is Clean\n$(RESET)"
+	@printf "\r$(GREEN)$(NAME) is Clean$(RESET)"
 
 	
 fclean: clean

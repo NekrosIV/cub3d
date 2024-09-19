@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 18:34:35 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/18 16:37:03 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/19 18:00:40 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,11 @@ void	print_struct(t_game *game)
 	print_tabint(game->ceiling, 3);
 	printf("floor: \n");
 	print_tabint(game->floor, 3);
+}
+
+double get_current_time()
+{
+    struct timeval time;
+    gettimeofday(&time, NULL);
+    return ((double)time.tv_sec + (double)time.tv_usec / 1000000.0);
 }

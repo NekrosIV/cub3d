@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/18 17:41:31 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/19 18:22:53 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@
 # define E_MLXWIN "Could not creat the mlx window"
 
 # define WINAME "GOAT3D"
-# define WINX 1500
-# define WINY 1200
+# define WINX 1400
+# define WINY 1000
 # define MIN_X_OR_Y ((WINX) < (WINY) ? (WINX) : (WINY))
 # define MIN_DIM MIN_X_OR_Y / 4
 # define PI 3.14159265358979323846
@@ -74,16 +74,22 @@
 # define TILE_SIZE 21
 # define BIG_TILE_SIZE 50
 # define EA 0
-# define SPEED_M 0.1
-# define SPEED_C 0.04
+// # define SPEED_M 0.1
+// # define SPEED_C 0.04
+# define SPEED_M 0.01
+# define SPEED_C 0.005
 # define WALL_TEXT_CARRE 64
 # define FLOOR 0x000000
 # define SKY 0x000000
-#define HALT 1
-#define WALK 0
-#define ATTACK 2
-#define DEATH 3
-#define DAMAGE 4
+# define HALT 1
+# define WALK 0
+# define ATTACK 2
+# define DEATH 3
+# define DAMAGE 4
+# define FOV 1
+# define CIRCLE_COLOR 0x000000
+# define MINI_W 0x000000
+# define MINI_S 0xFFFFFF
 
 typedef struct s_mlx
 {
@@ -111,12 +117,12 @@ typedef struct s_enemy
 	int			hp;
 	char		name[10];
 	t_texture	texture[5][4];
-	int pixel;
-	int mapX;
-	int mapY;
-	int i_count;
-	double posX;
-	double posY;
+	int			pixel;
+	int			mapX;
+	int			mapY;
+	int			i_count;
+	double		posX;
+	double		posY;
 }				t_enemy;
 
 typedef struct s_ray
@@ -179,12 +185,14 @@ typedef struct s_game
 	char		player_dir;
 	double		playerdirX;
 	double		playerdirY;
+	int			map_x;
+	int			map_y;
 	t_texture	pic;
 	t_mlx		*mlx;
 	t_texture	gun[4];
 	t_texture	wall[4];
 	t_player	player;
-	t_enemy 	ennemy;
+	t_enemy		ennemy;
 }				t_game;
 
 t_game			*parsing(char *file);
@@ -200,14 +208,29 @@ void			print_tabint(int *tab, int len);
 void			init_mlx(t_game *game);
 void			init_mlx2(t_mlx *mlx);
 int				key_hook(int keycode, t_game *game);
-void			draw_rectangle(char *data, int size_line, int bpp, int x, int y,
-					int width, int height, int color, int win_width,
-					int win_height);
+void			draw_rectangle(t_texture *textures, int x, int y, int color);
 void			draw_gun(t_game *game, char *data, int bpp);
 void			movements(t_game *game, double angle_shift);
 void			direction(t_game *game, char side);
 void			check_moves(t_game *game);
 double			get_current_time(void);
 void			update_gun_animation(t_game *game);
+void			mini_draw_map(t_game *game, t_texture *texture);
+void			mini_draw_arrow(t_game *game, t_texture *texture);
+void			draw_filled_circle(t_texture *textures, int start_x,
+					int start_y, int radius);
+void			draw_ray_in_data(t_game *game, t_texture *textures, int x0,
+					int y0, int x1, int y1, int color);
+void			draw_loop(t_game *game, int line_size, float offset_x,
+					float offset_y);
+float			find_offset(t_game *game, double playerpos, int max);
+t_player		init_player_struct(void);
+int				init_player(t_game *game);
+int				india(t_game *game);
+double			get_current_time(void);
+void			draw_arrow(t_game *game, t_texture *textures);
+int				key_release(int keycode, t_game *game);
+void			draw_crosshair(t_game *game, char *data, int size_line, int bpp,
+					int color);
 
 #endif

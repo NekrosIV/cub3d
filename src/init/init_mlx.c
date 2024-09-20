@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/18 15:40:29 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/20 17:48:30 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,22 +57,66 @@ void	init_mlx(t_game *game)
 			&game->ennemy.texture[WALK][3].w, &game->ennemy.texture[WALK][3].h);
 	game->ennemy.texture[WALK][3].data = mlx_get_data_addr(game->ennemy.texture[WALK][3].img,
 			&game->ennemy.texture[WALK][3].bpp, &fakex, &fakey);
-	game->gun[0].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/gun1.xpm",
+	game->gun[0].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/sgun1.xpm",
 			&game->gun[0].w, &game->gun[0].h);
 	game->gun[0].data = mlx_get_data_addr(game->gun[0].img, &game->gun[0].bpp,
 			&fakex, &fakey);
-	game->gun[1].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/gun2.xpm",
+	game->gun[1].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/sgun2.xpm",
 			&game->gun[1].w, &game->gun[1].h);
 	game->gun[1].data = mlx_get_data_addr(game->gun[1].img, &game->gun[1].bpp,
 			&fakex, &fakey);
-	game->gun[2].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/gun3.xpm",
+	game->gun[2].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/sgun3.xpm",
 			&game->gun[2].w, &game->gun[2].h);
 	game->gun[2].data = mlx_get_data_addr(game->gun[2].img, &game->gun[2].bpp,
 			&fakex, &fakey);
-	game->gun[3].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/gun4.xpm",
+	game->gun[3].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/sgun4.xpm",
 			&game->gun[3].w, &game->gun[3].h);
 	game->gun[3].data = mlx_get_data_addr(game->gun[3].img, &game->gun[3].bpp,
 			&fakex, &fakey);
+	game->gun[4].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/sgun5.xpm",
+			&game->gun[4].w, &game->gun[4].h);
+	game->gun[4].data = mlx_get_data_addr(game->gun[4].img, &game->gun[4].bpp,
+			&fakex, &fakey);
+	game->gun[5].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/sgun6.xpm",
+			&game->gun[5].w, &game->gun[5].h);
+	game->gun[5].data = mlx_get_data_addr(game->gun[5].img, &game->gun[5].bpp,
+			&fakex, &fakey);
+	game->gun[6].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/sgun7.xpm",
+			&game->gun[6].w, &game->gun[6].h);
+	game->gun[6].data = mlx_get_data_addr(game->gun[6].img, &game->gun[6].bpp,
+			&fakex, &fakey);
+	game->gun[7].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/sgun8.xpm",
+			&game->gun[7].w, &game->gun[7].h);
+	game->gun[7].data = mlx_get_data_addr(game->gun[7].img, &game->gun[7].bpp,
+			&fakex, &fakey);
+	game->gun[8].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/sgun9.xpm",
+			&game->gun[8].w, &game->gun[8].h);
+	game->gun[8].data = mlx_get_data_addr(game->gun[8].img, &game->gun[8].bpp,
+			&fakex, &fakey);
+	game->gun[9].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
+			"textures/sgun10.xpm", &game->gun[9].w, &game->gun[9].h);
+	game->gun[9].data = mlx_get_data_addr(game->gun[9].img, &game->gun[9].bpp,
+			&fakex, &fakey);
+	game->gun[10].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
+			"textures/sgun11.xpm", &game->gun[10].w, &game->gun[10].h);
+	game->gun[10].data = mlx_get_data_addr(game->gun[10].img,
+			&game->gun[10].bpp, &fakex, &fakey);
+	game->gun[11].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
+			"textures/sgun12.xpm", &game->gun[11].w, &game->gun[11].h);
+	game->gun[11].data = mlx_get_data_addr(game->gun[11].img,
+			&game->gun[11].bpp, &fakex, &fakey);
+	game->gun[12].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
+			"textures/sgun13.xpm", &game->gun[12].w, &game->gun[12].h);
+	game->gun[12].data = mlx_get_data_addr(game->gun[12].img,
+			&game->gun[12].bpp, &fakex, &fakey);
+	game->gun[13].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
+			"textures/sgun14.xpm", &game->gun[13].w, &game->gun[13].h);
+	game->gun[13].data = mlx_get_data_addr(game->gun[13].img,
+			&game->gun[13].bpp, &fakex, &fakey);
+	game->gun[14].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
+			"textures/sgun15.xpm", &game->gun[14].w, &game->gun[14].h);
+	game->gun[14].data = mlx_get_data_addr(game->gun[14].img,
+			&game->gun[14].bpp, &fakex, &fakey);
 	game->wall[0].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
 			"textures/colorstone.xpm", &game->wall[0].w, &game->wall[0].h);
 	game->wall[0].data = mlx_get_data_addr(game->wall[0].img,

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/19 18:22:53 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/20 18:07:37 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ typedef struct s_game
 	int			map_y;
 	t_texture	pic;
 	t_mlx		*mlx;
-	t_texture	gun[4];
+	t_texture	gun[15];
 	t_texture	wall[4];
 	t_player	player;
 	t_enemy		ennemy;

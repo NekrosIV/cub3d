@@ -101,7 +101,7 @@ clean:
 	@make --silent clean -C ${MLXDIR}
 	@make --silent clean -C ${LIBFTDIR}
 	@rm -rf $(OBJS_DIR)
-	@printf "\r$(GREEN)$(NAME) is Clean$(RESET)"
+	@printf "\r$(GREEN)$(NAME) is Clean\n$(RESET)"
 
 	
 fclean: clean

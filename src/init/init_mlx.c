@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/20 17:48:30 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/21 19:08:52 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void	init_mlx(t_game *game)
 	game->ennemy.mapX = (int)game->player.posX;
 	game->ennemy.mapY = (int)game->player.posY - 6;
 	game->ennemy.posX = game->player.posX;
-	game->ennemy.posY = game->player.posY - 5.0;
+	game->ennemy.posY = game->player.posY - 6.0;
 	texture->img = mlx_new_image(game->mlx->mlx_ptr, WINX, WINY);
 	texture->data = mlx_get_data_addr(texture->img, &texture->bpp,
 			&texture->size_line, &texture->endian);

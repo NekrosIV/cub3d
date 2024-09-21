@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 18:34:35 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/19 18:00:40 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/21 15:49:43 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ void	print_tabsquare(char **tab)
 
 	i = 0;
 	if (!tab)
+	{
+		ft_printf("%s\n", tab);
 		return ;
+	}
 	while (tab[i])
 	{
 		ft_printf("%s\n", tab[i]);
@@ -46,7 +49,7 @@ void	print_tabint(int *tab, int len)
 void	print_struct(t_game *game)
 {
 	printf("map :\n");
-	// print_tabsquare(game->map);
+	print_tabsquare(game->map);
 	printf("pos_x: %d\n", (int)game->player.posX);
 	printf("pos_y: %d\n", (int)game->player.posY);
 	printf("map_pos: %d\n", game->map_pos);
@@ -63,9 +66,10 @@ void	print_struct(t_game *game)
 	print_tabint(game->floor, 3);
 }
 
-double get_current_time()
+double	get_current_time(void)
 {
-    struct timeval time;
-    gettimeofday(&time, NULL);
-    return ((double)time.tv_sec + (double)time.tv_usec / 1000000.0);
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((double)time.tv_sec + (double)time.tv_usec / 1000000.0);
 }

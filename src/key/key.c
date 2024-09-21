@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   key.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:05:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/19 18:06:18 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/21 19:09:10 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,12 @@ int	key_hook(int keycode, t_game *game)
 	if (keycode == XK_p)
 	{
 		if (game->gun->animating == 0)
+		{
 			game->gun->animating = 1;
+		}
+		game->ennemy.posY -= SPEED_BOT;
+		game->ennemy.posX -= SPEED_BOT;
+		printf("ooo\n");
 	}
 	return (0);
 }

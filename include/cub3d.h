@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/20 18:07:37 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/21 19:17:37 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,11 @@
 # define TILE_SIZE 21
 # define BIG_TILE_SIZE 50
 # define EA 0
+# define SPEED_BOT 0.05
 // # define SPEED_M 0.1
 // # define SPEED_C 0.04
-# define SPEED_M 0.01
-# define SPEED_C 0.005
+# define SPEED_M 0.1
+# define SPEED_C 0.02
 # define WALL_TEXT_CARRE 64
 # define FLOOR 0x000000
 # define SKY 0x000000
@@ -193,6 +194,8 @@ typedef struct s_game
 	t_texture	wall[4];
 	t_player	player;
 	t_enemy		ennemy;
+	int			enemyhit;
+	double		profondeur[WINX];
 }				t_game;
 
 t_game			*parsing(char *file);
@@ -218,7 +221,7 @@ void			update_gun_animation(t_game *game);
 void			mini_draw_map(t_game *game, t_texture *texture);
 void			mini_draw_arrow(t_game *game, t_texture *texture);
 void			draw_filled_circle(t_texture *textures, int start_x,
-					int start_y, int radius);
+					int start_y, int color);
 void			draw_ray_in_data(t_game *game, t_texture *textures, int x0,
 					int y0, int x1, int y1, int color);
 void			draw_loop(t_game *game, int line_size, float offset_x,
@@ -232,5 +235,6 @@ void			draw_arrow(t_game *game, t_texture *textures);
 int				key_release(int keycode, t_game *game);
 void			draw_crosshair(t_game *game, char *data, int size_line, int bpp,
 					int color);
+void			drawEnemy(t_game *game, char *data);
 
 #endif

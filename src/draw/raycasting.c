@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/19 18:04:28 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/21 19:07:40 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	draw_ray_in_data(t_game *game, t_texture *textures,
-		int x0, int y0, int x1, int y1, int color)
+void	draw_ray_in_data(t_game *game, t_texture *textures, int x0, int y0,
+		int x1, int y1, int color)
 {
 	int	dx;
 	int	sx;
@@ -40,9 +40,9 @@ void	draw_ray_in_data(t_game *game, t_texture *textures,
 			// Calculer l'index du pixel dans la mémoire tampon
 			pixel_index = y0 * textures->size_line + x0 * (textures->bpp / 8);
 			// Stocker la couleur (supposant un format RGB avec 32 bits par pixel)
-			textures->data[pixel_index] = color & 0xFF;    // Rouge
-			textures->data[pixel_index + 1] = (color >> 8) & 0xFF; // Vert
-			textures->data[pixel_index + 2] = (color >> 16) & 0xFF;        // Bleu
+			textures->data[pixel_index] = color & 0xFF;             // Rouge
+			textures->data[pixel_index + 1] = (color >> 8) & 0xFF;  // Vert
+			textures->data[pixel_index + 2] = (color >> 16) & 0xFF; // Bleu
 		}
 		if (x0 == x1 && y0 == y1)
 			break ;
@@ -62,8 +62,7 @@ void	draw_ray_in_data(t_game *game, t_texture *textures,
 
 void	draw_arrow(t_game *game, t_texture *textures)
 {
-	// int		start_x;
-	double		start_y;
+	double	start_y;
 	double	length;
 	double	end_x;
 	double	end_y;
@@ -84,22 +83,24 @@ void	draw_arrow(t_game *game, t_texture *textures)
 	int		ray_hit;
 	int		last_hit;
 	double	perp_length;
-	int y;
-	double y_wall;
-	double line_h;
-	double ratio;
-	
+	int		y;
+	double	y_wall;
+	double	line_h;
+	double	ratio;
+	int		wall;
+		double pos_texture;
+
 	fov = FOV;
 	i = 0;
-	int wall = 0;
+	wall = 0;
 	ray = game->player.dirangle + fov / 2;
 	offset = (fov) / WINX;
-	game->ennemy.i_count = 0;
+	game->enemyhit = 0;
 	while (i < WINX)
 	{
 		ray_dX = cos(ray);
 		ray_dY = sin(ray);
-		if (ray_dY < 0.00001 && ray_dY > -0.00001)
+		if (ray_dY < 0.0001 && ray_dY > -0.0001)
 			deltaY = 1e30;
 		else
 			deltaY = 1.0 / fabs(ray_dY);
@@ -144,12 +145,9 @@ void	draw_arrow(t_game *game, t_texture *textures)
 				sidedistY += deltaY;
 				last_hit = 1;
 			}
-			if (raymapX == game->ennemy.mapX && raymapY == game->ennemy.mapY)
-			{
-				game->ennemy.pixel = i;
-				game->ennemy.i_count += 1;
-			}
-		
+			if (raymapX == (int)game->ennemy.posX
+				&& raymapY == (int)game->ennemy.posY)
+				game->enemyhit += 1;
 			if (game->map[raymapY][raymapX] != '0')
 				ray_hit = 1;
 		}
@@ -158,70 +156,73 @@ void	draw_arrow(t_game *game, t_texture *textures)
 		else
 			length = (sidedistX - deltaX);
 		// *** Correction du fisheye ***
-		perp_length = fabs(length * cos(ray - game->player.dirangle)); // Correction de la distance
+		// perp_length = fabs(length * cos(ray - game->player.dirangle));
+			// Correction de la distance
 		// Calcul de la hauteur de la ligne à dessiner en fonction de la distance perpendiculaire
-		line_h = WINY / perp_length;
-		start_y = (WINY/2.0)-(line_h/2.0) ;
-		end_y = (WINY/2.0)+(line_h/2.0) ;
+		perp_length = length;
+		game->profondeur[i] = perp_length;
+		line_h = WINY / fabs(perp_length * cos(ray - game->player.dirangle));
+		start_y = (WINY / 2.0) - (line_h / 2.0);
+		end_y = (WINY / 2.0) + (line_h / 2.0);
 		ratio = 64.0 / line_h;
 		(void)end_x;
-		double pos_texture;
-		if (end_y > WINY-1)
+		if (end_y > WINY - 1)
 		{
 			end_y = WINY - 1;
 			start_y = 0;
 		}
-	
-		if (last_hit == 1) {  
+		if (last_hit == 1)
+		{
 			if (stepY == -1)
-				wall = 0;  
+				wall = 0;
 			else
-				wall = 1; 
-			pos_texture = (game->player.posX) + (perp_length*ray_dX);
+				wall = 1;
+			pos_texture = (game->player.posX) + (perp_length * ray_dX);
 			pos_texture -= floor(pos_texture);
-
-		} else {  
+		}
+		else
+		{
 			if (stepX == -1)
-				wall = 2;  
+				wall = 2;
 			else
-				wall = 3;  
-			pos_texture = (game->player.posY) - (perp_length*ray_dY);
+				wall = 3;
+			pos_texture = (game->player.posY) - (perp_length * ray_dY);
 			pos_texture -= floor(pos_texture);
-		}		
+		}
 		// Dessiner le rayon
 		y = 0;
 		pos_texture *= 64.0;
 		if (stepX < 0 && last_hit == 0)
-			pos_texture = 64.0 - pos_texture ;
-		if (last_hit == 1 && stepY >0)
-			pos_texture = 64.0 - pos_texture ;
+			pos_texture = 64.0 - pos_texture - 1;
+		if (last_hit == 1 && stepY > 0)
+			pos_texture = 64.0 - pos_texture - 1;
 		y_wall = 0.0;
-		if(line_h > WINY)
-			y_wall = ratio*(line_h-(double)WINY)/2;
+		if (line_h > WINY)
+			y_wall = ratio * (line_h - (double)WINY) / 2;
 		if (pos_texture > 63.0)
 			pos_texture = 63.0;
 		while (y <= (int)start_y)
 		{
-			*((int *)textures->data + i + y*WINX) = FLOOR;
+			*((int *)textures->data + i + y * WINX) = FLOOR;
 			y++;
 		}
-		while(y <= (int)end_y)
+		while (y <= (int)end_y)
 		{
-			*((int *)textures->data + i + y*WINX) = *((int*)game->wall[wall].data +(int)pos_texture + abs(64-(int)y_wall*64)); 
+			*((int *)textures->data + i + y
+					* WINX) = *((int *)game->wall[wall].data + (int)pos_texture
+					+ (int)fabs(64 - (int)y_wall * 64.0));
 			y_wall += ratio;
 			y++;
 		}
 		while (y < WINY)
 		{
-			*((int *)textures->data + i + y*WINX) = SKY;
+			*((int *)textures->data + i + y * WINX) = SKY;
 			y++;
 		}
 		i++;
 		ray -= offset;
-		
 	}
 }
-
 
 // void	pre_init_ray(t_player *player, t_ray *ray)
 // {

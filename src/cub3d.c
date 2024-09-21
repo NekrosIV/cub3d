@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/19 18:15:21 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/21 18:13:56 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,16 @@
 int	loop_hook(t_game *game)
 {
 	void	*img_ptr;
-	char	*data;
+	char	*datax;
 	t_texture *texture;
 
 	texture = &game->pic;
 	int bpp, size_line, endian;
+	game->enemyhit = false;
 	check_moves(game);
 	draw_arrow(game, texture);
 	mini_draw_map(game, texture);
+	drawEnemy(game, texture->data);
 	draw_crosshair(game, texture->data, texture->size_line, texture->bpp,0xFF1493);
 	update_gun_animation(game);
 	draw_gun(game, texture->data, texture->bpp);
@@ -46,6 +48,9 @@ int	main(int ac, char **av)
 	mlx_hook(game->mlx->mlx_win, 02, (1L << 0), key_hook, game);
 	mlx_hook(game->mlx->mlx_win, 03, (1L << 1), key_release, game);
 	mlx_loop(game->mlx->mlx_ptr);
+	// ft_calloc(1,sizeof(t_game));
+	// print_struct(game);
+	
 	return (0);
 }
 

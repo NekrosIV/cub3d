@@ -14,6 +14,7 @@ FILES := cub3d.c \
 		minimap/minimap.c \
 		key/key.c \
 		draw/draw.c \
+		draw/raycastingbot.c \
 		draw/raycasting.c \
 		utils.c 
 

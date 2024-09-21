@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minimap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 16:08:47 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/19 17:45:42 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/21 19:17:17 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,14 @@ void	mini_draw_map(t_game *game, t_texture *textures)
 	mini_draw_arrow(game, textures);
 }
 
-void draw_filled_circle(t_texture *textures, int start_x, int start_y, int radius) 
+void draw_filled_circle(t_texture *textures, int start_x, int start_y, int color) 
 {
+	int radius;
     int x;
 	int y;
     int pixel_index;
 
+	radius = 4;
     // Dessiner le cercle rempli en utilisant l'algorithme de Bresenham
     for (y = -radius; y <= radius; y++) {
         for (x = -radius; x <= radius; x++) {
@@ -102,9 +104,9 @@ void draw_filled_circle(t_texture *textures, int start_x, int start_y, int radiu
                     // Calculer l'index du pixel dans la mémoire tampon
                     pixel_index = py * textures->size_line + px * (textures->bpp / 8);
                     // Stocker la couleur (supposant un format RGB avec 32 bits par pixel)
-                    textures->data[pixel_index] = CIRCLE_COLOR & 0xFF;         // Rouge
-                    textures->data[pixel_index + 1] = (CIRCLE_COLOR >> 8) & 0xFF; // Vert
-                    textures->data[pixel_index + 2] = (CIRCLE_COLOR >> 16) & 0xFF; // Bleu
+                    textures->data[pixel_index] = color & 0xFF;         // Rouge
+                    textures->data[pixel_index + 1] = (color >> 8) & 0xFF; // Vert
+                    textures->data[pixel_index + 2] = (color >> 16) & 0xFF; // Bleu
                 }
             }
         }
@@ -272,5 +274,6 @@ void	mini_draw_arrow(t_game *game, t_texture *textures)
 		i++;
 		ray += offset;
 	}
-	draw_filled_circle(textures, start_x, start_y, 4);
+	draw_filled_circle(textures, start_x, start_y, CIRCLE_COLOR);
+	draw_filled_circle(textures, game->ennemy.posX * tile_width + offset_x, game->ennemy.posY * tile_width + offset_y, 0xFF0000);
 }

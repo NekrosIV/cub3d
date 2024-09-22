@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/21 19:07:40 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/22 18:13:30 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,14 +88,21 @@ void	draw_arrow(t_game *game, t_texture *textures)
 	double	line_h;
 	double	ratio;
 	int		wall;
-		double pos_texture;
+	double pos_texture;
+	int b;
 
+	b = 0;
 	fov = FOV;
 	i = 0;
 	wall = 0;
 	ray = game->player.dirangle + fov / 2;
 	offset = (fov) / WINX;
-	game->enemyhit = 0;
+	while (i < game->bot_nb)
+	{
+		game->ennemy[i].bothit = 0;
+		i++;
+	}
+	i = 0;
 	while (i < WINX)
 	{
 		ray_dX = cos(ray);
@@ -145,9 +152,18 @@ void	draw_arrow(t_game *game, t_texture *textures)
 				sidedistY += deltaY;
 				last_hit = 1;
 			}
-			if (raymapX == (int)game->ennemy.posX
-				&& raymapY == (int)game->ennemy.posY)
-				game->enemyhit += 1;
+			// ft_printf("if %d, posx = %f, posy = %f \n", b, game->ennemy[1].posX, game->ennemy[1].posX);
+			b = 0;
+			while (b < game->bot_nb)
+			{
+				if (raymapX == (int)game->ennemy[b].posX
+				&& raymapY == (int)game->ennemy[b].posY)
+				{
+					game->ennemy[b].bothit += 1;
+				}
+				b++;
+					// ft_printf("if %d, posx = %f, posy = %f \n", b, game->ennemy[b].posX, game->ennemy[b].posX);
+			}
 			if (game->map[raymapY][raymapX] != '0')
 				ray_hit = 1;
 		}

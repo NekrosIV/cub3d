@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/21 19:17:37 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/22 19:14:36 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,13 +117,13 @@ typedef struct s_enemy
 {
 	int			hp;
 	char		name[10];
-	t_texture	texture[5][4];
 	int			pixel;
 	int			mapX;
 	int			mapY;
 	int			i_count;
 	double		posX;
 	double		posY;
+	int			bothit;
 }				t_enemy;
 
 typedef struct s_ray
@@ -188,13 +188,15 @@ typedef struct s_game
 	double		playerdirY;
 	int			map_x;
 	int			map_y;
+	int			bot_nb;
 	t_texture	pic;
 	t_mlx		*mlx;
 	t_texture	gun[15];
 	t_texture	wall[4];
+	t_texture	texturebot[5][4];
 	t_player	player;
-	t_enemy		ennemy;
-	int			enemyhit;
+	t_enemy		ennemy[4];
+	// int			enemyhit;
 	double		profondeur[WINX];
 }				t_game;
 
@@ -235,6 +237,8 @@ void			draw_arrow(t_game *game, t_texture *textures);
 int				key_release(int keycode, t_game *game);
 void			draw_crosshair(t_game *game, char *data, int size_line, int bpp,
 					int color);
-void			drawEnemy(t_game *game, char *data);
+void			drawEnemy(t_game *game, char *data, t_enemy *enemy);
+void			drawallbot(t_game *game, char *data);
+void			checkbotmoves(t_game *game);
 
 #endif

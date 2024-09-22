@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_mlx.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/21 19:08:52 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/22 17:41:44 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,26 +37,26 @@ void	init_mlx(t_game *game)
 	mlx->mlx_win = mlx_new_window(mlx->mlx_ptr, WINX, WINY, WINAME);
 	if (!mlx->mlx_win)
 		free_exit(game, __LINE__ - 2, __FILE__, E_MLXWIN);
-	game->ennemy.texture[WALK][0].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
+	game->texturebot[WALK][0].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
 			"textures/characters/CommandoWalk1.xpm",
-			&game->ennemy.texture[WALK][0].w, &game->ennemy.texture[WALK][0].h);
-	game->ennemy.texture[WALK][0].data = mlx_get_data_addr(game->ennemy.texture[WALK][0].img,
-			&game->ennemy.texture[WALK][0].bpp, &fakex, &fakey);
-	game->ennemy.texture[WALK][1].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
+			&game->texturebot[WALK][0].w, &game->texturebot[WALK][0].h);
+	game->texturebot[WALK][0].data = mlx_get_data_addr(game->texturebot[WALK][0].img,
+			&game->texturebot[WALK][0].bpp, &fakex, &fakey);
+	game->texturebot[WALK][1].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
 			"textures/characters/CommandoWalk2.xpm",
-			&game->ennemy.texture[WALK][1].w, &game->ennemy.texture[WALK][1].h);
-	game->ennemy.texture[WALK][1].data = mlx_get_data_addr(game->ennemy.texture[WALK][1].img,
-			&game->ennemy.texture[WALK][1].bpp, &fakex, &fakey);
-	game->ennemy.texture[WALK][2].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
+			&game->texturebot[WALK][1].w, &game->texturebot[WALK][1].h);
+	game->texturebot[WALK][1].data = mlx_get_data_addr(game->texturebot[WALK][1].img,
+			&game->texturebot[WALK][1].bpp, &fakex, &fakey);
+	game->texturebot[WALK][2].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
 			"textures/characters/CommandoWalk3.xpm",
-			&game->ennemy.texture[WALK][2].w, &game->ennemy.texture[WALK][2].h);
-	game->ennemy.texture[WALK][2].data = mlx_get_data_addr(game->ennemy.texture[WALK][2].img,
-			&game->ennemy.texture[WALK][2].bpp, &fakex, &fakey);
-	game->ennemy.texture[WALK][3].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
+			&game->texturebot[WALK][2].w, &game->texturebot[WALK][2].h);
+	game->texturebot[WALK][2].data = mlx_get_data_addr(game->texturebot[WALK][2].img,
+			&game->texturebot[WALK][2].bpp, &fakex, &fakey);
+	game->texturebot[WALK][3].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
 			"textures/characters/CommandoWalk4.xpm",
-			&game->ennemy.texture[WALK][3].w, &game->ennemy.texture[WALK][3].h);
-	game->ennemy.texture[WALK][3].data = mlx_get_data_addr(game->ennemy.texture[WALK][3].img,
-			&game->ennemy.texture[WALK][3].bpp, &fakex, &fakey);
+			&game->texturebot[WALK][3].w, &game->texturebot[WALK][3].h);
+	game->texturebot[WALK][3].data = mlx_get_data_addr(game->texturebot[WALK][3].img,
+			&game->texturebot[WALK][3].bpp, &fakex, &fakey);
 	game->gun[0].img = mlx_xpm_file_to_image(mlx->mlx_ptr, "textures/sgun1.xpm",
 			&game->gun[0].w, &game->gun[0].h);
 	game->gun[0].data = mlx_get_data_addr(game->gun[0].img, &game->gun[0].bpp,
@@ -137,10 +137,22 @@ void	init_mlx(t_game *game)
 	game->gun->animating = 0;
 	game->gun->frame_delay = 0.050;
 	game->gun->last_time = get_current_time();
-	game->ennemy.mapX = (int)game->player.posX;
-	game->ennemy.mapY = (int)game->player.posY - 6;
-	game->ennemy.posX = game->player.posX;
-	game->ennemy.posY = game->player.posY - 6.0;
+	game->ennemy[0].mapX = (int)game->player.posX;
+	game->ennemy[0].mapY = (int)game->player.posY - 2;
+	game->ennemy[0].posX = game->player.posX;
+	game->ennemy[0].posY = game->player.posY - 2.0;
+	game->ennemy[1].mapX = (int)game->player.posX;
+	game->ennemy[1].mapY = (int)game->player.posY + 2;
+	game->ennemy[1].posX = game->player.posX;
+	game->ennemy[1].posY = game->player.posY + 2.0;
+	game->ennemy[2].mapX = (int)game->player.posX + 2;
+	game->ennemy[2].mapY = (int)game->player.posY;
+	game->ennemy[2].posX = game->player.posX + 2.0;
+	game->ennemy[2].posY = game->player.posY;
+	game->ennemy[3].mapX = (int)game->player.posX - 2;
+	game->ennemy[3].mapY = (int)game->player.posY;
+	game->ennemy[3].posX = game->player.posX - 2.0;
+	game->ennemy[3].posY = game->player.posY;
 	texture->img = mlx_new_image(game->mlx->mlx_ptr, WINX, WINY);
 	texture->data = mlx_get_data_addr(texture->img, &texture->bpp,
 			&texture->size_line, &texture->endian);

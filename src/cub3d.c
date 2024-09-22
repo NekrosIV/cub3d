@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/21 18:13:56 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/22 19:15:07 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ int	loop_hook(t_game *game)
 
 	texture = &game->pic;
 	int bpp, size_line, endian;
-	game->enemyhit = false;
 	check_moves(game);
 	draw_arrow(game, texture);
 	mini_draw_map(game, texture);
-	drawEnemy(game, texture->data);
+	drawallbot(game, texture->data);
+	checkbotmoves(game);
 	draw_crosshair(game, texture->data, texture->size_line, texture->bpp,0xFF1493);
 	update_gun_animation(game);
 	draw_gun(game, texture->data, texture->bpp);

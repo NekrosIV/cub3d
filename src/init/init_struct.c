@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/19 17:58:53 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/22 17:55:35 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ t_game	*init_game(void)
 	game->player = init_player_struct();
 	game->map_x = 0;
 	game->map_y = 0;
+	game->bot_nb = 4;
 	return (game);
 }
 

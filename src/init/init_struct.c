@@ -3,23 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   init_struct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/22 17:55:35 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/23 17:56:59 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "cub3d.h"
 
-t_player init_player_struct()
+t_player	init_player_struct(void)
 {
-	t_player player;
+	t_player	player;
 
 	player.posX = -1.0;
 	player.posY = -1.0;
-
 	player.dirangle = -1.0;
 	player.playerdirX = -1.0;
 	player.playerdirY = -1.0;
@@ -29,7 +27,7 @@ t_player init_player_struct()
 	player.left = false;
 	player.side_r = false;
 	player.side_l = false;
-	return(player);
+	return (player);
 }
 
 t_game	*init_game(void)
@@ -63,6 +61,7 @@ t_game	*init_game(void)
 	game->map_x = 0;
 	game->map_y = 0;
 	game->bot_nb = 4;
+	game->do_damage = false;
 	return (game);
 }
 
@@ -78,5 +77,6 @@ int	init_player(t_game *game)
 		game->player.dirangle = WE;
 	game->playerdirX = cos(game->player.dirangle);
 	game->playerdirY = sin(game->player.dirangle);
+	game->player.hp = 100;
 	return (0);
 }

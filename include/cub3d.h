@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/22 19:14:36 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/23 18:01:49 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,19 +74,21 @@
 # define TILE_SIZE 21
 # define BIG_TILE_SIZE 50
 # define EA 0
-# define SPEED_BOT 0.05
+// # define SPEED_BOT 0.05
+# define SPEED_BOT 0.005
+# define SPEED_M 0.01
+# define SPEED_C 0.008
 // # define SPEED_M 0.1
-// # define SPEED_C 0.04
-# define SPEED_M 0.1
-# define SPEED_C 0.02
+// # define SPEED_C 0.02
 # define WALL_TEXT_CARRE 64
 # define FLOOR 0x000000
 # define SKY 0x000000
-# define HALT 1
-# define WALK 0
+# define HALT 0
+# define WALK 1
 # define ATTACK 2
 # define DEATH 3
 # define DAMAGE 4
+# define DAMAGE_BOT 25
 # define FOV 1
 # define CIRCLE_COLOR 0x000000
 # define MINI_W 0x000000
@@ -123,7 +125,15 @@ typedef struct s_enemy
 	int			i_count;
 	double		posX;
 	double		posY;
+	double		distance;
 	int			bothit;
+	int			frame;
+	int			action;
+	double		last_time;
+	int			animating;
+	double		last_time2;
+	double		frame_delay;
+	bool		takedmg;
 }				t_enemy;
 
 typedef struct s_ray
@@ -165,6 +175,7 @@ typedef struct s_player
 	bool		left;
 	bool		side_r;
 	bool		side_l;
+	int			hp;
 }				t_player;
 
 typedef struct s_game
@@ -189,6 +200,7 @@ typedef struct s_game
 	int			map_x;
 	int			map_y;
 	int			bot_nb;
+	bool		do_damage;
 	t_texture	pic;
 	t_mlx		*mlx;
 	t_texture	gun[15];
@@ -240,5 +252,6 @@ void			draw_crosshair(t_game *game, char *data, int size_line, int bpp,
 void			drawEnemy(t_game *game, char *data, t_enemy *enemy);
 void			drawallbot(t_game *game, char *data);
 void			checkbotmoves(t_game *game);
+void			update_enemy_animation(t_game *game, t_enemy *bot);
 
 #endif

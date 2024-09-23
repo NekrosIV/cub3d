@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/22 19:15:07 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/23 18:07:07 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ int	loop_hook(t_game *game)
 	draw_gun(game, texture->data, texture->bpp);
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win, texture->img, 0,
 		0);
+	if (game->player.hp <= 0)
+	{
+		ft_printf(RED"YOU DIED *rip*\n"RESET);
+		free_exit(game, 0, NULL, "EOG");
+	}
 	return (0);
 }
 

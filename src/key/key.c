@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   key.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:05:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/22 18:17:56 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/23 16:13:06 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,30 +33,13 @@ int	key_hook(int keycode, t_game *game)
 		if (game->gun->animating == 0)
 		{
 			game->gun->animating = 1;
+			game->do_damage = 1;
 		}
-		game->ennemy[0].posY -= SPEED_BOT;
-		game->ennemy[0].posX -= SPEED_BOT;
-		game->ennemy[1].posY += SPEED_BOT;
-		game->ennemy[1].posX += SPEED_BOT;
-		game->ennemy[2].posY -= SPEED_BOT;
-		game->ennemy[2].posX -= SPEED_BOT;
-		game->ennemy[3].posY += SPEED_BOT;
-		game->ennemy[3].posX += SPEED_BOT;
 	}
 	if (keycode == XK_o)
 	{
 		if (game->gun->animating == 0)
-		{
 			game->gun->animating = 1;
-		}
-		game->ennemy[0].posY += SPEED_BOT;
-		game->ennemy[0].posX += SPEED_BOT;
-		game->ennemy[1].posY -= SPEED_BOT;
-		game->ennemy[1].posX -= SPEED_BOT;
-		game->ennemy[2].posY += SPEED_BOT;
-		game->ennemy[2].posX += SPEED_BOT;
-		game->ennemy[3].posY -= SPEED_BOT;
-		game->ennemy[3].posX -= SPEED_BOT;
 	}
 	return (0);
 }

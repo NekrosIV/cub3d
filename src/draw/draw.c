@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:09:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/20 18:04:15 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/23 18:13:05 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	draw_gun(t_game *game, char *data, int bpp)
 	// printf("%d %d %d %d\n",x,y,x_img,y_img);
 	while (y < WINY)
 	{
-		while (x < WINX )
+		while (x < WINX)
 		{
 			if (x_img < gun->w && y_img < gun->h && *((int *)gun->data
 					+ (int)x_img + (int)y_img * (gun->w)) != ignore)
@@ -129,7 +129,79 @@ void	draw_gun(t_game *game, char *data, int bpp)
 		y++;
 	}
 }
+void	update_enemy_animation(t_game *game, t_enemy *bot)
+{
+	double	current_time;
 
+	// printf("bot->action = %d frame = %d\n",bot->action,bot->frame);
+	if( bot->animating == 0)
+		return;
+	
+	if (bot->action == HALT)
+	{
+		bot->frame = 0;
+		return;
+	}
+	current_time = get_current_time();
+
+	if (bot->action == DAMAGE)
+	{
+		bot->frame_delay = 0.5;
+		if (current_time - bot->last_time >= bot->frame_delay)
+		{
+			bot->frame += 1;
+			bot->last_time = current_time;
+			if (bot->frame > 0)
+			{
+				bot->frame = 0;
+				bot->action = HALT;
+			}
+		}
+		if(bot->hp <= 0)
+			bot->action = DEATH;
+	}
+	if (bot->action == DEATH)
+	{
+		bot->frame_delay = 0.2;
+		if (current_time - bot->last_time >= bot->frame_delay)
+		{
+			bot->frame += 1;
+			bot->last_time = current_time;
+			if (bot->frame > 3)
+			{
+				bot->frame = 3;
+				bot->animating = 0;
+			}
+		}
+	}
+	if (bot->action == ATTACK)
+	{
+		if(bot->frame == 0)
+			bot->frame_delay = 0.2;
+		else
+			bot->frame_delay = 1;
+		if (current_time - bot->last_time >= bot->frame_delay)
+		{
+			if(bot->frame == 0)
+				game->player.hp -= 2;
+			bot->frame += 1;
+			bot->last_time = current_time;
+			if (bot->frame > 1)
+				bot->frame = 0;
+		}
+	}
+	if (bot->action == WALK)
+	{
+		bot->frame_delay = 0.2;
+		if (current_time - bot->last_time >= bot->frame_delay)
+		{
+			bot->frame += 1;
+			bot->last_time = current_time;
+			if (bot->frame > 3)
+				bot->frame = 0;
+		}
+	}
+}
 void	update_gun_animation(t_game *game)
 {
 	if (game->gun->animating == 0)

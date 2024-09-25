@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycastingbot.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/23 18:01:30 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/24 18:12:57 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int is_collision_with_others(t_game *game, t_enemy *current_bot, double new_posX
         temp_bot.posY = new_posY;
         
         // Vérifier la collision avec les autres bots
-        if (is_bot_collision(&temp_bot, other_bot, 0.5)) {  // 1.0 est la distance de sécurité
+        if (is_bot_collision(&temp_bot, other_bot, 0.5) && other_bot->action != DEATH) 
+		{  // 1.0 est la distance de sécurité
           return 1;  // Collision détectée}
         }
     }
@@ -69,31 +70,33 @@ int is_wall(t_game *game, double x, double y) {
 void movebot(t_game *game, t_enemy *bot) {
     double dx;
     double dy;
-    double distance;
 	bool moved;
 	double	current_time;
 
-
 	if(bot->action == DAMAGE || bot->action == DEATH)
 		return;
+	if (bot->distance > TRIGGERBOT)
+	{
+		bot->action = HALT;
+		return;
+	}
 	current_time = get_current_time();
     // Calcul de la direction vers le joueur
 	moved = false;
     dx = game->player.posX - bot->posX;
     dy = game->player.posY - bot->posY;
-    distance = sqrt((dx * dx) + (dy * dy));
- 	if (distance < 7.0) 
+ 	if (bot->distance < BOT_SHOOT) 
     {
-		if (bot->action != ATTACK )
+		if (bot->action != ATTACK && current_time - bot->last_time2 > 0.7)
 		{	
 			bot->action = ATTACK;
 			bot->frame = 1;
 		}
 		return;
 	}
-    if (distance > 0) {
-        dx /= distance;
-        dy /= distance;
+    if (bot->distance > 0) {
+        dx /= bot->distance;
+        dy /= bot->distance;
     }
 
 
@@ -147,13 +150,7 @@ void	do_damage_to_bot(t_game *game)
 	// bot = game->ennemy;
 	while (i < game->bot_nb)
 	{
-		if(game->ennemy[i].hp > 0 && game->ennemy[i].takedmg && game->ennemy[i].distance <= 5)
-		{
-			game->ennemy[i].hp -= DAMAGE_BOT;
-			game->ennemy[i].action = DAMAGE;
-			game->ennemy[i].frame = 0;
-		}
-		
+		dammage(game,&game->ennemy[i]);
 		i++;
 	}
 	game->do_damage = false;
@@ -319,4 +316,49 @@ void	drawEnemy(t_game *game, char *data, t_enemy *enemy)
 		x_img += ratio;
 		startx++;
 	}
+}
+
+
+void	dammage(t_game *game,t_enemy *enemy)
+{
+	double	dx;
+	double	dy;
+	double	distance;
+	double	angle;
+	int		screenX;
+	int		screenY;
+	double	line_h;
+	int		starty;
+	int		endy;
+	int		startx;
+	int		endx;
+	double	difference;
+	double	pixelx;
+	double	ratio;
+	double	x_img;
+	double	y_img;
+
+	if (enemy->animating == 0 || enemy->bothit < 20 || enemy->distance > SGUNRANGE)
+		return;
+	dx = enemy->posX - game->player.posX;
+	dy = enemy->posY - game->player.posY;
+	distance = sqrt((dx * dx) + (dy * dy));
+	// printf("distance = %f", distance);
+	angle = atan2(-dy, dx);
+	// printf("angle du bot :%f\n",angle);
+	// printf("posx %f posy%f\n",enemy->posX,enemy->posY);
+	difference = game->player.dirangle - angle + (PI/36);
+	// Normalize the angle difference to [-PI, PI]
+	while (difference > 2*PI)
+		difference -= 2 * PI;
+	while (difference < 0)
+		difference += 2 * PI;
+	// printf("difference%f\n\n\n",difference);
+	if (fabs(difference)> AIMBOT)
+		return;
+	enemy->hp -= DAMAGE_BOT;
+	printf("enemyhp%d\n",enemy->hp);
+	enemy->action = DAMAGE;
+	enemy->frame = 0;
+	// enemy->takedmg = false;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:09:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/23 18:13:05 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/24 17:37:18 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,11 +151,14 @@ void	update_enemy_animation(t_game *game, t_enemy *bot)
 		{
 			bot->frame += 1;
 			bot->last_time = current_time;
-			if (bot->frame > 0)
+			
+			if (bot->frame > 1)
 			{
 				bot->frame = 0;
 				bot->action = HALT;
 			}
+			else 
+				bot->last_time2 = current_time;
 		}
 		if(bot->hp <= 0)
 			bot->action = DEATH;
@@ -226,3 +229,49 @@ void	update_gun_animation(t_game *game)
 		game->gun->last_time = current_time;
 	}
 }
+
+
+// void draw_floor_and_ceiling(t_game *game, t_texture *textures)
+// {
+//     double ray_angle;
+//     double ray_dX, ray_dY;
+//     double row_distance, floor_x, floor_y;
+//     double floor_step_x, floor_step_y;
+//     int tex_x, tex_y;
+//     int x, y;
+
+//     double player_posX = game->player.posX;
+//     double player_posY = game->player.posY;
+
+//     for (y = WINY / 2; y < WINY; y++)  // Traiter à partir de l'horizon vers le bas
+//     {
+//         // Distance projetée entre la caméra et le point projeté sur le sol
+//         row_distance = WINY / (2.0 * (y - WINY / 2.0));
+
+//         for (x = 0; x < WINX; x++)
+//         {
+//             // Calcul de l'angle de direction du rayon pour ce pixel
+//             ray_angle = game->player.dirangle - FOV / 2 + x * (FOV / WINX);
+            
+//             // Calcul des directions du rayon (cos et sin de l'angle)
+//             ray_dX = cos(ray_angle);
+//             ray_dY = sin(ray_angle);
+
+//             // Calcul des positions au sol selon la distance projetée
+//             floor_x = player_posX + row_distance * ray_dX;
+//             floor_y = player_posY + row_distance * ray_dY;
+
+//             // Coordonnées dans la texture du sol (64x64 par exemple)
+//             tex_x = (int)(64 * (floor_x - (int)floor_x)) & (64 - 1);
+//             tex_y = (int)(64 * (floor_y - (int)floor_y)) & (64 - 1);
+
+//             // Appliquer la texture du sol
+//             int floor_color = game->wall[3].data[tex_y + tex_x];
+//             *((int *)textures->data + x + y * WINX) = floor_color;
+
+//             // Appliquer la texture du plafond (symétrique)
+//             int ceiling_color = game->wall[3].data[tex_y + tex_x];
+//             *((int *)textures->data + x + (WINY - y - 1) * WINX) = ceiling_color;
+//         }
+//     }
+// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/23 18:01:49 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/24 18:13:08 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,10 @@
 # define CIRCLE_COLOR 0x000000
 # define MINI_W 0x000000
 # define MINI_S 0xFFFFFF
+# define AIMBOT PI / 12
+#define SGUNRANGE 5
+#define BOT_SHOOT 5
+#define TRIGGERBOT 15
 
 typedef struct s_mlx
 {
@@ -252,6 +256,8 @@ void			draw_crosshair(t_game *game, char *data, int size_line, int bpp,
 void			drawEnemy(t_game *game, char *data, t_enemy *enemy);
 void			drawallbot(t_game *game, char *data);
 void			checkbotmoves(t_game *game);
+void			dammage(t_game *game, t_enemy *enemy);
 void			update_enemy_animation(t_game *game, t_enemy *bot);
+void			draw_floor_and_ceiling(t_game *game, t_texture *textures);
 
 #endif

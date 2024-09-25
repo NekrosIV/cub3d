@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_struct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/23 17:56:59 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/24 15:40:44 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,6 @@ int	init_player(t_game *game)
 		game->player.dirangle = WE;
 	game->playerdirX = cos(game->player.dirangle);
 	game->playerdirY = sin(game->player.dirangle);
-	game->player.hp = 100;
+	game->player.hp = 10000;
 	return (0);
 }

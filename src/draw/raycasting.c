@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/23 17:46:04 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/24 17:08:50 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,16 +158,7 @@ void	draw_arrow(t_game *game, t_texture *textures)
 			{
 				if (raymapX == (int)game->ennemy[b].posX
 				&& raymapY == (int)game->ennemy[b].posY)
-				{
-					if (i == WINX/2 && game->ennemy[b].hp > 0)
-					{	
-						game->ennemy[b].takedmg = true;
-						// game->ennemy[b].hp -= DAMAGE_BOT;
-						// game->ennemy[b].action = DAMAGE;
-						// game->ennemy[b].frame = 0;
-					}
 					game->ennemy[b].bothit += 1;
-				}
 				b++;
 					// ft_printf("if %d, posx = %f, posy = %f \n", b, game->ennemy[b].posX, game->ennemy[b].posX);
 			}

@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/24 17:08:50 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/25 19:07:37 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,7 @@ void	draw_arrow(t_game *game, t_texture *textures)
 			pos_texture = 63.0;
 		while (y <= (int)start_y)
 		{
-			*((int *)textures->data + i + y * WINX) = FLOOR;
+			*((int *)textures->data + i + y * WINX) = SKY;
 			y++;
 		}
 		while (y <= (int)end_y)
@@ -230,7 +230,7 @@ void	draw_arrow(t_game *game, t_texture *textures)
 		}
 		while (y < WINY)
 		{
-			*((int *)textures->data + i + y * WINX) = SKY;
+			*((int *)textures->data + i + y * WINX) = FLOOR;
 			y++;
 		}
 		i++;

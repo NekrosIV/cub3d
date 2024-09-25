@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:09:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/24 17:37:18 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/25 16:58:14 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,10 +106,10 @@ void	draw_gun(t_game *game, char *data, int bpp)
 	x_img = 0;
 	y_img = 0;
 	(void)bpp;
-	resetx = WINX / 4;
-	y = WINY - WINY / 2;
-	ratiox = (gun->w) / (double)WINX * 1.5;
-	ratioy = (gun->h) / (double)(WINY / 2);
+	resetx = WINX / 2;
+	y = WINY - WINY / 1.6;
+	ratiox = (gun->w) / (double)WINX * 2;
+	ratioy = (gun->h) / (double)(WINY / 2) * 0.8;
 	x = resetx;
 	// printf("%d %d %d %d\n",x,y,x_img,y_img);
 	while (y < WINY)
@@ -214,14 +214,10 @@ void	update_gun_animation(t_game *game)
 
 	if (current_time - game->gun->last_time >= game->gun->frame_delay)
 	{
-		if (game->gun->frame > 3)
-			game->gun->frame_delay = 0.090;
-
 		game->gun->frame += 1;
 
-		if (game->gun->frame > 14)
+		if (game->gun->frame > 38)
 		{
-			game->gun->frame_delay = 0.050;
 			game->gun->frame = 0;
 			game->gun->animating = 0;
 		}

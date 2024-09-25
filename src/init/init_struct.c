@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/24 15:40:44 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/25 19:35:49 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ t_game	*init_game(void)
 	game->map_y = 0;
 	game->bot_nb = 4;
 	game->do_damage = false;
+	game->mouse_x = 0;
+	game->mouse_y = 0;
+	game->mouse_cam = 0.0;
 	return (game);
 }
 

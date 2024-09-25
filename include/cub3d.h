@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/24 18:13:08 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/25 20:03:34 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@
 // # define SPEED_M 0.1
 // # define SPEED_C 0.02
 # define WALL_TEXT_CARRE 64
-# define FLOOR 0x000000
-# define SKY 0x000000
+# define FLOOR 0x00FFFF
+# define SKY 0x4B0082
 # define HALT 0
 # define WALK 1
 # define ATTACK 2
@@ -90,13 +90,14 @@
 # define DAMAGE 4
 # define DAMAGE_BOT 25
 # define FOV 1
-# define CIRCLE_COLOR 0x000000
-# define MINI_W 0x000000
-# define MINI_S 0xFFFFFF
+# define CIRCLE_COLOR 0xFF6EC7
+# define MINI_W 0x4B0082
+# define MINI_S 0x00FFFF
 # define AIMBOT PI / 12
-#define SGUNRANGE 5
-#define BOT_SHOOT 5
-#define TRIGGERBOT 15
+# define SGUNRANGE 5
+# define BOT_SHOOT 5
+# define TRIGGERBOT 15
+# define CROSSHAIR 0x4B0082
 
 typedef struct s_mlx
 {
@@ -207,12 +208,14 @@ typedef struct s_game
 	bool		do_damage;
 	t_texture	pic;
 	t_mlx		*mlx;
-	t_texture	gun[15];
+	t_texture	gun[39];
 	t_texture	wall[4];
 	t_texture	texturebot[5][4];
 	t_player	player;
 	t_enemy		ennemy[4];
-	// int			enemyhit;
+	int			mouse_x;
+	int			mouse_y;
+	float		mouse_cam;
 	double		profondeur[WINX];
 }				t_game;
 
@@ -259,5 +262,6 @@ void			checkbotmoves(t_game *game);
 void			dammage(t_game *game, t_enemy *enemy);
 void			update_enemy_animation(t_game *game, t_enemy *bot);
 void			draw_floor_and_ceiling(t_game *game, t_texture *textures);
+int				mouse_move(int x, int y, t_game *game);
 
 #endif

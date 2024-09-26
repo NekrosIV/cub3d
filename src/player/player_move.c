@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 13:03:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/17 16:39:30 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/26 11:27:11 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,11 +112,11 @@ void	movements(t_game *game, double angle_shift)
 	attempt_move_player(game, player);
 }
 
-void	direction(t_game *game, char side)
+void	direction(t_game *game, char side, double speed_cam)
 {
 	if (side == 'd')
 	{
-		game->player.dirangle -= SPEED_C;
+		game->player.dirangle -= speed_cam;
 		if (game->player.dirangle < 0)
 			game->player.dirangle += 2 * PI;
 		game->playerdirX = cos(game->player.dirangle);
@@ -124,7 +124,7 @@ void	direction(t_game *game, char side)
 	}
 	else
 	{
-		game->player.dirangle += SPEED_C;
+		game->player.dirangle += speed_cam;
 		if (game->player.dirangle > 2 * PI)
 			game->player.dirangle = game->player.dirangle - (2 * PI);
 		game->playerdirX = cos(game->player.dirangle);
@@ -146,9 +146,9 @@ void	check_moves(t_game *game)
 	if (player.left == true)
 		movements(game, NO);
 	if (player.side_l == true)
-		direction(game, 'a');
+		direction(game, 'a',SPEED_C);
 	if (player.side_r == true)
-		direction(game, 'd');
+		direction(game, 'd',SPEED_C);
 }
 // void	movements(t_game *game, double angle_shift)
 // {

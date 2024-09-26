@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/25 20:03:34 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/26 15:20:05 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,14 +90,14 @@
 # define DAMAGE 4
 # define DAMAGE_BOT 25
 # define FOV 1
-# define CIRCLE_COLOR 0xFF6EC7
+# define CIRCLE_COLOR 0xFF7300
 # define MINI_W 0x4B0082
 # define MINI_S 0x00FFFF
 # define AIMBOT PI / 12
 # define SGUNRANGE 5
 # define BOT_SHOOT 5
 # define TRIGGERBOT 15
-# define CROSSHAIR 0x4B0082
+# define CROSSHAIR 0xFF7300
 
 typedef struct s_mlx
 {
@@ -235,7 +235,7 @@ int				key_hook(int keycode, t_game *game);
 void			draw_rectangle(t_texture *textures, int x, int y, int color);
 void			draw_gun(t_game *game, char *data, int bpp);
 void			movements(t_game *game, double angle_shift);
-void			direction(t_game *game, char side);
+void			direction(t_game *game, char side, double speed_cam);
 void			check_moves(t_game *game);
 double			get_current_time(void);
 void			update_gun_animation(t_game *game);

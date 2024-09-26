@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_mlx.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/25 19:48:51 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/26 16:26:44 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,7 +216,7 @@ void	init_mlx(t_game *game)
 	game->gun[27].data = mlx_get_data_addr(game->gun[27].img,
 			&game->gun[27].bpp, &fakex, &fakey);
 	game->gun[28].img = mlx_xpm_file_to_image(mlx->mlx_ptr,
-			"textures/sfxreload29.xpm", &game->gun[28].w, &game->gun[28].h);
+			"textures/sfxreload34.xpm", &game->gun[28].w, &game->gun[28].h);
 	game->gun[28].data = mlx_get_data_addr(game->gun[28].img,
 			&game->gun[28].bpp, &fakex, &fakey);
 	game->gun[29].img = mlx_xpm_file_to_image(mlx->mlx_ptr,

@@ -1,7 +1,7 @@
-NO ./path_to_the_north_texture.xpm
-SO ./path_to_the_south_texture.xpm
-WE ./path_to_the_west_texture.xpm
-EA ./path_to_the_east_texture.xpm
+NO textures/scifi1.xpm
+SO textures/scifi1.xpm
+WE textures/scifi1.xpm
+EA textures/scifi1.xpm
 
 F 220,210,0
 C 225,30,0

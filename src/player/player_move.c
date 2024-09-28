@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 13:03:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/26 11:27:11 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/28 14:05:12 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,9 +146,9 @@ void	check_moves(t_game *game)
 	if (player.left == true)
 		movements(game, NO);
 	if (player.side_l == true)
-		direction(game, 'a',SPEED_C);
+		direction(game, 'a', SPEED_C);
 	if (player.side_r == true)
-		direction(game, 'd',SPEED_C);
+		direction(game, 'd', SPEED_C);
 }
 // void	movements(t_game *game, double angle_shift)
 // {

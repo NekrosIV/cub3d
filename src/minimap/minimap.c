@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 16:08:47 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/26 15:18:30 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/28 14:04:45 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,20 +277,4 @@ void	mini_draw_arrow(t_game *game, t_texture *textures)
 		ray += offset;
 	}
 	draw_filled_circle(textures, start_x, start_y, CIRCLE_COLOR);
-	int g;
-	g = 0;
-	while (g < game->bot_nb)
-	{
-		screen_x = game->ennemy[g].posX * TILE_SIZE + offset_x;
-		screen_y = game->ennemy[g].posY * TILE_SIZE + offset_y;
-
-		if ( screen_x  > 0 && screen_x  < MIN_DIM && 
-			    screen_y  > 0 && screen_y  < MIN_DIM && game->ennemy[g].animating == 0)
-			draw_filled_circle(textures, screen_x, screen_y, 0x0000FF);
-
-		else if (screen_x  > 0 && screen_x  < MIN_DIM && 
-			    screen_y  > 0 && screen_y  < MIN_DIM && game->ennemy[g].animating != 0)
-			draw_filled_circle(textures, screen_x, screen_y, 0xFF0000);	
-		g++;
-	}
 }

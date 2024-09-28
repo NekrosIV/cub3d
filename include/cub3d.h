@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   cub3d_bonus.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/26 15:20:05 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/28 13:32:50 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,16 @@
 # define E_NOMAP "No map found bg"
 # define E_INITMLX "Could not iniate the mlx pointer"
 # define E_MLXWIN "Could not creat the mlx window"
+# define E_MLXIMG "Failed to load image"
+# define E_MLXDATA "Failed to get data address for image"
 
 # define WINAME "GOAT3D"
-# define WINX 1400
-# define WINY 1000
+# define N 0
+# define S 1
+# define W 2
+# define E 3
+# define WINX 1200
+# define WINY 900
 # define MIN_X_OR_Y ((WINX) < (WINY) ? (WINX) : (WINY))
 # define MIN_DIM MIN_X_OR_Y / 4
 # define PI 3.14159265358979323846
@@ -74,30 +80,22 @@
 # define TILE_SIZE 21
 # define BIG_TILE_SIZE 50
 # define EA 0
-// # define SPEED_BOT 0.05
 # define SPEED_BOT 0.005
 # define SPEED_M 0.01
 # define SPEED_C 0.008
 // # define SPEED_M 0.1
 // # define SPEED_C 0.02
-# define WALL_TEXT_CARRE 64
-# define FLOOR 0x00FFFF
+# define FLOOR 0xFF7300
 # define SKY 0x4B0082
-# define HALT 0
-# define WALK 1
-# define ATTACK 2
-# define DEATH 3
-# define DAMAGE 4
-# define DAMAGE_BOT 25
 # define FOV 1
 # define CIRCLE_COLOR 0xFF7300
 # define MINI_W 0x4B0082
 # define MINI_S 0x00FFFF
-# define AIMBOT PI / 12
-# define SGUNRANGE 5
-# define BOT_SHOOT 5
-# define TRIGGERBOT 15
 # define CROSSHAIR 0xFF7300
+#define LINE_THICKNESS ((WINX + WINY) / 800)
+#define CROSSHAIR_SIZE ((WINX + WINY) / 300)
+#define CENTER_X (WINX / 2)
+#define CENTER_Y (WINY / 2)
 
 typedef struct s_mlx
 {
@@ -120,27 +118,6 @@ typedef struct s_textures
 	int			endian;
 }				t_texture;
 
-typedef struct s_enemy
-{
-	int			hp;
-	char		name[10];
-	int			pixel;
-	int			mapX;
-	int			mapY;
-	int			i_count;
-	double		posX;
-	double		posY;
-	double		distance;
-	int			bothit;
-	int			frame;
-	int			action;
-	double		last_time;
-	int			animating;
-	double		last_time2;
-	double		frame_delay;
-	bool		takedmg;
-}				t_enemy;
-
 typedef struct s_ray
 {
 	double		posX;
@@ -156,7 +133,25 @@ typedef struct s_ray
 	double		hit;
 	int			stepX;
 	int			stepY;
-
+	double		start_y;
+	double		length;
+	double		end_x;
+	double		end_y;
+	double		ray;
+	double		offset;
+	double		fov;
+	double		sidedistX;
+	double		sidedistY;
+	double		ray_dX;
+	double		ray_dY;
+	int			ray_hit;
+	int			last_hit;
+	double		perp_length;
+	double		y_wall;
+	double		line_h;
+	double		ratio;
+	int			wall;
+	double		pos_texture;
 }				t_ray;
 
 typedef struct s_player
@@ -196,6 +191,7 @@ typedef struct s_game
 	char		*so;
 	char		*we;
 	char		*ea;
+	char		*wall_path[4];
 	int			ceiling[3];
 	int			floor[3];
 	int			fd;
@@ -208,11 +204,8 @@ typedef struct s_game
 	bool		do_damage;
 	t_texture	pic;
 	t_mlx		*mlx;
-	t_texture	gun[39];
 	t_texture	wall[4];
-	t_texture	texturebot[5][4];
 	t_player	player;
-	t_enemy		ennemy[4];
 	int			mouse_x;
 	int			mouse_y;
 	float		mouse_cam;
@@ -254,14 +247,6 @@ int				india(t_game *game);
 double			get_current_time(void);
 void			draw_arrow(t_game *game, t_texture *textures);
 int				key_release(int keycode, t_game *game);
-void			draw_crosshair(t_game *game, char *data, int size_line, int bpp,
-					int color);
-void			drawEnemy(t_game *game, char *data, t_enemy *enemy);
-void			drawallbot(t_game *game, char *data);
-void			checkbotmoves(t_game *game);
-void			dammage(t_game *game, t_enemy *enemy);
-void			update_enemy_animation(t_game *game, t_enemy *bot);
-void			draw_floor_and_ceiling(t_game *game, t_texture *textures);
-int				mouse_move(int x, int y, t_game *game);
+void			draw_crosshair(t_game *game, t_texture *textures, int color);
 
 #endif

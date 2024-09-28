@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:05:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/26 12:12:24 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/28 14:04:12 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,6 @@ int	key_hook(int keycode, t_game *game)
 		game->player.side_l = true;
 	else if (keycode == XK_Right)
 		game->player.side_r = true;
-	if (keycode == XK_p)
-	{
-		if (game->gun->animating == 0)
-		{
-			game->gun->animating = 1;
-			game->do_damage = 1;
-		}
-	}
-	if (keycode == XK_o)
-	{
-		if (game->gun->animating == 0)
-			game->gun->animating = 1;
-	}
 	return (0);
 }
 

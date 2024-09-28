@@ -6,53 +6,11 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/26 15:20:11 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/28 17:40:47 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-int	mouse_move(int x, int y, t_game *game)
-{
-	int center_x = WINX / 2;
-    int center_y = WINY / 2;
-	static int ignore_event = 0;
-	int			delta_x;
-	char side;
-	double		speed_cam;
-
- 	if (ignore_event)
-    {
-        ignore_event = 0;
-        return (0);
-    }
-	delta_x = x - center_x;
-	if (delta_x != 0)
-	{
-		if (delta_x > 0)
-			side = 'd';
-		else
-			side = 'g';
-		speed_cam = fabs(delta_x) * 0.0005;
-		direction(game, side, speed_cam);
-	}
-	ignore_event = 1;
-	mlx_mouse_move(game->mlx->mlx_ptr, game->mlx->mlx_win, center_x, center_y);
-	return (0);
-}
-
-int	mouse_press(int button, int x, int y,t_game *game)
-{
-	if(button == 1)
-	{
-		if (game->gun->animating == 0)
-		{
-			game->gun->animating = 1;
-			game->do_damage = 1;
-		}
-	}
-	return (0);
-}
 
 int	loop_hook(t_game *game)
 {
@@ -65,15 +23,9 @@ int	loop_hook(t_game *game)
 	check_moves(game);
 	draw_arrow(game, texture);
 	mini_draw_map(game, texture);
-	drawallbot(game, texture->data);
-	checkbotmoves(game);
-	draw_crosshair(game, texture->data, texture->size_line, texture->bpp,
-		CROSSHAIR);
-	update_gun_animation(game);
-	draw_gun(game, texture->data, texture->bpp);
+	draw_crosshair(game, texture, CROSSHAIR);
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win,
 		texture->img, 0, 0);
-	// mlx_mouse_move(game->mlx->mlx_ptr, game->mlx->mlx_win, WINX / 2, WINY/ 2);
 	if (game->player.hp <= 0)
 	{
 		ft_printf(RED "YOU DIED *rip*\n" RESET);
@@ -81,8 +33,6 @@ int	loop_hook(t_game *game)
 	}
 	return (0);
 }
-
-
 
 int	main(int ac, char **av)
 {
@@ -97,15 +47,6 @@ int	main(int ac, char **av)
 	mlx_hook(game->mlx->mlx_win, 17, 0, india, game);
 	mlx_hook(game->mlx->mlx_win, 02, (1L << 0), key_hook, game);
 	mlx_hook(game->mlx->mlx_win, 03, (1L << 1), key_release, game);
-	if (mlx_hook(game->mlx->mlx_win, 6, (1L << 6), mouse_move, game) == 0)
-	{
-		printf("Failed to set mouse move hook\n");
-	}
-	else
-	{
-		printf("Mouse move hook set successfully\n");
-	}
-	mlx_hook(game->mlx->mlx_win, 04,(1L<<2) , mouse_press, game);
 	mlx_loop(game->mlx->mlx_ptr);
 	// ft_calloc(1,sizeof(t_game));
 	// print_struct(game);

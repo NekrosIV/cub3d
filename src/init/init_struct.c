@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_struct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/25 19:35:49 by pscala           ###   ########.fr       */
+/*   Updated: 2024/09/28 16:31:35 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ t_game	*init_game(void)
 	game = malloc(sizeof(t_game));
 	if (!game)
 		exit(1);
-	game->ea = NULL;
-	game->no = NULL;
-	game->so = NULL;
-	game->we = NULL;
+	game->wall_path[N] = NULL;
+	game->wall_path[S] = NULL;
+	game->wall_path[W] = NULL;
+	game->wall_path[E] = NULL;
 	game->ceiling[0] = -1;
 	game->ceiling[1] = -1;
 	game->ceiling[2] = -1;

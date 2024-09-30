@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/28 13:44:17 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/30 14:29:11 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,32 @@ int is_wall(t_game *game, double x, double y) {
     return 0;
 }
 
+bool has_wall_between(t_game *game, t_enemy *bot)
+{
+    double deltaX = game->player.posX - bot->posX;
+    double deltaY = game->player.posY - bot->posY;
+    double distance = sqrt(deltaX * deltaX + deltaY * deltaY);
+    int steps = (int)(distance * 10);
+    double incrementX = deltaX / steps;
+    double incrementY = deltaY / steps;
+    double x = bot->posX;
+    double y = bot->posY;
+    int i;
+
+   i = 0;
+   while(i < steps)
+   {
+        x += incrementX;
+        y += incrementY;
+        int mapX = (int)floor(x);
+        int mapY = (int)floor(y);
+        if (game->map[mapY][mapX] != '0') 
+            return true;
+		i++;
+    }
+    return false;
+}
+
 // Fonction pour déplacer le bot vers le joueur
 void movebot(t_game *game, t_enemy *bot) {
     double dx;
@@ -87,7 +113,9 @@ void movebot(t_game *game, t_enemy *bot) {
     dy = game->player.posY - bot->posY;
  	if (bot->distance < BOT_SHOOT) 
     {
-		if (bot->action != ATTACK && current_time - bot->last_time2 > 0.7)
+		if (has_wall_between(game, bot))
+            bot->action = HALT;
+		else if (bot->action != ATTACK && current_time - bot->last_time2 > 0.7)
 		{	
 			bot->action = ATTACK;
 			bot->frame = 1;
@@ -132,14 +160,11 @@ void movebot(t_game *game, t_enemy *bot) {
 			moved = true;
         }
     }
-	// if (current_time - bot->last_time >= bot->frame_delay)
-	// {	
 		if (moved == true)
 			bot->action = WALK;  
 		else
 			bot->action = HALT; 
-		// bot->last_time2 = current_time;
-	// }
+	
 }
 void	do_damage_to_bot(t_game *game)
 {
@@ -229,23 +254,6 @@ void drawallbot(t_game *game, char *data) {
     }
 }
 
-// void	drawallbot(t_game *game, char *data)
-// {
-// 	t_enemy *tab;
-// 	int i;
-
-// 	i = 0;
-// 	tab = game->ennemy;
-// 	while (i < game->bot_nb)
-// 	{
-// 		update_enemy_animation(tab + i);
-// 		drawEnemy(game, data, tab + i);
-// 		// printf("i = %d nb rayaons,%d\n", i,  game->ennemy[i].bothit);
-
-// 		i++;
-// 	}
-// }
-
 void	drawEnemy(t_game *game, char *data, t_enemy *enemy)
 {
 	double	dx;
@@ -292,13 +300,12 @@ void	drawEnemy(t_game *game, char *data, t_enemy *enemy)
 	y_img = 0.0;
 	while (startx < endx)
 	{
-		if (startx < WINX && startx >= 0) // Changed to >= 0
+		if (startx < WINX && startx >= 0) 
 		{
-			y_img = 0; // Reset y_img here
+			y_img = 0;
 			if (game->profondeur[startx] > distance)
 			{
 				for (int i = starty; i < endy && i < WINY && i >= 0; i++)
-					// Changed to >= 0
 				{
 					if (x_img < 64 && y_img < 64
 						&& *((int *)game->texturebot[enemy->action][enemy->frame].data + (int)x_img

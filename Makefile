@@ -14,7 +14,6 @@ FILES := cub3d.c \
 		init/init_mlx.c \
 		init/init_struct.c \
 		player/player_move.c \
-		minimap/minimap.c \
 		key/key.c \
 		draw/draw.c \
 		draw/raycasting.c \

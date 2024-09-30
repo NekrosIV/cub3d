@@ -104,6 +104,11 @@
 # define BOT_SHOOT 5
 # define TRIGGERBOT 15
 # define CROSSHAIR 0xFF7300
+# define REDHP 0x8A0707
+# define BRIGHTRED 0xFF6666
+# define ORANGEHP 0xFFB347
+# define GREENHP 0x39FF14
+# define HPP 100
 
 typedef struct s_mlx
 {
@@ -198,13 +203,11 @@ typedef struct s_game
 	int			map_pos;
 	int			map_rows;
 	int			map_column;
-	char		*no;
-	char		*so;
-	char		*we;
-	char		*ea;
 	char		*wall_path[4];
 	int			ceiling[3];
 	int			floor[3];
+	int			floor_hexa;
+	int			ceiling_hexa;
 	int			fd;
 	char		player_dir;
 	double		playerdirX;

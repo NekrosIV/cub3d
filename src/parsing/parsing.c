@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/28 16:07:09 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/30 16:17:39 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -495,7 +495,10 @@ void	read_file(char *file, t_game *game)
 	init_map(game, file);
 	game->fd = -1;
 }
-
+int rgb_to_hexa(int rgb[3])
+{
+	return((rgb[0] << 16) | (rgb[1] << 8) | rgb[2]);
+}
 t_game	*parsing(char *file)
 {
 	t_game	*game;
@@ -506,5 +509,7 @@ t_game	*parsing(char *file)
 	read_file(file, game);
 	print_struct(game);
 	game->map[(int)game->player.posY][(int)game->player.posX] = '0';
+	game->floor_hexa = rgb_to_hexa(game->floor);
+	game->ceiling_hexa = rgb_to_hexa(game->ceiling);
 	return (game);
 }

@@ -92,10 +92,10 @@
 # define MINI_W 0x4B0082
 # define MINI_S 0x00FFFF
 # define CROSSHAIR 0xFF7300
-#define LINE_THICKNESS ((WINX + WINY) / 800)
-#define CROSSHAIR_SIZE ((WINX + WINY) / 300)
-#define CENTER_X (WINX / 2)
-#define CENTER_Y (WINY / 2)
+# define LINE_THICKNESS ((WINX + WINY) / 800)
+# define CROSSHAIR_SIZE ((WINX + WINY) / 300)
+# define CENTER_X (WINX / 2)
+# define CENTER_Y (WINY / 2)
 
 typedef struct s_mlx
 {
@@ -110,10 +110,6 @@ typedef struct s_textures
 	int			w;
 	int			bpp;
 	char		*data;
-	int			frame;
-	int			animating;
-	double		last_time;
-	double		frame_delay;
 	int			size_line;
 	int			endian;
 }				t_texture;
@@ -159,8 +155,6 @@ typedef struct s_player
 	double		posX;
 	double		posY;
 	double		dirangle;
-	double		playerdirX;
-	double		playerdirY;
 	double		new_x;
 	double		new_y;
 	double		new_dir;
@@ -187,28 +181,19 @@ typedef struct s_game
 	int			map_pos;
 	int			map_rows;
 	int			map_column;
-	char		*no;
-	char		*so;
-	char		*we;
-	char		*ea;
 	char		*wall_path[4];
 	int			ceiling[3];
 	int			floor[3];
+	int			floor_hexa;
+	int			ceiling_hexa;
 	int			fd;
 	char		player_dir;
-	double		playerdirX;
-	double		playerdirY;
 	int			map_x;
 	int			map_y;
-	int			bot_nb;
-	bool		do_damage;
 	t_texture	pic;
 	t_mlx		*mlx;
 	t_texture	wall[4];
 	t_player	player;
-	int			mouse_x;
-	int			mouse_y;
-	float		mouse_cam;
 	double		profondeur[WINX];
 }				t_game;
 
@@ -232,8 +217,6 @@ void			direction(t_game *game, char side, double speed_cam);
 void			check_moves(t_game *game);
 double			get_current_time(void);
 void			update_gun_animation(t_game *game);
-void			mini_draw_map(t_game *game, t_texture *texture);
-void			mini_draw_arrow(t_game *game, t_texture *texture);
 void			draw_filled_circle(t_texture *textures, int start_x,
 					int start_y, int color);
 void			draw_ray_in_data(t_game *game, t_texture *textures, int x0,

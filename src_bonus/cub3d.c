@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/28 14:08:32 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/30 14:27:22 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,54 @@ int	mouse_press(int button, int x, int y, t_game *game)
 	return (0);
 }
 
+void	draw_health(t_game *game, t_texture *texture)
+{
+	int		lenght;
+	int		height;
+	double	hp;
+	int		color;
+	int		x;
+	int		y;
+	int		reset;
+
+	lenght = WINX / 5;
+	height = WINY / 50;
+	hp = (double)game->player.hp;
+	hp = hp / HPP;
+	if (hp > 0.5)
+		color = GREENHP;
+	else if (hp > 0.2)
+		color = ORANGEHP;
+	else
+		color = BRIGHTRED;
+	lenght = (int)((double)lenght * hp);
+	x = 0;
+	y = WINY - height;
+	reset = y;
+	while (x < WINX / 5)
+	{
+		while (y < reset + height)
+		{
+			*((int *)texture->data + x + y * WINX) = REDHP;
+			y++;
+		}
+		x++;
+		y = reset;
+	}
+	x = 0;
+	y = reset;
+	while (x < lenght)
+	{
+		while (y < reset + height)
+		{
+			*((int *)texture->data + x + y * WINX) = color;
+			y++;
+		}
+		x++;
+		y = reset;
+	}
+}
+
 int	loop_hook(t_game *game)
 {
 	void		*img_ptr;
@@ -73,6 +121,7 @@ int	loop_hook(t_game *game)
 		CROSSHAIR);
 	update_gun_animation(game);
 	draw_gun(game, texture->data, texture->bpp);
+	draw_health(game, texture);
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win,
 		texture->img, 0, 0);
 	if (game->player.hp <= 0)

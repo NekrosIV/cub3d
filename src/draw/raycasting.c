@@ -6,60 +6,11 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/28 17:15:40 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/30 19:38:08 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-void	draw_ray_in_data(t_game *game, t_texture *textures, int x0, int y0,
-		int x1, int y1, int color)
-{
-	int	dx;
-	int	sx;
-	int	dy;
-	int	sy;
-	int	err;
-	int	e2;
-	int	pixel_index;
-
-	(void)game;
-	// y0 *= (WINY / game->map_max_y);
-	// y1 *= (WINY / game->map_max_y);
-	// x0 *= (WINX / game->map_max_x);
-	// x1 *= (WINX / game->map_max_x);
-	dx = abs(x1 - x0);
-	sx = x0 < x1 ? 1 : -1;
-	dy = -abs(y1 - y0);
-	sy = y0 < y1 ? 1 : -1;
-	err = dx + dy;
-	while (1)
-	{
-		if (x0 >= 0 && x0 < WINX && y0 >= 0 && y0 < WINY)
-		{
-			// Calculer l'index du pixel dans la mémoire tampon
-			pixel_index = y0 * textures->size_line + x0 * (textures->bpp / 8);
-			// Stocker la couleur (supposant un format RGB avec 32 bits par pixel)
-			textures->data[pixel_index] = color & 0xFF;             // Rouge
-			textures->data[pixel_index + 1] = (color >> 8) & 0xFF;  // Vert
-			textures->data[pixel_index + 2] = (color >> 16) & 0xFF; // Bleu
-		}
-		if (x0 == x1 && y0 == y1)
-			break ;
-		e2 = 2 * err;
-		if (e2 >= dy)
-		{
-			err += dy;
-			x0 += sx;
-		}
-		if (e2 <= dx)
-		{
-			err += dx;
-			y0 += sy;
-		}
-	}
-}
-
 
 void	init_ray(t_ray *ray, t_game *game)
 {
@@ -68,11 +19,11 @@ void	init_ray(t_ray *ray, t_game *game)
 	if (ray->ray_dY < 0.0001 && ray->ray_dY > -0.0001)
 		ray->deltaY = 1e30;
 	else
-		ray->deltaY = 1.0 / fabs(ray->ray_dY);
+		ray->deltaY =  1 /fabs(ray->ray_dY);
 	if (ray->ray_dX < 0.00001 && ray->ray_dX > -0.00001)
 		ray->deltaX = 1e30;
 	else
-		ray->deltaX = 1.0 / fabs(ray->ray_dX);
+		ray->deltaX =1/fabs(ray->ray_dX);
 	ray->mapX = (int)game->player.posX;
 	ray->mapY = (int)game->player.posY;
 }
@@ -198,7 +149,7 @@ void	draw_pixels(t_ray *ray, t_game *game, t_texture *textures, int i)
 	y = 0;
 	while (y <= (int)ray->start_y)
 	{
-		*((int *)textures->data + i + y * WINX) = SKY;
+		*((int *)textures->data + i + y * WINX) = game->ceiling_hexa;
 		y++;
 	}
 	while (y <= (int)ray->end_y)
@@ -211,7 +162,7 @@ void	draw_pixels(t_ray *ray, t_game *game, t_texture *textures, int i)
 	}
 	while (y < WINY)
 	{
-		*((int *)textures->data + i + y * WINX) = FLOOR;
+		*((int *)textures->data + i + y * WINX) = game->floor_hexa;
 		y++;
 	}
 }

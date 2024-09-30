@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 18:34:35 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/28 13:44:17 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/30 16:43:57 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ void	print_struct(t_game *game)
 	printf("map_rows: %d\n", game->map_rows);
 	printf("map_max_x: %d\n", game->map_max_x);
 	printf("map_max_y: %d\n", game->map_max_y);
-	printf("NO: %s\n", game->no);
-	printf("SO: %s\n", game->so);
-	printf("EA: %s\n", game->ea);
-	printf("WE: %s\n", game->we);
+	printf("NO: %s\n", game->wall_path[N]);
+	printf("SO: %s\n", game->wall_path[S]);
+	printf("EA: %s\n", game->wall_path[E]);
+	printf("WE: %s\n", game->wall_path[W]);
 	printf("ceiling: \n");
 	print_tabint(game->ceiling, 3);
 	printf("floor: \n");

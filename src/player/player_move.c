@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 13:03:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/28 14:05:12 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/30 15:59:01 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,16 +119,12 @@ void	direction(t_game *game, char side, double speed_cam)
 		game->player.dirangle -= speed_cam;
 		if (game->player.dirangle < 0)
 			game->player.dirangle += 2 * PI;
-		game->playerdirX = cos(game->player.dirangle);
-		game->playerdirY = sin(game->player.dirangle);
 	}
 	else
 	{
 		game->player.dirangle += speed_cam;
 		if (game->player.dirangle > 2 * PI)
 			game->player.dirangle = game->player.dirangle - (2 * PI);
-		game->playerdirX = cos(game->player.dirangle);
-		game->playerdirY = sin(game->player.dirangle);
 	}
 }
 
@@ -150,77 +146,3 @@ void	check_moves(t_game *game)
 	if (player.side_r == true)
 		direction(game, 'd', SPEED_C);
 }
-// void	movements(t_game *game, double angle_shift)
-// {
-// 	t_player	*player;
-
-// 	player = &game->player;
-// 	// Update the player's direction
-// 	player->new_dir = player->dirangle + angle_shift;
-// 	// Initialize safety offsets for collision detection
-// 	if (cos(player->new_dir) < 0)
-// 		player->safetyx = -0.01;
-// 	else
-// 		player->safetyx = 0.01;
-// 	if (sin(player->new_dir) > 0)
-// 		player->safetyy = -0.01;
-// 	else
-// 		player->safetyy = 0.01;
-// 	// Calculate the potential new position
-// 	player->new_x = player->posX + cos(player->new_dir) * SPEED_M
-// 		+ player->safetyx;
-// 	player->new_y = player->posY - sin(player->new_dir) * SPEED_M
-// 		+ player->safetyy;
-// 	// Determine the grid steps
-// 	player->stepx = (int)player->posX - (int)player->new_x;
-// 	player->stepy = (int)player->posY - (int)player->new_y;
-// 	player->flag = 1;
-// 	// Check for diagonal movement collision
-// 	if (player->stepx && player->stepy)
-// 	{
-// 		if (game->map[(int)player->posY][(int)player->new_x] != '0')
-// 			player->flag = 0;
-// 		if (game->map[(int)player->new_y][(int)player->posX] != '0')
-// 			player->flag = 0;
-// 	}
-// 	// Attempt to move the player
-// 	if (game->map[(int)player->new_y][(int)player->new_x] == '0'
-// 		&& player->flag)
-// 	{
-// 		player->posX = player->new_x - player->safetyx;
-// 		player->posY = player->new_y - player->safetyy;
-// 	}
-// 	else
-// 	{
-// 		// Handle collisions in the X direction
-// 		if (game->map[(int)player->posY][(int)player->new_x] == '0')
-// 		{
-// 			player->posX = player->new_x - player->safetyx;
-// 			if (sin(player->new_dir) > 0)
-// 				player->posY = (double)((int)player->posY) + 0.01;
-// 			else
-// 				player->posY = (double)((int)player->posY + 1) - 0.01;
-// 		}
-// 		// Handle collisions in the Y direction
-// 		else if (game->map[(int)player->new_y][(int)player->posX] == '0')
-// 		{
-// 			player->posY = player->new_y - player->safetyy;
-// 			if (cos(player->new_dir) > 0)
-// 				player->posX = (double)((int)player->posX + 1) - 0.01;
-// 			else
-// 				player->posX = (double)((int)player->posX) + 0.01;
-// 		}
-// 		// Handle collisions in both directions
-// 		else
-// 		{
-// 			if (cos(player->new_dir) > 0)
-// 				player->posX = (double)((int)player->posX + 1) - 0.01;
-// 			else
-// 				player->posX = (double)((int)player->posX) + 0.01;
-// 			if (sin(player->new_dir) > 0)
-// 				player->posY = (double)((int)player->posY) + 0.01;
-// 			else
-// 				player->posY = (double)((int)player->posY + 1) - 0.01;
-// 		}
-// 	}
-// }

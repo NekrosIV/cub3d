@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:09:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/28 13:45:17 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/09/30 14:15:24 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ void	update_enemy_animation(t_game *game, t_enemy *bot)
 		if (current_time - bot->last_time >= bot->frame_delay)
 		{
 			if(bot->frame == 0)
-				game->player.hp -= 2;
+				game->player.hp -= 1;
 			bot->frame += 1;
 			bot->last_time = current_time;
 			if (bot->frame > 1)

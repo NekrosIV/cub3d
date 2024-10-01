@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/28 13:44:17 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/01 20:31:55 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,23 +222,26 @@ void	draw_arrow(t_game *game, t_texture *textures)
 			y_wall = ratio * (line_h - (double)WINY) / 2;
 		if (pos_texture > game->wall[wall].w - 1)
 			pos_texture = game->wall[wall].w - 1;
+		//sky
 		while (y <= (int)start_y)
 		{
 			*((int *)textures->data + i + y * WINX) = *((int *)game->evangelion.data + (int)skyx + ((int)y_sky * game->evangelion.size_line/4));
 			y_sky += sky_ratio;
 			y++;
 		}
+		//wall
 		while (y <= (int)end_y)
 		{
 			*((int *)textures->data + i + y * WINX) = *((int *)game->wall[wall].data + (int)pos_texture + ((int)y_wall * game->wall[wall].size_line/4));
 			y_wall += ratio;
 			y++;
 		}
+		//floor
 		while (y < WINY)
 		{
 			int offsetx = y%20;
 			int offsety = i%20;
-			*((int *)textures->data + i + y * WINX) =  *((int *)game->evangelion.data + offsetx+  (int)(((game->evangelion.h*0.85)+offsety) * game->evangelion.size_line/4));;
+			*((int *)textures->data + i + y * WINX) =  *((int *)game->evangelion.data + offsetx+  (int)(((game->evangelion.h*0.95)+offsety) * game->evangelion.size_line/4));;
 			y++;
 		}
 		i++;

@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/01 19:43:46 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/01 20:28:15 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,7 +332,7 @@ void	init_mlx(t_game *game)
 			&game->gun[38].bpp, &game->gun[38].size_line,
 			&game->gun[38].endian);
 	game->evangelion.img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
-			"textures/julsky.xpm", &game->evangelion.w, &game->evangelion.h);
+			"textures/godhands.xpm", &game->evangelion.w, &game->evangelion.h);
 	game->evangelion.data = mlx_get_data_addr(game->evangelion.img,
 			&game->evangelion.bpp, &game->evangelion.size_line,
 			&game->evangelion.endian);

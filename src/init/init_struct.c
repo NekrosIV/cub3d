@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_struct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/30 16:17:54 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:15:07 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_player	init_player_struct(void)
 	player.side_l = false;
 	return (player);
 }
+
 void	init_textures(t_game *game)
 {
 	int	i;
@@ -50,6 +51,7 @@ void	init_textures(t_game *game)
 		i++;
 	}
 }
+
 void	init_pic(t_game *game)
 {
 	game->pic.img = 0;

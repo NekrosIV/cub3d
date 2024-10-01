@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/30 15:30:26 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:23:50 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,14 @@
 int	loop_hook(t_game *game)
 {
 	t_texture	*texture;
+	int			bpp;
+	int			size_line;
+	int			endian;
 
 	texture = &game->pic;
-	int bpp, size_line, endian;
 	check_moves(game);
 	draw_arrow(game, texture);
-	// mini_draw_map(game, texture);
-	draw_crosshair(game, texture, CROSSHAIR);
+	draw_crosshair(texture, CROSSHAIR);
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win,
 		texture->img, 0, 0);
 	return (0);

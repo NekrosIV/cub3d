@@ -3,65 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   player_move.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 13:03:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/30 15:59:01 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:12:14 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-// Fonction pour initialiser les offsets de sécurité pour la détection des collisions
-void	initialize_safety_offsets(t_player *player)
-{
-	if (cos(player->new_dir) < 0)
-		player->safetyx = -0.07;
-	else
-		player->safetyx = 0.07;
-	if (sin(player->new_dir) > 0)
-		player->safetyy = -0.07;
-	else
-		player->safetyy = 0.07;
-}
-
-// Fonction pour calculer la nouvelle position potentielle du joueur
-void	calculate_new_position(t_player *player)
-{
-	player->new_x = player->posX + cos(player->new_dir) * SPEED_M
-		+ player->safetyx;
-	player->new_y = player->posY - sin(player->new_dir) * SPEED_M
-		+ player->safetyy;
-}
-
-// Fonction pour déterminer les pas sur la grille et initialiser le flag de collision
-void	determine_grid_steps(t_player *player)
-{
-	player->stepx = (int)player->posX - (int)player->new_x;
-	player->stepy = (int)player->posY - (int)player->new_y;
-	player->flag = 1;
-}
-
-// Fonction pour vérifier les collisions lors d'un mouvement diagonal
-void	check_diagonal_collision(t_game *game, t_player *player)
-{
-	if (player->stepx && player->stepy)
-	{
-		if (game->map[(int)player->posY][(int)player->new_x] != '0')
-			player->flag = 0;
-		if (game->map[(int)player->new_y][(int)player->posX] != '0')
-			player->flag = 0;
-	}
-}
-void	adjust_player_posX(t_player *player)
-{
-	if (cos(player->new_dir) > 0)
-		player->posX = (double)((int)player->posX + 1) - 0.07;
-	else
-		player->posX = (double)((int)player->posX) + 0.07;
-}
-
-void	adjust_player_posY(t_player *player)
+void	adjust_player_posy(t_player *player)
 {
 	if (sin(player->new_dir) > 0)
 		player->posY = (double)((int)player->posY) + 0.07;
@@ -69,7 +20,6 @@ void	adjust_player_posY(t_player *player)
 		player->posY = (double)((int)player->posY + 1) - 0.07;
 }
 
-// Fonction pour tenter de déplacer le joueur en fonction de la détection des collisions
 void	attempt_move_player(t_game *game, t_player *player)
 {
 	if (game->map[(int)player->new_y][(int)player->new_x] == '0'
@@ -83,22 +33,21 @@ void	attempt_move_player(t_game *game, t_player *player)
 		if (game->map[(int)player->posY][(int)player->new_x] == '0')
 		{
 			player->posX = player->new_x - player->safetyx;
-			adjust_player_posY(player);
+			adjust_player_posy(player);
 		}
 		else if (game->map[(int)player->new_y][(int)player->posX] == '0')
 		{
 			player->posY = player->new_y - player->safetyy;
-			adjust_player_posX(player);
+			adjust_player_posx(player);
 		}
 		else
 		{
-			adjust_player_posY(player);
-			adjust_player_posX(player);
+			adjust_player_posy(player);
+			adjust_player_posx(player);
 		}
 	}
 }
 
-// Fonction principale de mouvement
 void	movements(t_game *game, double angle_shift)
 {
 	t_player	*player;

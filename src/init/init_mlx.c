@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_mlx.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/28 16:23:05 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:14:43 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	init_mlx2(t_mlx *mlx)
 	mlx->mlx_ptr = NULL;
 	mlx->mlx_win = NULL;
 }
+
 void	init_wall(t_game *game)
 {
 	int	i;
@@ -26,13 +27,13 @@ void	init_wall(t_game *game)
 	{
 		game->wall[i].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
 				game->wall_path[i], &game->wall[i].w, &game->wall[i].h);
-        if(!game->wall[i].img)
-		    free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);
+		if (!game->wall[i].img)
+			free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);
 		game->wall[i].data = mlx_get_data_addr(game->wall[i].img,
 				&game->wall[i].bpp, &game->wall[i].size_line,
 				&game->wall[i].endian);
-         if(!game->wall[i].data)
-		    free_exit(game, __LINE__ - 2, __FILE__, E_MLXDATA);
+		if (!game->wall[i].data)
+			free_exit(game, __LINE__ - 2, __FILE__, E_MLXDATA);
 		i++;
 	}
 }
@@ -55,7 +56,7 @@ void	init_mlx(t_game *game)
 		free_exit(game, __LINE__ - 2, __FILE__, E_INITMLX);
 	init_wall(game);
 	mlx->mlx_win = mlx_new_window(mlx->mlx_ptr, WINX, WINY, WINAME);
-    if(!mlx->mlx_win)
+	if (!mlx->mlx_win)
 		free_exit(game, __LINE__ - 2, __FILE__, E_MLXWIN);
 	texture->img = mlx_new_image(game->mlx->mlx_ptr, WINX, WINY);
 	texture->data = mlx_get_data_addr(texture->img, &texture->bpp,

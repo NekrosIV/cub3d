@@ -10,13 +10,22 @@ HEADERS := ./include
 
 FILES := cub3d.c \
 		parsing/parsing.c \
-		error/exit.c \
+		parsing/rgb.c \
+		parsing/txtur_pars.c \
+		parsing/pars_map.c \
+		parsing/flood_fill.c \
+		parsing/map_utils.c \
+		parsing/parsing_utils.c \
 		init/init_mlx.c \
 		init/init_struct.c \
 		player/player_move.c \
+		player/player_move2.c \
 		key/key.c \
 		draw/draw.c \
 		draw/raycasting.c \
+		draw/raycasting2.c \
+		error/exit.c \
+		error/exit2.c \
 		utils.c 
 
 SRCS_DIR := ./src

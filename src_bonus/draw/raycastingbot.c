@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycastingbot.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/30 14:29:11 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:54:35 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -350,22 +350,15 @@ void	dammage(t_game *game,t_enemy *enemy)
 	dx = enemy->posX - game->player.posX;
 	dy = enemy->posY - game->player.posY;
 	distance = sqrt((dx * dx) + (dy * dy));
-	// printf("distance = %f", distance);
 	angle = atan2(-dy, dx);
-	// printf("angle du bot :%f\n",angle);
-	// printf("posx %f posy%f\n",enemy->posX,enemy->posY);
 	difference = game->player.dirangle - angle + (PI/36);
-	// Normalize the angle difference to [-PI, PI]
 	while (difference > 2*PI)
 		difference -= 2 * PI;
 	while (difference < 0)
 		difference += 2 * PI;
-	// printf("difference%f\n\n\n",difference);
 	if (fabs(difference)> AIMBOT)
 		return;
 	enemy->hp -= DAMAGE_BOT;
-	printf("enemyhp%d\n",enemy->hp);
 	enemy->action = DAMAGE;
 	enemy->frame = 0;
-	// enemy->takedmg = false;
 }

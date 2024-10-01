@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_mlx.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/30 17:44:52 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:43:46 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,7 +332,7 @@ void	init_mlx(t_game *game)
 			&game->gun[38].bpp, &game->gun[38].size_line,
 			&game->gun[38].endian);
 	game->evangelion.img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
-			"textures/cloudysky.xpm", &game->evangelion.w, &game->evangelion.h);
+			"textures/julsky.xpm", &game->evangelion.w, &game->evangelion.h);
 	game->evangelion.data = mlx_get_data_addr(game->evangelion.img,
 			&game->evangelion.bpp, &game->evangelion.size_line,
 			&game->evangelion.endian);

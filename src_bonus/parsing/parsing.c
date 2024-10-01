@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/28 16:08:00 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:33:33 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -504,7 +504,7 @@ t_game	*parsing(char *file)
 		free_exit(NULL, 0, NULL, E_FILE);
 	game = init_game();
 	read_file(file, game);
-	print_struct(game);
+	// print_struct(game);
 	game->map[(int)game->player.posY][(int)game->player.posX] = '0';
 	return (game);
 }

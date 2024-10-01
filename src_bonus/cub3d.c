@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/30 14:27:22 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/01 19:35:46 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,14 +145,7 @@ int	main(int ac, char **av)
 	mlx_hook(game->mlx->mlx_win, 17, 0, india, game);
 	mlx_hook(game->mlx->mlx_win, 02, (1L << 0), key_hook, game);
 	mlx_hook(game->mlx->mlx_win, 03, (1L << 1), key_release, game);
-	if (mlx_hook(game->mlx->mlx_win, 6, (1L << 6), mouse_move, game) == 0)
-	{
-		printf("Failed to set mouse move hook\n");
-	}
-	else
-	{
-		printf("Mouse move hook set successfully\n");
-	}
+	mlx_hook(game->mlx->mlx_win, 6, (1L << 6), mouse_move, game);
 	mlx_hook(game->mlx->mlx_win, 04, (1L << 2), mouse_press, game);
 	mlx_loop(game->mlx->mlx_ptr);
 	// ft_calloc(1,sizeof(t_game));

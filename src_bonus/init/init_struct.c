@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/30 16:45:41 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/02 14:44:51 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ t_game	*init_game(void)
 	game->map_y = 0;
 	game->bot_nb = 4;
 	game->do_damage = false;
+	game->hit_player = false;
 	game->mouse_x = 0;
 	game->mouse_y = 0;
 	game->mouse_cam = 0.0;

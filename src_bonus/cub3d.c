@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/01 19:35:46 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/02 18:25:32 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,21 @@ void	draw_health(t_game *game, t_texture *texture)
 	}
 }
 
+void	bot_attack(t_game *game, t_texture *texture)
+{
+	int		i;
+	double	current_time;
+
+	current_time = get_current_time();
+	i = 0;
+	while (i < game->bot_nb)
+	{
+		if (current_time - game->ennemy[i].last_time_hit <= 0.5)
+			draw_dammage(game, &game->ennemy[i], &game->player);
+		i++;
+	}
+}
+
 int	loop_hook(t_game *game)
 {
 	void		*img_ptr;
@@ -121,6 +136,7 @@ int	loop_hook(t_game *game)
 		CROSSHAIR);
 	update_gun_animation(game);
 	draw_gun(game, texture->data, texture->bpp);
+	bot_attack(game, texture);
 	draw_health(game, texture);
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win,
 		texture->img, 0, 0);

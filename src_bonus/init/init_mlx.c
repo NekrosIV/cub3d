@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_mlx.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/01 20:28:15 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/03 18:18:56 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,56 +336,69 @@ void	init_mlx(t_game *game)
 	game->evangelion.data = mlx_get_data_addr(game->evangelion.img,
 			&game->evangelion.bpp, &game->evangelion.size_line,
 			&game->evangelion.endian);
+	game->dammage.img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
+			"textures/bloodscreen.xpm", &game->dammage.w, &game->dammage.h);
+	game->dammage.data = mlx_get_data_addr(game->dammage.img,
+			&game->dammage.bpp, &game->dammage.size_line,
+			&game->dammage.endian);
 	mlx->mlx_win = mlx_new_window(mlx->mlx_ptr, WINX, WINY, WINAME);
 	mlx_mouse_hide(mlx->mlx_ptr, mlx->mlx_win);
 	game->gun->frame = 0;
 	game->gun->animating = 0;
 	game->gun->frame_delay = 0.060;
 	game->gun->last_time = get_current_time();
-	game->ennemy[0].mapX = (int)game->player.posX;
-	game->ennemy[0].mapY = (int)game->player.posY - 2;
-	game->ennemy[0].posX = game->player.posX;
-	game->ennemy[0].posY = game->player.posY - 2.0;
-	game->ennemy[0].action = 0;
-	game->ennemy[0].frame = 0;
-	game->ennemy[0].last_time = get_current_time();
-	game->ennemy[0].last_time2 = get_current_time();
-	game->ennemy[0].animating = 1;
-	game->ennemy[0].hp = 100;
-	game->ennemy[0].takedmg = false;
-	game->ennemy[1].mapX = (int)game->player.posX;
-	game->ennemy[1].mapY = (int)game->player.posY + 2;
-	game->ennemy[1].posX = game->player.posX;
-	game->ennemy[1].posY = game->player.posY + 2.0;
-	game->ennemy[1].action = 0;
-	game->ennemy[1].frame = 0;
-	game->ennemy[1].last_time = get_current_time();
-	game->ennemy[1].last_time2 = get_current_time();
-	game->ennemy[1].animating = 1;
-	game->ennemy[1].hp = 100;
-	game->ennemy[1].takedmg = false;
-	game->ennemy[2].mapX = (int)game->player.posX + 2;
-	game->ennemy[2].mapY = (int)game->player.posY;
-	game->ennemy[2].posX = game->player.posX + 2.0;
-	game->ennemy[2].posY = game->player.posY;
-	game->ennemy[2].action = 0;
-	game->ennemy[2].frame = 0;
-	game->ennemy[2].last_time = get_current_time();
-	game->ennemy[2].last_time2 = get_current_time();
-	game->ennemy[2].animating = 1;
-	game->ennemy[2].hp = 100;
-	game->ennemy[2].takedmg = false;
-	game->ennemy[3].mapX = (int)game->player.posX - 2;
-	game->ennemy[3].mapY = (int)game->player.posY;
-	game->ennemy[3].posX = game->player.posX - 2.0;
-	game->ennemy[3].posY = game->player.posY;
-	game->ennemy[3].action = 0;
-	game->ennemy[3].frame = 0;
-	game->ennemy[3].last_time = get_current_time();
-	game->ennemy[3].last_time2 = get_current_time();
-	game->ennemy[3].animating = 1;
-	game->ennemy[3].hp = 100;
-	game->ennemy[3].takedmg = false;
+	// game->ennemy[0].mapX = (int)game->player.posX;
+	// game->ennemy[0].mapY = (int)game->player.posY - 2;
+	// game->ennemy[0].posX = game->player.posX;
+	// game->ennemy[0].posY = game->player.posY - 2.0;
+	// game->ennemy[0].action = 0;
+	// game->ennemy[0].frame = 0;
+	// game->ennemy[0].last_time = get_current_time();
+	// game->ennemy[0].last_time2 = get_current_time();
+	// game->ennemy[0].last_time_hit = get_current_time();
+	// game->ennemy[0].animating = 1;
+	// game->ennemy[0].hp = 100;
+	// game->ennemy[0].takedmg = false;
+	// game->ennemy[0].hit_player = false;
+	// game->ennemy[1].mapX = (int)game->player.posX;
+	// game->ennemy[1].mapY = (int)game->player.posY + 2;
+	// game->ennemy[1].posX = game->player.posX;
+	// game->ennemy[1].posY = game->player.posY + 2.0;
+	// game->ennemy[1].action = 0;
+	// game->ennemy[1].frame = 0;
+	// game->ennemy[1].last_time = get_current_time();
+	// game->ennemy[1].last_time2 = get_current_time();
+	// game->ennemy[1].last_time_hit = get_current_time();
+	// game->ennemy[1].animating = 1;
+	// game->ennemy[1].hp = 100;
+	// game->ennemy[1].takedmg = false;
+	// game->ennemy[1].hit_player = false;
+	// game->ennemy[2].mapX = (int)game->player.posX + 2;
+	// game->ennemy[2].mapY = (int)game->player.posY;
+	// game->ennemy[2].posX = game->player.posX + 2.0;
+	// game->ennemy[2].posY = game->player.posY;
+	// game->ennemy[2].action = 0;
+	// game->ennemy[2].frame = 0;
+	// game->ennemy[2].last_time = get_current_time();
+	// game->ennemy[2].last_time2 = get_current_time();
+	// game->ennemy[2].last_time_hit = get_current_time();
+	// game->ennemy[2].animating = 1;
+	// game->ennemy[2].hp = 100;
+	// game->ennemy[2].takedmg = false;
+	// game->ennemy[2].hit_player = false;
+	// game->ennemy[3].mapX = (int)game->player.posX - 2;
+	// game->ennemy[3].mapY = (int)game->player.posY;
+	// game->ennemy[3].posX = game->player.posX - 2.0;
+	// game->ennemy[3].posY = game->player.posY;
+	// game->ennemy[3].action = 0;
+	// game->ennemy[3].frame = 0;
+	// game->ennemy[3].last_time = get_current_time();
+	// game->ennemy[3].last_time2 = get_current_time();
+	// game->ennemy[3].last_time_hit = get_current_time();
+	// game->ennemy[3].animating = 1;
+	// game->ennemy[3].hp = 100;
+	// game->ennemy[3].takedmg = false;
+	// game->ennemy[3].hit_player = false;
 	texture->img = mlx_new_image(game->mlx->mlx_ptr, WINX, WINY);
 	texture->data = mlx_get_data_addr(texture->img, &texture->bpp,
 			&texture->size_line, &texture->endian);

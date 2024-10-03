@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:09:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/30 14:15:24 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/02 18:31:28 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,21 +129,83 @@ void	draw_gun(t_game *game, char *data, int bpp)
 		y++;
 	}
 }
+
+void	draw_dammage(t_game *game, t_enemy *bot, t_player *player)
+{
+	double	dx;
+	double	dy;
+	double	angle;
+	int		ignore;
+	double	x_ratio;
+	double	y_ratio;
+	int		x;
+	int		y;
+	double	x_img;
+	double	y_img;
+
+	dx = bot->posX - player->posX;
+	dy = bot->posY - player->posY;
+	angle = atan2(dy, dx);
+	dx = cos(angle);
+	dy = -sin(angle);
+	ignore = *((int *)game->dammage.data + game->dammage.h / 2
+			+ game->dammage.w / 2);
+	x_ratio = (double)game->dammage.w / (double)WINX;
+	y_ratio = (double)game->dammage.h / (double)WINY;
+	x = 0;
+	y = 0;
+	y_img = 0;
+	x_img = 0;
+	while (x < WINX)
+	{
+		while (y < WINY)
+		{
+			if (*((int *)game->dammage.data + (int)y_img * game->dammage.w
+					+ (int)x_img) != ignore)
+				*((int *)game->pic.data + y * WINX + x) = *((int *)game->dammage.data + (int)y_img * game->dammage.w + (int)x_img);
+			y++;
+			y_img += y_ratio;
+		}
+		x++;
+		y = 0;
+		y_img = 0;
+		x_img += x_ratio;
+	}
+	ignore = *((int *)game->dammage.data + (game->dammage.h / 2) * game->dammage.w + (game->dammage.w / 2));
+	x_ratio = (double)game->dammage.w / (double)WINX;
+	y_ratio = (double)game->dammage.h / (double)WINY;
+	
+	for (x = 0; x < WINX; x++)
+	{
+	    for (y = 0; y < WINY; y++)
+	    {
+	        x_img = x * x_ratio;
+	        y_img = y * y_ratio;
+	
+	        int img_index = ((int)y_img) * game->dammage.w + (int)x_img;
+	        int screen_index = y * WINX + x;
+	
+	        if (*((int *)game->dammage.data + img_index) != ignore)
+	        {
+	            *((int *)game->pic.data + screen_index) = *((int *)game->dammage.data + img_index);
+	        }
+	    }
+	}
+}
+
 void	update_enemy_animation(t_game *game, t_enemy *bot)
 {
 	double	current_time;
 
 	// printf("bot->action = %d frame = %d\n",bot->action,bot->frame);
-	if( bot->animating == 0)
-		return;
-	
+	if (bot->animating == 0)
+		return ;
 	if (bot->action == HALT)
 	{
 		bot->frame = 0;
-		return;
+		return ;
 	}
 	current_time = get_current_time();
-
 	if (bot->action == DAMAGE)
 	{
 		bot->frame_delay = 0.5;
@@ -151,16 +213,15 @@ void	update_enemy_animation(t_game *game, t_enemy *bot)
 		{
 			bot->frame += 1;
 			bot->last_time = current_time;
-			
 			if (bot->frame > 1)
 			{
 				bot->frame = 0;
 				bot->action = HALT;
 			}
-			else 
+			else
 				bot->last_time2 = current_time;
 		}
-		if(bot->hp <= 0)
+		if (bot->hp <= 0)
 			bot->action = DEATH;
 	}
 	if (bot->action == DEATH)
@@ -179,14 +240,18 @@ void	update_enemy_animation(t_game *game, t_enemy *bot)
 	}
 	if (bot->action == ATTACK)
 	{
-		if(bot->frame == 0)
+		if (bot->frame == 0)
 			bot->frame_delay = 0.2;
 		else
 			bot->frame_delay = 1;
 		if (current_time - bot->last_time >= bot->frame_delay)
 		{
-			if(bot->frame == 0)
+			if (bot->frame == 0)
+			{
 				game->player.hp -= 1;
+				game->hit_player = true;
+				bot->last_time_hit = current_time;
+			}
 			bot->frame += 1;
 			bot->last_time = current_time;
 			if (bot->frame > 1)
@@ -207,25 +272,22 @@ void	update_enemy_animation(t_game *game, t_enemy *bot)
 }
 void	update_gun_animation(t_game *game)
 {
+	double	current_time;
+
 	if (game->gun->animating == 0)
 		return ;
-
-	double current_time = get_current_time();
-
+	current_time = get_current_time();
 	if (current_time - game->gun->last_time >= game->gun->frame_delay)
 	{
 		game->gun->frame += 1;
-
 		if (game->gun->frame > 38)
 		{
 			game->gun->frame = 0;
 			game->gun->animating = 0;
 		}
-
 		game->gun->last_time = current_time;
 	}
 }
-
 
 // void draw_floor_and_ceiling(t_game *game, t_texture *textures)
 // {
@@ -239,7 +301,8 @@ void	update_gun_animation(t_game *game)
 //     double player_posX = game->player.posX;
 //     double player_posY = game->player.posY;
 
-//     for (y = WINY / 2; y < WINY; y++)  // Traiter à partir de l'horizon vers le bas
+//     for (y = WINY / 2; y < WINY; y++)
+// Traiter à partir de l'horizon vers le bas
 //     {
 //         // Distance projetée entre la caméra et le point projeté sur le sol
 //         row_distance = WINY / (2.0 * (y - WINY / 2.0));
@@ -248,7 +311,7 @@ void	update_gun_animation(t_game *game)
 //         {
 //             // Calcul de l'angle de direction du rayon pour ce pixel
 //             ray_angle = game->player.dirangle - FOV / 2 + x * (FOV / WINX);
-            
+
 //             // Calcul des directions du rayon (cos et sin de l'angle)
 //             ray_dX = cos(ray_angle);
 //             ray_dY = sin(ray_angle);
@@ -267,7 +330,8 @@ void	update_gun_animation(t_game *game)
 
 //             // Appliquer la texture du plafond (symétrique)
 //             int ceiling_color = game->wall[3].data[tex_y + tex_x];
-//             *((int *)textures->data + x + (WINY - y - 1) * WINX) = ceiling_color;
+//             *((int *)textures->data + x + (WINY - y - 1)
+// * WINX) = ceiling_color;
 //         }
 //     }
 // }

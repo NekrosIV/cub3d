@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/01 19:33:33 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/03 18:27:24 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,7 +219,7 @@ bool	look_like_a_map_line(char *line)
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] == '1' || line[i] == '0' || line[i] == ' '
+		if (line[i] == '1' || line[i] == '0' || line[i] == ' ' || line[i] == 'B'
 			|| line[i] == '\n')
 			i++;
 		else
@@ -335,13 +335,74 @@ void	replace_space_in_map(t_game *game)
 
 bool	check_valid_char(char c)
 {
-	return (c != '1' && c != '0' && c != ' ' && c != 'N' && c != 'E' && c != 'W'
-		&& c != 'S');
+	return (c != '1' && c != '0' && c != 'B' && c != ' ' && c != 'N' && c != 'E'
+		&& c != 'W' && c != 'S');
 }
 
 bool	check_play_pos(char c)
 {
 	return (c == 'N' || c == 'E' || c == 'W' || c == 'S');
+}
+
+void	check_player(t_game *game, int x, int y)
+{
+	if (check_valid_char(game->map[y][x]))
+		free_exit(game, 0, NULL, E_MAPCHAR);
+	if (game->player_dir == '0' && check_play_pos(game->map[y][x]))
+	{
+		game->player_dir = game->map[y][x];
+		game->player.posY = y;
+		game->player.posX = x;
+	}
+	else if (game->player_dir != '0' && check_play_pos(game->map[y][x]))
+		free_exit(game, 0, NULL, E_MULTIPOS);
+	if (game->map[y][x] == 'B')
+		game->bot_nb++;
+}
+
+void	init_bot(t_game *game, int i, int x, int y)
+{
+	game->ennemy[i].mapX = x;
+	game->ennemy[i].mapY = y;
+	game->ennemy[i].posX = (double) x;
+	game->ennemy[i].posY = (double) y;
+	game->ennemy[i].action = 0;
+	game->ennemy[i].frame = 0;
+	game->ennemy[i].last_time = get_current_time();
+	game->ennemy[i].last_time2 = get_current_time();
+	game->ennemy[i].last_time_hit = get_current_time();
+	game->ennemy[i].animating = 1;
+	game->ennemy[i].hp = 100;
+	game->ennemy[i].takedmg = false;
+	game->ennemy[i].hit_player = false;
+}
+
+void	search_bot(t_game *game)
+{
+	int y;
+	int x;
+	int i;
+
+	i = 0;
+	game->ennemy = malloc(sizeof(t_enemy) * game->bot_nb);
+	if (!game->ennemy)
+		free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC);
+	y = 0;
+	while (game->map[y])
+	{
+		x = 0;
+		while (game->map[y][x])
+		{
+			if (game->map[y][x] == 'B')
+			{
+				init_bot(game, i, x, y);
+				game->map[y][x] = '0';
+				i++;
+			}
+			x++;
+		}
+		y++;
+	}
 }
 
 void	pre_pars_map(t_game *game)
@@ -355,20 +416,12 @@ void	pre_pars_map(t_game *game)
 		x = 0;
 		while (game->map[y][x])
 		{
-			if (check_valid_char(game->map[y][x]))
-				free_exit(game, 0, NULL, E_MAPCHAR);
-			if (game->player_dir == '0' && check_play_pos(game->map[y][x]))
-			{
-				game->player_dir = game->map[y][x];
-				game->player.posY = y;
-				game->player.posX = x;
-			}
-			else if (game->player_dir != '0' && check_play_pos(game->map[y][x]))
-				free_exit(game, 0, NULL, E_MULTIPOS);
+			check_player(game, x, y);
 			x++;
 		}
 		y++;
 	}
+	search_bot(game);
 	if (game->player_dir == '0')
 		free_exit(game, 0, NULL, E_MISSPOS);
 }

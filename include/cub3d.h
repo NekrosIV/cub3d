@@ -69,8 +69,8 @@
 # define S 1
 # define W 2
 # define E 3
-# define WINX 1200
-# define WINY 900
+# define WINX 1800
+# define WINY 1000
 # define MIN_X_OR_Y ((WINX) < (WINY) ? (WINX) : (WINY))
 # define MIN_DIM MIN_X_OR_Y / 4
 # define PI 3.14159265358979323846

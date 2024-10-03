@@ -146,10 +146,12 @@ typedef struct s_enemy
 	int			frame;
 	int			action;
 	double		last_time;
+	double		last_time_hit;
 	int			animating;
 	double		last_time2;
 	double		frame_delay;
 	bool		takedmg;
+	bool		hit_player;
 }				t_enemy;
 
 typedef struct s_ray
@@ -223,11 +225,13 @@ typedef struct s_game
 	t_texture	wall[4];
 	t_texture	texturebot[5][4];
 	t_player	player;
-	t_enemy		ennemy[4];
+	t_enemy		*ennemy;
+	t_texture	dammage;
 	int			mouse_x;
 	int			mouse_y;
 	float		mouse_cam;
 	double		profondeur[WINX];
+	bool		hit_player;
 }				t_game;
 
 t_game			*parsing(char *file);
@@ -274,5 +278,6 @@ void			dammage(t_game *game, t_enemy *enemy);
 void			update_enemy_animation(t_game *game, t_enemy *bot);
 void			draw_floor_and_ceiling(t_game *game, t_texture *textures);
 int				mouse_move(int x, int y, t_game *game);
+void			draw_dammage(t_game *game, t_enemy *bot, t_player *player);
 
 #endif

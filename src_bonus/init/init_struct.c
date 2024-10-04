@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/02 14:44:51 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/04 18:01:24 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ t_game	*init_game(void)
 	game->mouse_x = 0;
 	game->mouse_y = 0;
 	game->mouse_cam = 0.0;
+	game->nb_door = 0;
+	game->check_door = 0; 
 	init_textures(game);
 	init_pic(game);
 	return (game);

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/02 18:25:32 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/04 19:51:03 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,42 @@ void	bot_attack(t_game *game, t_texture *texture)
 		i++;
 	}
 }
+void	check_door(t_game *game)
+{
+	double	delta_x;
+	double	delta_y;
+	int		i;
+
+	if (game->check_door == 0)
+		return ;
+	i = 0;
+	while (i < game->nb_door)
+	{
+		delta_y = game->player.posY - ((double)game->door[i].map_y + 0.5);
+		delta_x = game->player.posX - ((double)game->door[i].map_x + 0.5);
+		game->door[i].distance = sqrt(delta_x * delta_x + delta_y * delta_y);
+		printf("d = %f\n", game->door[i].distance);
+		if ((game->door[i].map_y != (int)game->player.posY
+				|| game->door[i].map_x != (int)game->player.posX))
+		{
+			if (game->door[i].distance <= 1.3)
+			{
+				if (game->door[i].state == OPEN)
+				{
+					game->map[game->door[i].map_y][game->door[i].map_x] = '1';
+					game->door[i].state = CLOSE;
+				}
+				else
+				{
+					game->map[game->door[i].map_y][game->door[i].map_x] = '0';
+					game->door[i].state = OPEN;
+				}
+			}
+		}
+		i++;
+	}
+	game->check_door = 0;
+}
 
 int	loop_hook(t_game *game)
 {
@@ -127,7 +163,8 @@ int	loop_hook(t_game *game)
 
 	texture = &game->pic;
 	int bpp, size_line, endian;
-	check_moves(game);
+	(check_moves(game));
+	check_door(game);
 	draw_arrow(game, texture);
 	mini_draw_map(game, texture);
 	drawallbot(game, texture->data);

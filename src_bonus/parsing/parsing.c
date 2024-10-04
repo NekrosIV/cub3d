@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/03 18:27:24 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/04 19:46:36 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,7 @@ bool	look_like_a_map_line(char *line)
 	while (line[i])
 	{
 		if (line[i] == '1' || line[i] == '0' || line[i] == ' ' || line[i] == 'B'
-			|| line[i] == '\n')
+			|| line[i] == 'P' || line[i] == '\n')
 			i++;
 		else
 			return (false);
@@ -336,7 +336,7 @@ void	replace_space_in_map(t_game *game)
 bool	check_valid_char(char c)
 {
 	return (c != '1' && c != '0' && c != 'B' && c != ' ' && c != 'N' && c != 'E'
-		&& c != 'W' && c != 'S');
+		&& c != 'W' && c != 'S' && c != 'P');
 }
 
 bool	check_play_pos(char c)
@@ -358,14 +358,16 @@ void	check_player(t_game *game, int x, int y)
 		free_exit(game, 0, NULL, E_MULTIPOS);
 	if (game->map[y][x] == 'B')
 		game->bot_nb++;
+	if (game->map[y][x] == 'P')
+		game->nb_door++;
 }
 
 void	init_bot(t_game *game, int i, int x, int y)
 {
 	game->ennemy[i].mapX = x;
 	game->ennemy[i].mapY = y;
-	game->ennemy[i].posX = (double) x;
-	game->ennemy[i].posY = (double) y;
+	game->ennemy[i].posX = (double)x;
+	game->ennemy[i].posY = (double)y;
 	game->ennemy[i].action = 0;
 	game->ennemy[i].frame = 0;
 	game->ennemy[i].last_time = get_current_time();
@@ -377,15 +379,49 @@ void	init_bot(t_game *game, int i, int x, int y)
 	game->ennemy[i].hit_player = false;
 }
 
-void	search_bot(t_game *game)
+void	init_door(t_game *game, int i, int x, int y)
 {
-	int y;
-	int x;
-	int i;
+	game->door[i].map_x = x;
+	game->door[i].map_y = y;
+	game->door[i].frame = 0;
+	game->door[i].state = OPEN;
+	game->door[i].last_time = get_current_time();
+}
+
+void	search_bot(t_game *game, int x, int y, int *i)
+{
+	if (game->map[y][x] == 'B')
+	{
+		init_bot(game, *i, x, y);
+		game->map[y][x] = '0';
+		(*i)++;
+	}
+}
+
+void	search_door(t_game *game, int x, int y, int *j)
+{
+	if (game->map[y][x] == 'P')
+	{
+		init_door(game, *j, x, y);
+		game->map[y][x] = '0';
+		(*j)++;
+	}
+}
+
+void	search_things(t_game *game)
+{
+	int	y;
+	int	x;
+	int	i;
+	int	j;
 
 	i = 0;
+	j = 0;
 	game->ennemy = malloc(sizeof(t_enemy) * game->bot_nb);
 	if (!game->ennemy)
+		free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC);
+	game->door = malloc(sizeof(t_enemy) * game->nb_door);
+	if (!game->door)
 		free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC);
 	y = 0;
 	while (game->map[y])
@@ -393,12 +429,8 @@ void	search_bot(t_game *game)
 		x = 0;
 		while (game->map[y][x])
 		{
-			if (game->map[y][x] == 'B')
-			{
-				init_bot(game, i, x, y);
-				game->map[y][x] = '0';
-				i++;
-			}
+			search_bot(game, x, y, &i);
+			search_door(game, x, y, &j);
 			x++;
 		}
 		y++;
@@ -421,7 +453,7 @@ void	pre_pars_map(t_game *game)
 		}
 		y++;
 	}
-	search_bot(game);
+	search_things(game);
 	if (game->player_dir == '0')
 		free_exit(game, 0, NULL, E_MISSPOS);
 }
@@ -549,6 +581,18 @@ void	read_file(char *file, t_game *game)
 	game->fd = -1;
 }
 
+void	put_door(t_game *game)
+{
+	int	i;
+
+	i = 0;
+	while (i < game->nb_door)
+	{
+		game->map[game->door[i].map_y][game->door[i].map_x] = '0';
+		i++;
+	}
+}
+
 t_game	*parsing(char *file)
 {
 	t_game	*game;
@@ -557,7 +601,8 @@ t_game	*parsing(char *file)
 		free_exit(NULL, 0, NULL, E_FILE);
 	game = init_game();
 	read_file(file, game);
-	// print_struct(game);
+	print_struct(game);
+	put_door(game);
 	game->map[(int)game->player.posY][(int)game->player.posX] = '0';
 	return (game);
 }

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:09:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/02 18:31:28 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/04 15:55:35 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,9 +132,6 @@ void	draw_gun(t_game *game, char *data, int bpp)
 
 void	draw_dammage(t_game *game, t_enemy *bot, t_player *player)
 {
-	double	dx;
-	double	dy;
-	double	angle;
 	int		ignore;
 	double	x_ratio;
 	double	y_ratio;
@@ -142,54 +139,26 @@ void	draw_dammage(t_game *game, t_enemy *bot, t_player *player)
 	int		y;
 	double	x_img;
 	double	y_img;
+	int		img_index;
+	int		screen_index;
 
-	dx = bot->posX - player->posX;
-	dy = bot->posY - player->posY;
-	angle = atan2(dy, dx);
-	dx = cos(angle);
-	dy = -sin(angle);
-	ignore = *((int *)game->dammage.data + game->dammage.h / 2
-			+ game->dammage.w / 2);
+	ignore = *((int *)game->dammage.data + (game->dammage.h / 2)
+			* game->dammage.w + (game->dammage.w / 2));
 	x_ratio = (double)game->dammage.w / (double)WINX;
 	y_ratio = (double)game->dammage.h / (double)WINY;
-	x = 0;
-	y = 0;
-	y_img = 0;
-	x_img = 0;
-	while (x < WINX)
-	{
-		while (y < WINY)
-		{
-			if (*((int *)game->dammage.data + (int)y_img * game->dammage.w
-					+ (int)x_img) != ignore)
-				*((int *)game->pic.data + y * WINX + x) = *((int *)game->dammage.data + (int)y_img * game->dammage.w + (int)x_img);
-			y++;
-			y_img += y_ratio;
-		}
-		x++;
-		y = 0;
-		y_img = 0;
-		x_img += x_ratio;
-	}
-	ignore = *((int *)game->dammage.data + (game->dammage.h / 2) * game->dammage.w + (game->dammage.w / 2));
-	x_ratio = (double)game->dammage.w / (double)WINX;
-	y_ratio = (double)game->dammage.h / (double)WINY;
-	
 	for (x = 0; x < WINX; x++)
 	{
-	    for (y = 0; y < WINY; y++)
-	    {
-	        x_img = x * x_ratio;
-	        y_img = y * y_ratio;
-	
-	        int img_index = ((int)y_img) * game->dammage.w + (int)x_img;
-	        int screen_index = y * WINX + x;
-	
-	        if (*((int *)game->dammage.data + img_index) != ignore)
-	        {
-	            *((int *)game->pic.data + screen_index) = *((int *)game->dammage.data + img_index);
-	        }
-	    }
+		for (y = 0; y < WINY; y++)
+		{
+			x_img = x * x_ratio;
+			y_img = y * y_ratio;
+			img_index = ((int)y_img) * game->dammage.w + (int)x_img;
+			screen_index = y * WINX + x;
+			if (*((int *)game->dammage.data + img_index) != ignore)
+				*((int *)game->pic.data
+						+ screen_index) = *((int *)game->dammage.data
+						+ img_index);
+		}
 	}
 }
 

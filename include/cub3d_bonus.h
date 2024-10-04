@@ -99,6 +99,7 @@
 # define CIRCLE_COLOR 0xFF7300
 # define MINI_W 0x4B0082
 # define MINI_S 0x00FFFF
+# define MINI_D 0x00FF00
 # define AIMBOT PI / 12
 # define SGUNRANGE 5
 # define BOT_SHOOT 5
@@ -109,6 +110,9 @@
 # define ORANGEHP 0xFFB347
 # define GREENHP 0x39FF14
 # define HPP 100
+# define CLOSE 0
+# define OPEN 1
+
 
 typedef struct s_mlx
 {
@@ -196,6 +200,16 @@ typedef struct s_player
 	int			hp;
 }				t_player;
 
+typedef struct s_door
+{
+	int			map_y;
+	int			map_x;
+	int			frame;
+	int			state;
+	double		last_time;
+	double		distance;
+}				t_door;
+
 typedef struct s_game
 {
 	char		**map;
@@ -227,11 +241,15 @@ typedef struct s_game
 	t_player	player;
 	t_enemy		*ennemy;
 	t_texture	dammage;
+	t_texture	door_texture;
 	int			mouse_x;
 	int			mouse_y;
 	float		mouse_cam;
 	double		profondeur[WINX];
 	bool		hit_player;
+	int 		nb_door;
+	t_door		*door;
+	int			check_door;
 }				t_game;
 
 t_game			*parsing(char *file);

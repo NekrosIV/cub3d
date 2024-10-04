@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 16:08:47 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/28 13:44:17 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/04 19:27:22 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	draw_loop(t_game *game, int line_size, float offset_x, float offset_y)
 {
 	float	screen_x;
 	float	screen_y;
+	int i;
 	
 	game->map_y = 0;
 	// Parcourir toutes les cases de la carte
@@ -32,11 +33,21 @@ void	draw_loop(t_game *game, int line_size, float offset_x, float offset_y)
 			if (screen_x + TILE_SIZE > 0 && screen_x < MIN_DIM && 
 			    screen_y + TILE_SIZE > 0 && screen_y < MIN_DIM)
 			{
-				// Déterminer la couleur en fonction du contenu de la carte
 				if (game->map[game->map_y][game->map_x] == '1')  // Mur
 					draw_rectangle(&game->pic, (int)screen_x, (int)screen_y, MINI_W);	
 				else
 					draw_rectangle(&game->pic, (int)screen_x, (int)screen_y, MINI_S);
+				i = 0;
+				while (i < game->nb_door)
+				{
+					if ((game->door[i].map_y == game->map_y
+						&& game->door[i].map_x == game->map_x) && (game->door[i].state == OPEN))
+					{
+						draw_rectangle(&game->pic, (int)screen_x, (int)screen_y,
+							MINI_D);
+					}
+					i++;
+				}
 			}
 			game->map_x++;
 		}

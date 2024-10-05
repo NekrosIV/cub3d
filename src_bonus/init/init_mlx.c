@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/04 17:17:26 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/05 15:31:13 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,14 @@ void	init_wall(t_game *game)
 				&game->wall[i].endian);
 		i++;
 	}
+	game->wall[i].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
+			"textures/wallaurared.xpm", &game->wall[i].w,
+			&game->wall[i].h);
+	if (!game->wall[i].img)
+		free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);
+	game->wall[i].data = mlx_get_data_addr(game->wall[i].img,
+			&game->wall[i].bpp, &game->wall[i].size_line,
+			&game->wall[i].endian);
 }
 void	int_enemy_textutre(t_game *game)
 {
@@ -89,8 +97,8 @@ void	init_gun_texture(t_game *game)
 	frame = 0;
 	while (frame < 39)
 	{
-		snprintf(texture_path, sizeof(texture_path), "textures/sfxgun%d.xpm", frame
-			+ 1);
+		snprintf(texture_path, sizeof(texture_path), "textures/sfxgun%d.xpm",
+			frame + 1);
 		game->gun[frame].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
 				texture_path, &game->gun[frame].w, &game->gun[frame].h);
 		if (game->gun[frame].img == NULL)

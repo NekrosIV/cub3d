@@ -113,7 +113,6 @@
 # define CLOSE 0
 # define OPEN 1
 
-
 typedef struct s_mlx
 {
 	void		*mlx_ptr;
@@ -208,6 +207,7 @@ typedef struct s_door
 	int			state;
 	double		last_time;
 	double		distance;
+	int			door_hit;
 }				t_door;
 
 typedef struct s_game
@@ -236,7 +236,7 @@ typedef struct s_game
 	t_texture	evangelion;
 	t_mlx		*mlx;
 	t_texture	gun[39];
-	t_texture	wall[4];
+	t_texture	wall[5];
 	t_texture	texturebot[5][4];
 	t_player	player;
 	t_enemy		*ennemy;
@@ -247,7 +247,7 @@ typedef struct s_game
 	float		mouse_cam;
 	double		profondeur[WINX];
 	bool		hit_player;
-	int 		nb_door;
+	int			nb_door;
 	t_door		*door;
 	int			check_door;
 }				t_game;

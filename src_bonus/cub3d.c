@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/04 19:51:03 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/05 15:35:23 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void	check_door(t_game *game)
 		if ((game->door[i].map_y != (int)game->player.posY
 				|| game->door[i].map_x != (int)game->player.posX))
 		{
-			if (game->door[i].distance <= 1.3)
+			if (game->door[i].distance <= 1.5 && game->door[i].door_hit >= WINX/2)
 			{
 				if (game->door[i].state == OPEN)
 				{

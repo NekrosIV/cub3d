@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/01 20:31:55 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/05 16:54:32 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,12 @@ void	draw_arrow(t_game *game, t_texture *textures)
 		i++;
 	}
 	i = 0;
+	while (i < game->nb_door)
+	{
+		game->door[i].door_hit = 0;	
+		i++;
+	}
+	i = 0;
 	while (i < WINX)
 	{
 		ray_dX = cos(ray);
@@ -162,17 +168,34 @@ void	draw_arrow(t_game *game, t_texture *textures)
 				b++;
 					// ft_printf("if %d, posx = %f, posy = %f \n", b, game->ennemy[b].posX, game->ennemy[b].posX);
 			}
+			b = 0;
+			while (b < game->nb_door)
+				{
+					if ((game->door[b].map_y == raymapY
+						&& game->door[b].map_x == raymapX))
+							game->door[b].door_hit++;
+					b++;
+				}
 			if (game->map[raymapY][raymapX] != '0')
+			{
 				ray_hit = 1;
+				b = 0;
+				while (b < game->nb_door && ray_hit == 1)
+				{
+					if ((game->door[b].map_y == raymapY
+						&& game->door[b].map_x == raymapX))
+						{
+							ray_hit = 2 ;
+							game->door[b].door_hit++;
+						}
+					b++;
+				}
+			}
 		}
 		if (last_hit)
 			length = (sidedistY - deltaY);
 		else
 			length = (sidedistX - deltaX);
-		// *** Correction du fisheye ***
-		// perp_length = fabs(length * cos(ray - game->player.dirangle));
-			// Correction de la distance
-		// Calcul de la hauteur de la ligne à dessiner en fonction de la distance perpendiculaire
 		perp_length = length;
 		game->profondeur[i] = perp_length;
 		line_h = WINY / fabs(perp_length * cos(ray - game->player.dirangle));
@@ -186,7 +209,9 @@ void	draw_arrow(t_game *game, t_texture *textures)
 		}
 		if (last_hit == 1)
 		{
-			if (stepY == -1)
+			if(ray_hit == 2)
+				wall = 4;
+			else if (stepY == -1)
 				wall = 0;
 			else
 				wall = 1;
@@ -195,13 +220,16 @@ void	draw_arrow(t_game *game, t_texture *textures)
 		}
 		else
 		{
-			if (stepX == -1)
+			if(ray_hit == 2)
+				wall = 4;
+			else if (stepX == -1)
 				wall = 2;
 			else
 				wall = 3;
 			pos_texture = (game->player.posY) - (perp_length * ray_dY);
 			pos_texture -= floor(pos_texture);
 		}
+		// printf("wall : %d ray : %d\n", wall, ray_hit);
 		ratio = game->wall[wall].h / line_h;
 		double sky_ratio  = game->evangelion.h / (double)(WINY/2);
 		double y_sky = 0;

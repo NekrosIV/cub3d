@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/04 19:46:36 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/05 18:12:18 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -366,8 +366,8 @@ void	init_bot(t_game *game, int i, int x, int y)
 {
 	game->ennemy[i].mapX = x;
 	game->ennemy[i].mapY = y;
-	game->ennemy[i].posX = (double)x;
-	game->ennemy[i].posY = (double)y;
+	game->ennemy[i].posX = (double)x + 0.5;
+	game->ennemy[i].posY = (double)y + 0.5;
 	game->ennemy[i].action = 0;
 	game->ennemy[i].frame = 0;
 	game->ennemy[i].last_time = get_current_time();
@@ -384,7 +384,7 @@ void	init_door(t_game *game, int i, int x, int y)
 	game->door[i].map_x = x;
 	game->door[i].map_y = y;
 	game->door[i].frame = 0;
-	game->door[i].state = OPEN;
+	game->door[i].state = CLOSE;
 	game->door[i].last_time = get_current_time();
 }
 
@@ -417,12 +417,18 @@ void	search_things(t_game *game)
 
 	i = 0;
 	j = 0;
-	game->ennemy = malloc(sizeof(t_enemy) * game->bot_nb);
-	if (!game->ennemy)
-		free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC);
-	game->door = malloc(sizeof(t_enemy) * game->nb_door);
-	if (!game->door)
-		free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC);
+	if (game->bot_nb > 0)
+	{
+		game->ennemy = malloc(sizeof(t_enemy) * game->bot_nb);
+		if (!game->ennemy)
+			free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC);
+	}
+	if (game->nb_door > 0)
+	{
+		game->door = malloc(sizeof(t_enemy) * game->nb_door);
+		if (!game->door)
+			free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC);
+	}
 	y = 0;
 	while (game->map[y])
 	{
@@ -588,7 +594,7 @@ void	put_door(t_game *game)
 	i = 0;
 	while (i < game->nb_door)
 	{
-		game->map[game->door[i].map_y][game->door[i].map_x] = '0';
+		game->map[game->door[i].map_y][game->door[i].map_x] = '1';
 		i++;
 	}
 }

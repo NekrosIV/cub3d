@@ -1,10 +1,10 @@
-NO textures/ceilingrocks.xpm
-SO textures/ceilingrocks.xpm
-WE textures/ceilingrocks.xpm
-EA textures/ceilingrocks.xpm
+NO textures/doom/stone.xpm
+SO textures/doom/stone.xpm
+WE textures/doom/stone.xpm
+EA textures/doom/stone.xpm
 
 F 255,255,255
-C textures/ceilingrocks.xpm
+C textures/skybox/skybox_desert_night.xpm
 
 111111111111111111111111111111111111111111111111111111111111111111111
 111111111111111111111111111100000000010000000000000000000000011111111

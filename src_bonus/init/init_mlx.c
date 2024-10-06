@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_mlx.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/06 16:07:34 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/06 18:27:06 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	init_wall(t_game *game)
 		i++;
 	}
 	game->wall[i].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
-			"textures/wallaurared.xpm", &game->wall[i].w,
+			"textures/doom/door3.xpm", &game->wall[i].w,
 			&game->wall[i].h);
 	if (!game->wall[i].img)
 		free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);

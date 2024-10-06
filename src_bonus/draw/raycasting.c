@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/05 16:54:32 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/06 16:08:40 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,7 @@ void	draw_arrow(t_game *game, t_texture *textures)
 		if (last_hit == 1)
 		{
 			if(ray_hit == 2)
-				wall = 4;
+				wall = 5;
 			else if (stepY == -1)
 				wall = 0;
 			else
@@ -221,7 +221,7 @@ void	draw_arrow(t_game *game, t_texture *textures)
 		else
 		{
 			if(ray_hit == 2)
-				wall = 4;
+				wall = 5;
 			else if (stepX == -1)
 				wall = 2;
 			else
@@ -231,13 +231,13 @@ void	draw_arrow(t_game *game, t_texture *textures)
 		}
 		// printf("wall : %d ray : %d\n", wall, ray_hit);
 		ratio = game->wall[wall].h / line_h;
-		double sky_ratio  = game->evangelion.h / (double)(WINY/2);
+		double sky_ratio  = game->wall[C].h / (double)(WINY/2);
 		double y_sky = 0;
 		while(ray > 2*PI)
 			ray-= 2*PI;
 		while(ray < 0)
 			ray+= 2*PI;			
-		double skyx = ray*(game->evangelion.w / (2*PI));
+		double skyx = ray*(game->wall[C].w / (2*PI));
 		// Dessiner le rayon
 		y = 0;
 		pos_texture *= game->wall[wall].w;
@@ -253,7 +253,7 @@ void	draw_arrow(t_game *game, t_texture *textures)
 		//sky
 		while (y <= (int)start_y)
 		{
-			*((int *)textures->data + i + y * WINX) = *((int *)game->evangelion.data + (int)skyx + ((int)y_sky * game->evangelion.size_line/4));
+			*((int *)textures->data + i + y * WINX) = *((int *)game->wall[C].data + (int)skyx + ((int)y_sky * game->wall[C].size_line/4));
 			y_sky += sky_ratio;
 			y++;
 		}
@@ -269,7 +269,7 @@ void	draw_arrow(t_game *game, t_texture *textures)
 		{
 			int offsetx = y%20;
 			int offsety = i%20;
-			*((int *)textures->data + i + y * WINX) =  *((int *)game->evangelion.data + offsetx+  (int)(((game->evangelion.h*0.95)+offsety) * game->evangelion.size_line/4));;
+			*((int *)textures->data + i + y * WINX) =  *((int *)game->wall[C].data + offsetx+  (int)(((game->wall[C].h*0.95)+offsety) * game->wall[C].size_line/4));;
 			y++;
 		}
 		i++;

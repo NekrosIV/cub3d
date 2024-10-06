@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 18:34:35 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/30 16:43:57 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/06 16:10:24 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,7 @@ void	print_struct(t_game *game)
 	printf("SO: %s\n", game->wall_path[S]);
 	printf("EA: %s\n", game->wall_path[E]);
 	printf("WE: %s\n", game->wall_path[W]);
-	printf("ceiling: \n");
-	print_tabint(game->ceiling, 3);
+	printf("ceiling: %s\n", game->wall_path[C]);
 	printf("floor: \n");
 	print_tabint(game->floor, 3);
 }

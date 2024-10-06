@@ -1,10 +1,10 @@
-NO textures/eclipsecouleur.xpm
-SO textures/eclipsecouleur.xpm
-WE textures/eclipsecouleur.xpm
-EA textures/eclipsecouleur.xpm
+NO textures/preview.xpm
+SO textures/preview.xpm
+WE textures/preview.xpm
+EA textures/preview.xpm
 
 F 255,255,255
-C 135,206,250
+C textures/preview.xpm
 
 111111111111111111111111111111111111111111111111111111111
 111111111111000000000000111111111111111111111111111111111

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_struct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/04 18:01:24 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/06 15:58:28 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,7 @@ void	init_textures(t_game *game)
 		game->wall[i].frame_delay = -1;
 		game->wall[i].last_time = -1;
 		if (i < 3)
-		{
-			game->ceiling[i] = -1;
 			game->floor[i] = -1;
-		}
 		i++;
 	}
 }

@@ -69,6 +69,7 @@
 # define S 1
 # define W 2
 # define E 3
+# define C 4
 # define WINX 1200
 # define WINY 900
 # define MIN_X_OR_Y ((WINX) < (WINY) ? (WINX) : (WINY))
@@ -80,12 +81,12 @@
 # define TILE_SIZE 21
 # define BIG_TILE_SIZE 50
 # define EA 0
-# define SPEED_BOT 0.005
-# define SPEED_M 0.01
-# define SPEED_C 0.008
-// # define SPEED_BOT 0.05
-// # define SPEED_M 0.1
-// # define SPEED_C 0.02
+// # define SPEED_BOT 0.005
+// # define SPEED_M 0.01
+// # define SPEED_C 0.008
+# define SPEED_BOT 0.05
+# define SPEED_M 0.1
+# define SPEED_C 0.02
 # define WALL_TEXT_CARRE 64
 # define FLOOR 0xFF7300
 # define SKY 0x4B0082
@@ -219,8 +220,7 @@ typedef struct s_game
 	int			map_pos;
 	int			map_rows;
 	int			map_column;
-	char		*wall_path[4];
-	int			ceiling[3];
+	char		*wall_path[5];
 	int			floor[3];
 	int			floor_hexa;
 	int			ceiling_hexa;
@@ -236,7 +236,7 @@ typedef struct s_game
 	t_texture	evangelion;
 	t_mlx		*mlx;
 	t_texture	gun[39];
-	t_texture	wall[5];
+	t_texture	wall[6];
 	t_texture	texturebot[5][4];
 	t_player	player;
 	t_enemy		*ennemy;

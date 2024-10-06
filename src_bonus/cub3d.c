@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/05 15:35:23 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/06 13:52:30 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	mouse_move(int x, int y, t_game *game)
 			side = 'd';
 		else
 			side = 'g';
-		speed_cam = fabs(delta_x) * 0.0005;
+		speed_cam = fabs((delta_x) * 0.0005);
 		direction(game, side, speed_cam);
 	}
 	ignore_event = 1;

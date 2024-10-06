@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/05 18:12:18 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/06 16:03:12 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ bool	multi_def(t_game *game, char *line, char flag)
 		(free(line), free_exit(game, 0, NULL, E_TMULTI "EA"));
 	if (flag == 'F' && game->floor[0] != -1)
 		(free(line), free_exit(game, 0, NULL, E_TMULTI "F"));
-	if (flag == 'C' && game->ceiling[0] != -1)
+	if (flag == 'C' && game->wall_path[C] != NULL)
 		(free(line), free_exit(game, 0, NULL, E_TMULTI "C"));
 	return (false);
 }
@@ -139,8 +139,6 @@ void	fill_tab_rgb(t_game *game, char *line, char flag)
 			(free(line), free_exit(game, 0, NULL, E_RGB));
 		if (flag == 'F')
 			game->floor[i] = ft_atoi(tab[i]);
-		else
-			game->ceiling[i] = ft_atoi(tab[i]);
 		free(tab[i]);
 		i++;
 	}
@@ -162,7 +160,7 @@ void	trime_line(t_game *game, char *line)
 	else if (ft_strncmp(line + i, "F", 1) == 0 && !multi_def(game, line, 'F'))
 		fill_tab_rgb(game, line + i, 'F');
 	else if (ft_strncmp(line + i, "C", 1) == 0 && !multi_def(game, line, 'C'))
-		fill_tab_rgb(game, line + i, 'C');
+		game->wall_path[C] = get_texture_path(line + i, game);
 	else if (game->map_rows == -1 && !look_like_a_map_line(line))
 		(free(line), free_exit(game, 0, NULL, E_TEXTURE));
 	else if (look_like_a_map_line(line))
@@ -204,10 +202,10 @@ char	*get_texture_path(char *line, t_game *game)
 
 bool	textures_filled(t_game *game)
 {
-	if (game->ceiling[0] == -1 || game->floor[0] == -1)
+	if (game->floor[0] == -1)
 		return (false);
 	else if (!game->wall_path[E] || !game->wall_path[N] || !game->wall_path[S]
-		|| !game->wall_path[W])
+		|| !game->wall_path[W] || !game->wall_path[C])
 		return (false);
 	return (true);
 }

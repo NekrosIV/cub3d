@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_mlx.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/05 15:31:13 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/06 16:07:34 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	init_wall(t_game *game)
 	int	i;
 
 	i = 0;
-	while (i < 4)
+	while (i < 5)
 	{
 		game->wall[i].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
 				game->wall_path[i], &game->wall[i].w, &game->wall[i].h);
@@ -129,11 +129,6 @@ void	init_mlx(t_game *game)
 	init_wall(game);
 	int_enemy_textutre(game);
 	init_gun_texture(game);
-	game->evangelion.img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
-			"textures/godhands.xpm", &game->evangelion.w, &game->evangelion.h);
-	game->evangelion.data = mlx_get_data_addr(game->evangelion.img,
-			&game->evangelion.bpp, &game->evangelion.size_line,
-			&game->evangelion.endian);
 	game->dammage.img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
 			"textures/bloodscreen.xpm", &game->dammage.w, &game->dammage.h);
 	game->dammage.data = mlx_get_data_addr(game->dammage.img,

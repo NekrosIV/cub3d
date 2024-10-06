@@ -1,10 +1,10 @@
-NO textures/eclipsecouleur.xpm
-SO textures/eclipsecouleur.xpm
-WE textures/eclipsecouleur.xpm
-EA textures/eclipsecouleur.xpm
+NO textures/ceilingrocks.xpm
+SO textures/ceilingrocks.xpm
+WE textures/ceilingrocks.xpm
+EA textures/ceilingrocks.xpm
 
 F 255,255,255
-C 135,206,250
+C textures/ceilingrocks.xpm
 
 111111111111111111111111111111111111111111111111111111111111111111111
 111111111111111111111111111100000000010000000000000000000000011111111

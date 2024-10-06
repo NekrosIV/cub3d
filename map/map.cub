@@ -1,10 +1,10 @@
-NO textures/preview.xpm
-SO textures/preview.xpm
-WE textures/preview.xpm
-EA textures/preview.xpm
+NO textures/ceilingrocks.xpm
+SO textures/ceilingrocks.xpm
+WE textures/ceilingrocks.xpm
+EA textures/ceilingrocks.xpm
 
 F 255,255,255
-C textures/preview.xpm
+C textures/evangelion2.xpm
 
 111111111111111111111111111111111111111111111111111111111
 111111111111000000000000111111111111111111111111111111111

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 16:08:47 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/04 19:27:22 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/07 12:48:30 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,7 +295,12 @@ void	mini_draw_arrow(t_game *game, t_texture *textures)
 		screen_x = game->ennemy[g].posX * TILE_SIZE + offset_x;
 		screen_y = game->ennemy[g].posY * TILE_SIZE + offset_y;
 
-		if ( screen_x  > 0 && screen_x  < MIN_DIM && 
+		if(game->ennemy[g].is_active == false)
+		{
+			g++;
+			continue;
+		}
+		else if (screen_x  > 0 && screen_x  < MIN_DIM && 
 			    screen_y  > 0 && screen_y  < MIN_DIM && game->ennemy[g].animating == 0)
 			draw_filled_circle(textures, screen_x, screen_y, 0x0000FF);
 

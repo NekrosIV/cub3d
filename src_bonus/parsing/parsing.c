@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/06 16:03:12 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/07 12:43:30 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -366,15 +366,16 @@ void	init_bot(t_game *game, int i, int x, int y)
 	game->ennemy[i].mapY = y;
 	game->ennemy[i].posX = (double)x + 0.5;
 	game->ennemy[i].posY = (double)y + 0.5;
-	game->ennemy[i].action = 0;
+	game->ennemy[i].action = HALT;
 	game->ennemy[i].frame = 0;
 	game->ennemy[i].last_time = get_current_time();
 	game->ennemy[i].last_time2 = get_current_time();
-	game->ennemy[i].last_time_hit = get_current_time();
+	game->ennemy[i].last_time_hit = 0;
 	game->ennemy[i].animating = 1;
 	game->ennemy[i].hp = 100;
 	game->ennemy[i].takedmg = false;
 	game->ennemy[i].hit_player = false;
+	game->ennemy[i].is_active = false;
 }
 
 void	init_door(t_game *game, int i, int x, int y)

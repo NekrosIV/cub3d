@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/05 18:43:06 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/07 12:44:03 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,21 +58,47 @@ int	is_collision_with_others(t_game *game, t_enemy *current_bot,
 	return (0); // Pas de collision
 }
 
-// Fonction pour vérifier si une position est un mur
-int	is_wall(t_game *game, double x, double y)
+int	is_wall(t_game *game, double x, double y, double radius)
 {
-	int	map_x;
-	int	map_y;
+	int		min_map_x;
+	int		max_map_x;
+	int		min_map_y;
+	int		max_map_y;
+	int		map_x;
+	int		map_y;
+	double	closestX;
+	double	closestY;
+	double	distanceX;
+	double	distanceY;
+	double	distanceSquared;
 
-	map_x = (int)x;
-	map_y = (int)y;
-	// Assure-toi que les coordonnées sont dans les limites de la carte
-	if (map_x < 0 || map_y < 0 || map_x >= game->map_max_x
-		|| map_y >= game->map_max_y)
-		return (1); // Si en dehors de la carte, considère comme un mur
-	// Si la position sur la carte contient un mur, retourne 1 (mur)
-	if (game->map[map_y][map_x] == '1')
-		return (1);
+	min_map_x = (int)floor(x - radius);
+	max_map_x = (int)floor(x + radius);
+	min_map_y = (int)floor(y - radius);
+	max_map_y = (int)floor(y + radius);
+	for (map_y = min_map_y; map_y <= max_map_y; map_y++)
+	{
+		for (map_x = min_map_x; map_x <= max_map_x; map_x++)
+		{
+			if (map_x < 0 || map_y < 0 || map_x >= game->map_max_x
+				|| map_y >= game->map_max_y)
+				return (1);
+			if (game->map[map_y][map_x] == '1')
+			{
+				// Vérification précise de la collision cercle-rectangle
+				closestX = fmax(map_x, fmin(x, map_x + 1.0));
+				closestY = fmax(map_y, fmin(y, map_y + 1.0));
+				distanceX = x - closestX;
+				distanceY = y - closestY;
+				distanceSquared = (distanceX * distanceX) + (distanceY
+						* distanceY);
+				if (distanceSquared < (radius * radius))
+				{
+					return (1);
+				}
+			}
+		}
+	}
 	return (0);
 }
 
@@ -126,6 +152,13 @@ void	movebot(t_game *game, t_enemy *bot)
 
 	if (bot->action == DAMAGE || bot->action == DEATH)
 		return ;
+	if (bot->is_active == false)
+	{
+		if (bot->distance <= TRIGGERBOT && !has_wall_between(game, bot))
+			bot->is_active = true;
+		else
+			return ;
+	}
 	if (bot->distance > TRIGGERBOT)
 	{
 		bot->action = HALT;
@@ -156,8 +189,8 @@ void	movebot(t_game *game, t_enemy *bot)
 	new_posX = bot->posX + dx * SPEED_BOT;
 	new_posY = bot->posY + dy * SPEED_BOT;
 	// Essayer de se déplacer vers la nouvelle position
-	if (!is_wall(game, new_posX, bot->posY) && !is_collision_with_others(game,
-			bot, new_posX, bot->posY))
+	if (!is_wall(game, new_posX, bot->posY, 0.3)
+		&& !is_collision_with_others(game, bot, new_posX, bot->posY))
 	{
 		{
 			bot->posX = new_posX;
@@ -169,15 +202,15 @@ void	movebot(t_game *game, t_enemy *bot)
 		// Essayer un déplacement alternatif (vers la gauche ou la droite)
 		alt_posX = bot->posX + (dx * SPEED_BOT) * cos(45.0);
 		// Essayer un léger angle
-		if (!is_wall(game, alt_posX, bot->posY)
+		if (!is_wall(game, alt_posX, bot->posY, 0.3)
 			&& !is_collision_with_others(game, bot, alt_posX, bot->posY))
 		{
 			bot->posX = alt_posX;
 			moved = true;
 		}
 	}
-	if (!is_wall(game, bot->posX, new_posY) && !is_collision_with_others(game,
-			bot, bot->posX, new_posY))
+	if (!is_wall(game, bot->posX, new_posY, 0.3)
+		&& !is_collision_with_others(game, bot, bot->posX, new_posY))
 	{
 		{
 			bot->posY = new_posY;
@@ -189,7 +222,7 @@ void	movebot(t_game *game, t_enemy *bot)
 		// Essayer un déplacement alternatif (vers le haut ou le bas)
 		alt_posY = bot->posY + (dy * SPEED_BOT) * sin(45.0);
 		// Essayer un léger angle
-		if (!is_wall(game, bot->posX, alt_posY)
+		if (!is_wall(game, bot->posX, alt_posY, 0.3)
 			&& !is_collision_with_others(game, bot, bot->posX, alt_posY))
 		{
 			bot->posY = alt_posY;

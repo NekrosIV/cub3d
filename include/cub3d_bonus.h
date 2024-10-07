@@ -81,12 +81,12 @@
 # define TILE_SIZE 21
 # define BIG_TILE_SIZE 50
 # define EA 0
-// # define SPEED_BOT 0.005
-// # define SPEED_M 0.01
-// # define SPEED_C 0.008
-# define SPEED_BOT 0.05
-# define SPEED_M 0.1
-# define SPEED_C 0.02
+# define SPEED_BOT 0.005
+# define SPEED_M 0.01
+# define SPEED_C 0.008
+// # define SPEED_BOT 0.05
+// # define SPEED_M 0.1
+// # define SPEED_C 0.02
 # define WALL_TEXT_CARRE 64
 # define FLOOR 0xFF7300
 # define SKY 0x4B0082
@@ -156,6 +156,7 @@ typedef struct s_enemy
 	double		frame_delay;
 	bool		takedmg;
 	bool		hit_player;
+	bool		is_active;
 }				t_enemy;
 
 typedef struct s_ray

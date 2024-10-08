@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_struct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/06 15:58:28 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/08 15:40:17 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,9 @@ t_game	*init_game(void)
 	game->mouse_cam = 0.0;
 	game->nb_door = 0;
 	game->check_door = 0; 
+	game->menu =  true;
+	game->is_game_start = false;
+	game->state_menu = NEW_GAME;
 	init_textures(game);
 	init_pic(game);
 	return (game);

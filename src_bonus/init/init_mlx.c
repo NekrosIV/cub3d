@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/06 18:27:06 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/08 16:23:56 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ void	init_wall(t_game *game)
 		i++;
 	}
 	game->wall[i].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
-			"textures/doom/door3.xpm", &game->wall[i].w,
-			&game->wall[i].h);
+			"textures/doom/door3.xpm", &game->wall[i].w, &game->wall[i].h);
 	if (!game->wall[i].img)
 		free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);
 	game->wall[i].data = mlx_get_data_addr(game->wall[i].img,
@@ -110,12 +109,52 @@ void	init_gun_texture(t_game *game)
 	}
 }
 
+void	init_menu_texture(t_game *game)
+{
+	char	texture_path[50];
+	int		frame;
+	int		state;
+
+	state = 0;
+	frame = 0;
+	while (state < 4)
+	{
+		frame = 0;
+		while (frame < 2)
+		{
+			if (state == NEW_GAME)
+				snprintf(texture_path, sizeof(texture_path),
+					"textures/got3d_%d.xpm", frame + 1);
+			else if (state == N_EXIT)
+				snprintf(texture_path, sizeof(texture_path),
+					"textures/got3d_%d.xpm", frame + 3);
+			else if (state == PAUSE)
+				snprintf(texture_path, sizeof(texture_path),
+					"textures/got3d_%d.xpm", frame + 5);
+			else if (state == P_EXIT)
+				snprintf(texture_path, sizeof(texture_path),
+					"textures/got3d_%d.xpm", frame + 7);
+			game->menu_texture[state][frame].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
+					texture_path, &game->menu_texture[state][frame].w,
+					&game->menu_texture[state][frame].h);
+			if (game->menu_texture[state][frame].img == NULL)
+				free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);
+			game->menu_texture[state][frame].data = mlx_get_data_addr(game->menu_texture[state][frame].img,
+					&game->menu_texture[state][frame].bpp,
+					&game->menu_texture[state][frame].size_line,
+					&game->menu_texture[state][frame].endian);
+			frame++;
+		}
+		state++;
+	}
+	game->menu_texture[0]->last_time = 0;
+	game->menu_texture[0]->frame_delay = 0.5;
+}
+
 void	init_mlx(t_game *game)
 {
 	t_mlx		*mlx;
 	t_texture	*texture;
-	int			fakex;
-	int			fakey;
 
 	texture = &game->pic;
 	mlx = malloc(sizeof(t_mlx));
@@ -129,6 +168,7 @@ void	init_mlx(t_game *game)
 	init_wall(game);
 	int_enemy_textutre(game);
 	init_gun_texture(game);
+	init_menu_texture(game);
 	game->dammage.img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
 			"textures/bloodscreen.xpm", &game->dammage.w, &game->dammage.h);
 	game->dammage.data = mlx_get_data_addr(game->dammage.img,

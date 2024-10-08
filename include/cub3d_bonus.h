@@ -95,6 +95,11 @@
 # define ATTACK 2
 # define DEATH 3
 # define DAMAGE 4
+# define NEW_GAME 0
+# define N_EXIT 1
+# define PAUSE 2
+# define P_EXIT 3
+
 # define DAMAGE_BOT 25
 # define FOV 1
 # define CIRCLE_COLOR 0xFF7300
@@ -243,6 +248,9 @@ typedef struct s_game
 	t_enemy		*ennemy;
 	t_texture	dammage;
 	t_texture	door_texture;
+	t_texture	menu_texture[4][2];
+	int			state_menu;
+	bool		is_game_start;
 	int			mouse_x;
 	int			mouse_y;
 	float		mouse_cam;
@@ -251,6 +259,7 @@ typedef struct s_game
 	int			nb_door;
 	t_door		*door;
 	int			check_door;
+	bool		menu;
 }				t_game;
 
 t_game			*parsing(char *file);

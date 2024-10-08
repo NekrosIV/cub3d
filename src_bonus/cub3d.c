@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/06 13:52:30 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/08 16:21:24 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	mouse_move(int x, int y, t_game *game)
 			side = 'd';
 		else
 			side = 'g';
-		speed_cam = fabs((delta_x) * 0.0005);
+		speed_cam = fabs((delta_x)*0.0005);
 		direction(game, side, speed_cam);
 	}
 	ignore_event = 1;
@@ -136,7 +136,8 @@ void	check_door(t_game *game)
 		if ((game->door[i].map_y != (int)game->player.posY
 				|| game->door[i].map_x != (int)game->player.posX))
 		{
-			if (game->door[i].distance <= 1.5 && game->door[i].door_hit >= WINX/2)
+			if (game->door[i].distance <= 1.5 && game->door[i].door_hit >= WINX
+				/ 2)
 			{
 				if (game->door[i].state == OPEN)
 				{
@@ -154,6 +155,58 @@ void	check_door(t_game *game)
 	}
 	game->check_door = 0;
 }
+void	draw_menu(t_game *game, t_texture *texture,int state, int frame)
+{
+	double	x_ratio;
+	double	y_ratio;
+	int		x;
+	int		y;
+	double	x_img;
+	double	y_img;
+	int		img_index;
+	int		screen_index;
+	int		ignore;
+
+
+	x_ratio = (double)game->menu_texture[state][frame].w / (double)WINX;
+	y_ratio = (double)game->menu_texture[state][frame].h / (double)WINY;
+	ignore = *((int *)game->menu_texture[state][frame].data);
+	for (x = 0; x < WINX; x++)
+	{
+		for (y = 0; y < WINY; y++)
+		{
+			x_img = x * x_ratio;
+			y_img = y * y_ratio;
+			img_index = ((int)y_img) * game->menu_texture[state][frame].w + (int)x_img;
+			screen_index = y * WINX + x;
+			// if (frame != 5 && frame != 4)
+				*((int *)game->pic.data
+						+ screen_index) = *((int *)game->menu_texture[state][frame].data
+						+ img_index);
+			// else if (*((int *)game->menu_texture[state][frame].data + img_index) != ignore)
+			// 	*((int *)game->pic.data
+			// 			+ screen_index) = *((int *)game->menu_texture[state][frame].data
+			// 			+ img_index);
+		}
+	}
+}
+
+void draw_good_state_menu(t_game *game, t_texture *texture)
+{
+	double	current_time;
+	static int frame = 0;
+
+	current_time = get_current_time();
+	if (current_time - game->menu_texture[0]->last_time >= game->menu_texture[0]->frame_delay)
+	{
+		if(frame == 0)
+			frame = 1;
+		else 
+			frame = 0;
+		game->menu_texture[0]->last_time = current_time;
+	}
+	draw_menu(game,texture,game->state_menu,frame);
+}
 
 int	loop_hook(t_game *game)
 {
@@ -163,18 +216,23 @@ int	loop_hook(t_game *game)
 
 	texture = &game->pic;
 	int bpp, size_line, endian;
-	(check_moves(game));
-	check_door(game);
-	draw_arrow(game, texture);
-	mini_draw_map(game, texture);
-	drawallbot(game, texture->data);
-	checkbotmoves(game);
-	draw_crosshair(game, texture->data, texture->size_line, texture->bpp,
-		CROSSHAIR);
-	update_gun_animation(game);
-	draw_gun(game, texture->data, texture->bpp);
-	bot_attack(game, texture);
-	draw_health(game, texture);
+	if (game->menu == false)
+	{
+		(check_moves(game));
+		check_door(game);
+		draw_arrow(game, texture);
+		mini_draw_map(game, texture);
+		drawallbot(game, texture->data);
+		checkbotmoves(game);
+		draw_crosshair(game, texture->data, texture->size_line, texture->bpp,
+			CROSSHAIR);
+		update_gun_animation(game);
+		draw_gun(game, texture->data, texture->bpp);
+		bot_attack(game, texture);
+		draw_health(game, texture);
+	}
+	else
+		draw_good_state_menu(game, texture);
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win,
 		texture->img, 0, 0);
 	if (game->player.hp <= 0)

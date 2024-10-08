@@ -15,6 +15,8 @@
 
 # include "../libft/include/libft.h"
 # include "../mlx/mlx.h"
+// # include <SDL2/SDL.h>
+// # include <SDL2/SDL_mixer.h>
 # include <X11/keysym.h>
 # include <errno.h>
 # include <fcntl.h>
@@ -260,6 +262,10 @@ typedef struct s_game
 	t_door		*door;
 	int			check_door;
 	bool		menu;
+	// Mix_Music	*background_music;
+	// Mix_Chunk	*gunshot_sound;
+	// Mix_Chunk	*door_open_sound;
+	// Mix_Chunk	*player_hurt_sound;
 }				t_game;
 
 t_game			*parsing(char *file);

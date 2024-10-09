@@ -15,13 +15,14 @@
 
 # include "../libft/include/libft.h"
 # include "../mlx/mlx.h"
-// # include <SDL2/SDL.h>
-// # include <SDL2/SDL_mixer.h>
+# include "../vendor/lib/openal/include/AL/al.h"
+# include "../vendor/lib/openal/include/AL/alc.h"
 # include <X11/keysym.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <math.h>
 # include <stdbool.h>
+# include <stdint.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -101,7 +102,12 @@
 # define N_EXIT 1
 # define PAUSE 2
 # define P_EXIT 3
-
+# define OST 0
+# define GUN 1
+# define STEP 2
+# define E_SHOT 3
+# define E_HIT 4
+# define E_DEAD 5
 # define DAMAGE_BOT 25
 # define FOV 1
 # define CIRCLE_COLOR 0xFF7300
@@ -219,6 +225,12 @@ typedef struct s_door
 	int			door_hit;
 }				t_door;
 
+typedef struct s_sound
+{
+	ALuint buffer; // Buffer contenant les données audio
+	ALuint source; // Source pour jouer le son
+}				t_sound;
+
 typedef struct s_game
 {
 	char		**map;
@@ -262,10 +274,9 @@ typedef struct s_game
 	t_door		*door;
 	int			check_door;
 	bool		menu;
-	// Mix_Music	*background_music;
-	// Mix_Chunk	*gunshot_sound;
-	// Mix_Chunk	*door_open_sound;
-	// Mix_Chunk	*player_hurt_sound;
+	t_sound		sound[6];
+	ALCdevice	*device;
+	ALCcontext	*context;
 }				t_game;
 
 t_game			*parsing(char *file);
@@ -313,5 +324,12 @@ void			update_enemy_animation(t_game *game, t_enemy *bot);
 void			draw_floor_and_ceiling(t_game *game, t_texture *textures);
 int				mouse_move(int x, int y, t_game *game);
 void			draw_dammage(t_game *game, t_enemy *bot, t_player *player);
+
+// Déclaration des fonctions pour le son
+int				init_openal(t_game *game);
+void			close_openal(t_game *game);
+t_sound			load_sound(const char *filename);
+void			play_sound(t_sound *sound, int loop);
+void			init_sound(t_game *game);
 
 #endif

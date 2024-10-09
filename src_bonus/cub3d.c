@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/08 16:21:24 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/09 18:01:46 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int	mouse_press(int button, int x, int y, t_game *game)
 	{
 		if (game->gun->animating == 0)
 		{
+			play_sound(&game->sound[GUN], false);
 			game->gun->animating = 1;
 			game->do_damage = 1;
 		}
@@ -252,6 +253,7 @@ int	main(int ac, char **av)
 	game = parsing(av[1]);
 	init_player(game);
 	init_mlx(game);
+	init_sound(game);
 	mlx_loop_hook(game->mlx->mlx_ptr, loop_hook, game);
 	mlx_hook(game->mlx->mlx_win, 17, 0, india, game);
 	mlx_hook(game->mlx->mlx_win, 02, (1L << 0), key_hook, game);
@@ -259,7 +261,7 @@ int	main(int ac, char **av)
 	mlx_hook(game->mlx->mlx_win, 6, (1L << 6), mouse_move, game);
 	mlx_hook(game->mlx->mlx_win, 04, (1L << 2), mouse_press, game);
 	mlx_loop(game->mlx->mlx_ptr);
-	// ft_calloc(1,sizeof(t_game));
+	ft_calloc(1,sizeof(t_game));
 	// print_struct(game);
 	return (0);
 }

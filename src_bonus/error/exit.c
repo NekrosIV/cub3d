@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:18:57 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/30 16:49:08 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/09 17:54:36 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,18 @@ void	free_texture_path(t_game *game)
 		i++;
 	}
 }
+void	stop_and_cleanup_sound(t_sound *sound)
+{
+	ALint	state;
+
+	// Arrêter le son s'il est en cours de lecture
+	alGetSourcei(sound->source, AL_SOURCE_STATE, &state);
+	if (state == AL_PLAYING)
+		alSourceStop(sound->source);
+	// Supprimer la source et le buffer associés
+	alDeleteSources(1, &sound->source);
+	alDeleteBuffers(1, &sound->buffer);
+}
 
 void	free_everything(t_game *game)
 {
@@ -73,6 +85,11 @@ void	free_everything(t_game *game)
 		free_taboftab(game->cpy_map);
 	if (game->mlx)
 		free_mlx(game, game->mlx);
+	// if (game->context || game->device)
+	// {
+	// 	stop_and_cleanup_sound(&game->[]);
+	// 	close_openal(game);
+	// }
 	free(game);
 }
 

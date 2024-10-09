@@ -5,6 +5,7 @@ CFLAGS :=  -g3 -MMD -O3
 MLX_FLAGS = -Lmlx -lmlx -Imlx -lXext -lX11 -lm 
 LIBFTDIR := ./libft
 MLXDIR := ./mlx
+SOUND_FLAGS = -Ivendor/lib/openal/include -Lvendor/lib/openal/lib -lopenal
 
 HEADERS := ./include
 
@@ -40,12 +41,14 @@ FILES_BONUS := cub3d.c \
 		error/exit.c \
 		init/init_mlx.c \
 		init/init_struct.c \
+		init/init_sound.c\
 		player/player_move.c \
 		minimap/minimap.c \
 		key/key.c \
 		draw/draw.c \
 		draw/raycastingbot.c \
 		draw/raycasting.c \
+		sound.c \
 		utils.c 
 
 SRCS_DIR_BONUS := ./src_bonus
@@ -133,7 +136,7 @@ bonus: $(NAME_BONUS)
 $(NAME_BONUS): $(OBJS_BONUS)
 	@make --silent -C ${LIBFTDIR}
 	@make --silent -C ${MLXDIR}
-	@$(CC) $(CFLAGS) -I$(HEADERS) -o $@ $(OBJS_BONUS) ${MLX_FLAGS} -L ${LIBFTDIR} -lft
+	@$(CC) $(CFLAGS) $(SOUND_FLAGS) -I$(HEADERS) -o $@ $(OBJS_BONUS) ${MLX_FLAGS} -L ${LIBFTDIR} -lft
 	@printf "$(RESET)\n\n\n"
 	@printf "⠀⠀$(PURPLE)⢀⠂⠘⠀⠱⠈⡝⣏⠐⠀⠑⠒⠤⣼⢶⠁⣠⠀⠠$(INDI)⠀⠀⠀⠀⢸⠍⣎⢙⣿⣿⢿⡁⠤⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣄⡀⠀$(RED)⠀⠀⠀⠀⠀⠀⠄⣡⠀⠈⠒⠄⢄⠀⠀⠀$(INDI)⠐⣫⡇⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠶⣷⣴⣥⣐⠘⢟⡟⡧⢛⣤⣳⣿⣿⠿⠟⠉⠀⠀⣰⡛⠄$(BLUE)⠀⠀⠀⠀⠀⠀⠈⢿⣿⣿⡇⠒⡤$(RESET)\n"
 	@printf "⠀$(PURPLE)⠀⡠⠒⠂⠡⠐⠁⡠⠠⢈⠍⠁⠀⠘⢟⢾⣿⣿⡀⠁$(INDI)⠀⠀⠀⠀⠘⢦⠰⣍⡻⣿⢀⢺⠁⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⡿⣿⢹⣿⣿⣿⣆⡀$(RED)⠀⠀⠀⠀⢠⢚⡤⡸⢊⣀⢨⣌⠀⠀⠀$(INDI)⢚⡿⠀⡰⠀⡀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠉⠛⠊⢀⠔⠿⠿⠋⠉⠀⠀⠀⠀⠀⣸⣿⣯$(BLUE)⠀⢀⡠⠶⣀⠀⠀⠀⠘⣿⡅⠈⠌⠋$(RESET)\n"

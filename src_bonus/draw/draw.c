@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:09:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/09 18:01:05 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/10 14:49:07 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,8 @@ void	update_enemy_animation(t_game *game, t_enemy *bot)
 	}
 	if (bot->action == DEATH)
 	{
+		if (bot->frame == 1)
+			play_sound(&game->sound[E_DEAD], false);
 		bot->frame_delay = 0.2;
 		if (current_time - bot->last_time >= bot->frame_delay)
 		{

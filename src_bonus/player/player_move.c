@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 13:03:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/28 13:44:17 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/10 15:19:10 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void	attempt_move_player(t_game *game, t_player *player)
 void	movements(t_game *game, double angle_shift)
 {
 	t_player	*player;
+	ALint		state;
 
 	player = &game->player;
 	player->new_dir = player->dirangle + angle_shift;
@@ -109,6 +110,11 @@ void	movements(t_game *game, double angle_shift)
 	calculate_new_position(player);
 	determine_grid_steps(player);
 	check_diagonal_collision(game, player);
+	alGetSourcei(game->sound[STEP].source, AL_SOURCE_STATE, &state);
+	if (state != AL_PLAYING)
+	{
+		play_sound(&game->sound[STEP], false);;
+	}
 	attempt_move_player(game, player);
 }
 

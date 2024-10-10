@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/09 18:01:46 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/10 16:20:08 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	mouse_press(int button, int x, int y, t_game *game)
 {
 	if (button == 1)
 	{
-		if (game->gun->animating == 0)
+		if (game->gun->animating == 0 && game->menu == false)
 		{
 			play_sound(&game->sound[GUN], false);
 			game->gun->animating = 1;
@@ -124,6 +124,7 @@ void	check_door(t_game *game)
 	double	delta_x;
 	double	delta_y;
 	int		i;
+	ALint	state;
 
 	if (game->check_door == 0)
 		return ;
@@ -140,6 +141,9 @@ void	check_door(t_game *game)
 			if (game->door[i].distance <= 1.5 && game->door[i].door_hit >= WINX
 				/ 2)
 			{
+				alGetSourcei(game->sound[DOOR].source, AL_SOURCE_STATE, &state);
+				if (state != AL_PLAYING)
+					play_sound(&game->sound[DOOR], false);
 				if (game->door[i].state == OPEN)
 				{
 					game->map[game->door[i].map_y][game->door[i].map_x] = '1';
@@ -156,7 +160,7 @@ void	check_door(t_game *game)
 	}
 	game->check_door = 0;
 }
-void	draw_menu(t_game *game, t_texture *texture,int state, int frame)
+void	draw_menu(t_game *game, t_texture *texture, int state, int frame)
 {
 	double	x_ratio;
 	double	y_ratio;
@@ -168,7 +172,6 @@ void	draw_menu(t_game *game, t_texture *texture,int state, int frame)
 	int		screen_index;
 	int		ignore;
 
-
 	x_ratio = (double)game->menu_texture[state][frame].w / (double)WINX;
 	y_ratio = (double)game->menu_texture[state][frame].h / (double)WINY;
 	ignore = *((int *)game->menu_texture[state][frame].data);
@@ -178,13 +181,15 @@ void	draw_menu(t_game *game, t_texture *texture,int state, int frame)
 		{
 			x_img = x * x_ratio;
 			y_img = y * y_ratio;
-			img_index = ((int)y_img) * game->menu_texture[state][frame].w + (int)x_img;
+			img_index = ((int)y_img) * game->menu_texture[state][frame].w
+				+ (int)x_img;
 			screen_index = y * WINX + x;
 			// if (frame != 5 && frame != 4)
-				*((int *)game->pic.data
-						+ screen_index) = *((int *)game->menu_texture[state][frame].data
-						+ img_index);
-			// else if (*((int *)game->menu_texture[state][frame].data + img_index) != ignore)
+			*((int *)game->pic.data
+					+ screen_index) = *((int *)game->menu_texture[state][frame].data
+					+ img_index);
+			// else if (*((int *)game->menu_texture[state][frame].data
+			// + img_index) != ignore)
 			// 	*((int *)game->pic.data
 			// 			+ screen_index) = *((int *)game->menu_texture[state][frame].data
 			// 			+ img_index);
@@ -192,21 +197,22 @@ void	draw_menu(t_game *game, t_texture *texture,int state, int frame)
 	}
 }
 
-void draw_good_state_menu(t_game *game, t_texture *texture)
+void	draw_good_state_menu(t_game *game, t_texture *texture)
 {
-	double	current_time;
-	static int frame = 0;
+	double		current_time;
+	static int	frame = 0;
 
 	current_time = get_current_time();
-	if (current_time - game->menu_texture[0]->last_time >= game->menu_texture[0]->frame_delay)
+	if (current_time
+		- game->menu_texture[0]->last_time >= game->menu_texture[0]->frame_delay)
 	{
-		if(frame == 0)
+		if (frame == 0)
 			frame = 1;
-		else 
+		else
 			frame = 0;
 		game->menu_texture[0]->last_time = current_time;
 	}
-	draw_menu(game,texture,game->state_menu,frame);
+	draw_menu(game, texture, game->state_menu, frame);
 }
 
 int	loop_hook(t_game *game)
@@ -261,7 +267,7 @@ int	main(int ac, char **av)
 	mlx_hook(game->mlx->mlx_win, 6, (1L << 6), mouse_move, game);
 	mlx_hook(game->mlx->mlx_win, 04, (1L << 2), mouse_press, game);
 	mlx_loop(game->mlx->mlx_ptr);
-	ft_calloc(1,sizeof(t_game));
+	ft_calloc(1, sizeof(t_game));
 	// print_struct(game);
 	return (0);
 }

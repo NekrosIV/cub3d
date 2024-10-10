@@ -6,32 +6,35 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:48:51 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/09 19:32:54 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/10 18:54:26 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
 
-void init_sound(t_game *game)
+void    init_sounds_struct(t_game *game)
 {
-    // Initialiser OpenAL
-    if (init_openal(game) != 0)
-        free_exit(game, 0, NULL, "INIT_SOUND FAIL");
+    int i;
 
-    game->sound[OST] = load_sound("textures/berserkbro.wav"); 
-
-    if (!game->sound[OST].buffer) {
-        free_exit(game, 0, NULL, "Erreur : impossible de charger le fichier audio");
+    i = 0;
+    while (i < 7)
+    {
+        game->sound[i].buffer = 0;
+        game->sound[i].source = 0;
+        i++;
     }
+}
 
-    game->sound[GUN] = load_sound("textures/lasergun4.wav");
-    if (!game->sound[GUN].buffer) {
-        free_exit(game, 0, NULL, "Erreur : impossible de charger le fichier audio");
-    }
-    play_sound(&game->sound[OST], true);
-    // ALint state;
-    // alGetSourcei(game->ost.source, AL_SOURCE_STATE, &state);
-    // if (state != AL_PLAYING) {
-    //     printf("Erreur : le son n'a pas démarré\n");
-    // }
+void	init_sound(t_game *game)
+{
+	if (init_openal(game) != 0)
+		free_exit(game, 0, NULL, "INIT_SOUND FAIL");
+	game->sound[OST] = load_sound(game, "textures/berserkbro.wav");
+	game->sound[GUN] = load_sound(game, "textures/lasergun5.wav");
+	game->sound[E_DEAD] = load_sound(game, "textures/LegoYodaDeath.wav");
+	game->sound[E_TRIG] = load_sound(game, "textures/mauvaisenouvelle.wav");
+	game->sound[E_HURT] = load_sound(game, "textures/hurt.wav");
+	game->sound[STEP] = load_sound(game, "textures/footstep.wav");
+	game->sound[DOOR] = load_sound(game, "textures/door.wav");
+	play_sound(&game->sound[OST], true);
 }

@@ -66,6 +66,8 @@
 # define E_MLXWIN "Could not creat the mlx window"
 # define E_MLXIMG "Failed to load image"
 # define E_MLXDATA "Failed to get data address for image"
+# define E_AUDIO "Couldnt load audio file"
+
 
 # define WINAME "GOAT3D"
 # define N 0
@@ -102,13 +104,15 @@
 # define N_EXIT 1
 # define PAUSE 2
 # define P_EXIT 3
+# define F_MENU 4
 # define OST 0
 # define GUN 1
 # define STEP 2
-# define E_SHOT 3
-# define E_HIT 4
+# define DOOR 3
+# define E_HURT 4
 # define E_DEAD 5
-# define DAMAGE_BOT 25
+# define E_TRIG 6
+# define DAMAGE_BOT 50
 # define FOV 1
 # define CIRCLE_COLOR 0xFF7300
 # define MINI_W 0x4B0082
@@ -274,7 +278,7 @@ typedef struct s_game
 	t_door		*door;
 	int			check_door;
 	bool		menu;
-	t_sound		sound[6];
+	t_sound		sound[7];
 	ALCdevice	*device;
 	ALCcontext	*context;
 }				t_game;
@@ -328,7 +332,7 @@ void			draw_dammage(t_game *game, t_enemy *bot, t_player *player);
 // Déclaration des fonctions pour le son
 int				init_openal(t_game *game);
 void			close_openal(t_game *game);
-t_sound			load_sound(const char *filename);
+t_sound			load_sound(t_game *game, const char *filename);
 void			play_sound(t_sound *sound, int loop);
 void			init_sound(t_game *game);
 

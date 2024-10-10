@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/07 12:44:03 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/10 14:57:38 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,10 @@ void	movebot(t_game *game, t_enemy *bot)
 	if (bot->is_active == false)
 	{
 		if (bot->distance <= TRIGGERBOT && !has_wall_between(game, bot))
+		{
+			play_sound(&game->sound[E_TRIG], false);
 			bot->is_active = true;
+		}
 		else
 			return ;
 	}
@@ -440,4 +443,5 @@ void	dammage(t_game *game, t_enemy *enemy)
 	enemy->hp -= DAMAGE_BOT;
 	enemy->action = DAMAGE;
 	enemy->frame = 0;
+	play_sound(&game->sound[E_HURT], false);
 }

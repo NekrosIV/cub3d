@@ -68,7 +68,6 @@
 # define E_MLXDATA "Failed to get data address for image"
 # define E_AUDIO "Couldnt load audio file"
 
-
 # define WINAME "GOAT3D"
 # define N 0
 # define S 1
@@ -87,7 +86,7 @@
 # define BIG_TILE_SIZE 50
 # define EA 0
 # define SPEED_BOT 0.005
-# define SPEED_M 0.01
+# define SPEED_M 0.1
 # define SPEED_C 0.008
 // # define SPEED_BOT 0.05
 // # define SPEED_M 0.1
@@ -191,7 +190,28 @@ typedef struct s_ray
 	double		hit;
 	int			stepX;
 	int			stepY;
-
+	double		start_y;
+	double		length;
+	double		end_x;
+	double		end_y;
+	double		ray;
+	double		offset;
+	double		fov;
+	double		sidedistX;
+	double		sidedistY;
+	double		ray_dX;
+	double		ray_dY;
+	int			ray_hit;
+	int			last_hit;
+	double		perp_length;
+	double		y_wall;
+	double		line_h;
+	double		ratio;
+	double		sky_ratio;
+	double		y_sky;
+	double		skyx;
+	int			wall;
+	double		pos_texture;
 }				t_ray;
 
 typedef struct s_player
@@ -257,7 +277,6 @@ typedef struct s_game
 	int			bot_nb;
 	bool		do_damage;
 	t_texture	pic;
-	t_texture	evangelion;
 	t_mlx		*mlx;
 	t_texture	gun[39];
 	t_texture	wall[6];
@@ -265,7 +284,6 @@ typedef struct s_game
 	t_player	player;
 	t_enemy		*ennemy;
 	t_texture	dammage;
-	t_texture	door_texture;
 	t_texture	menu_texture[4][2];
 	int			state_menu;
 	bool		is_game_start;

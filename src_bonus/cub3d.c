@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/10 16:20:08 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/11 19:11:16 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,6 @@ void	check_door(t_game *game)
 		delta_y = game->player.posY - ((double)game->door[i].map_y + 0.5);
 		delta_x = game->player.posX - ((double)game->door[i].map_x + 0.5);
 		game->door[i].distance = sqrt(delta_x * delta_x + delta_y * delta_y);
-		printf("d = %f\n", game->door[i].distance);
 		if ((game->door[i].map_y != (int)game->player.posY
 				|| game->door[i].map_x != (int)game->player.posX))
 		{
@@ -260,6 +259,8 @@ int	main(int ac, char **av)
 	init_player(game);
 	init_mlx(game);
 	init_sound(game);
+	game->menu =  false;
+	game->is_game_start = true;
 	mlx_loop_hook(game->mlx->mlx_ptr, loop_hook, game);
 	mlx_hook(game->mlx->mlx_win, 17, 0, india, game);
 	mlx_hook(game->mlx->mlx_win, 02, (1L << 0), key_hook, game);

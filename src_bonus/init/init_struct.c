@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/09 16:48:47 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/11 14:29:30 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,10 @@ void	init_textures(t_game *game)
 	int	i;
 
 	i = 0;
-	while (i < 4)
+	while (i < 6)
 	{
-		game->wall_path[i] = NULL;
+		if (i < 5)
+			game->wall_path[i] = NULL;
 		game->wall[i].img = 0;
 		game->wall[i].h = 0;
 		game->wall[i].w = 0;
@@ -84,15 +85,15 @@ t_game	*init_game(void)
 	game->player = init_player_struct();
 	game->map_x = 0;
 	game->map_y = 0;
-	game->bot_nb = 4;
+	game->bot_nb = 0;
 	game->do_damage = false;
 	game->hit_player = false;
 	game->mouse_x = 0;
 	game->mouse_y = 0;
 	game->mouse_cam = 0.0;
 	game->nb_door = 0;
-	game->check_door = 0; 
-	game->menu =  true;
+	game->check_door = 0;
+	game->menu = true;
 	game->is_game_start = false;
 	game->state_menu = NEW_GAME;
 	game->device = NULL;

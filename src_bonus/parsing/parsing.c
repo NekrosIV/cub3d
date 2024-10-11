@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/07 12:43:30 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/11 18:26:50 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ void	fill_tab_rgb(t_game *game, char *line, char flag)
 	int		i;
 	char	**tab;
 
+	
 	i = 1 + skip_e_space(line + 1, true);
 	if (number_of_value(line + i) != 2)
 		(free(line), free_exit(game, 0, NULL, E_RGB));

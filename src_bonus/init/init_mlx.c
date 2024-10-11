@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/09 16:40:42 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/11 19:11:36 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,7 @@ void	init_mlx(t_game *game)
 	init_wall(game);
 	int_enemy_textutre(game);
 	init_gun_texture(game);
-	init_menu_texture(game);
+	// init_menu_texture(game);
 	game->dammage.img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
 			"textures/bloodscreen.xpm", &game->dammage.w, &game->dammage.h);
 	game->dammage.data = mlx_get_data_addr(game->dammage.img,

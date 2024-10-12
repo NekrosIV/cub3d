@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:24:23 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/10 17:20:22 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/12 13:17:10 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	init_openal(t_game *game)
 {
 	ALCenum	error;
 
+	if (USE_SOUND == false)
+		return (0);
 	// Ouvrir le dispositif audio
 	game->device = alcOpenDevice(NULL);
 	if (!game->device)
@@ -40,6 +42,8 @@ int	init_openal(t_game *game)
 
 void	close_openal(t_game *game)
 {
+	if (USE_SOUND == false)
+		return ;
 	if (game->context)
 	{
 		alcMakeContextCurrent(NULL);
@@ -99,6 +103,8 @@ t_sound	load_sound(t_game *game, const char *filename)
 
 void	play_sound(t_sound *sound, int loop)
 {
+	if (USE_SOUND == false)
+		return ;
 	alSourcei(sound->source, AL_BUFFER, sound->buffer);
 	if (loop)
 		alSourcei(sound->source, AL_LOOPING, AL_TRUE); // Activer la boucle
@@ -106,4 +112,3 @@ void	play_sound(t_sound *sound, int loop)
 		alSourcei(sound->source, AL_LOOPING, AL_FALSE); // Désactiver la boucle
 	alSourcePlay(sound->source);
 }
-

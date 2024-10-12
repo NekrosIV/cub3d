@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/11 14:30:28 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/12 14:51:37 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,57 +102,77 @@ void	calculate_step_and_sidedist(t_ray *ray, t_game *game)
 	}
 }
 
+void	step_ray(t_ray *ray)
+{
+	if (ray->sidedistX < ray->sidedistY)
+	{
+		ray->mapX += ray->stepX;
+		ray->sidedistX += ray->deltaX;
+		ray->last_hit = 0;
+	}
+	else
+	{
+		ray->mapY += ray->stepY;
+		ray->sidedistY += ray->deltaY;
+		ray->last_hit = 1;
+	}
+}
+
+void	check_bot_collision(t_ray *ray, t_game *game)
+{
+	int i = 0;
+
+	while (i < game->bot_nb)
+	{
+		if (ray->mapX == (int)game->ennemy[i].posX && ray->mapY == (int)game->ennemy[i].posY)
+			game->ennemy[i].bothit += 1;
+		i++;
+	}
+}
+
+void	check_door_collision(t_ray *ray, t_game *game)
+{
+	int i = 0;
+
+	while (i < game->nb_door)
+	{
+		if (game->door[i].map_y == ray->mapY && game->door[i].map_x == ray->mapX)
+			game->door[i].door_hit++;
+		i++;
+	}
+}
+
+void	check_wall_hit(t_ray *ray, t_game *game)
+{
+	int i = 0;
+
+	if (game->map[ray->mapY][ray->mapX] != '0')
+	{
+		ray->ray_hit = 1;
+		while (i < game->nb_door && ray->ray_hit == 1)
+		{
+			if (game->door[i].map_y == ray->mapY && game->door[i].map_x == ray->mapX)
+			{
+				ray->ray_hit = 2;
+				game->door[i].door_hit++;
+			}
+			i++;
+		}
+	}
+}
+
 void	perform_dda(t_ray *ray, t_game *game)
 {
-	int i;
 	ray->ray_hit = 0;
 	while (ray->ray_hit == 0)
 	{
-		if (ray->sidedistX < ray->sidedistY)
-		{
-			ray->mapX += ray->stepX;
-			ray->sidedistX += ray->deltaX;
-			ray->last_hit = 0;
-		}
-		else
-		{
-			ray->mapY += ray->stepY;
-			ray->sidedistY += ray->deltaY;
-			ray->last_hit = 1;
-		}
-			i = 0;
-			while (i < game->bot_nb)
-			{
-		
-				if (ray->mapX == (int)game->ennemy[i].posX && ray->mapY == (int)game->ennemy[i].posY)
-					game->ennemy[i].bothit += 1;
-				i++;
-			}
-			i = 0;
-			while (i < game->nb_door)
-				{
-					if ((game->door[i].map_y == ray->mapY
-						&& game->door[i].map_x == ray->mapX))
-							game->door[i].door_hit++;
-					i++;
-				}
-			if (game->map[ray->mapY][ray->mapX] != '0')
-			{
-				ray->ray_hit = 1;
-				i = 0;
-				while (i < game->nb_door && ray->ray_hit == 1)
-				{
-					if ((game->door[i].map_y == ray->mapY
-						&& game->door[i].map_x == ray->mapX))
-						{
-							ray->ray_hit = 2 ;
-							game->door[i].door_hit++;
-						}
-					i++;
-				}
-			}
+		step_ray(ray);
+		check_bot_collision(ray, game);
+		check_door_collision(ray, game);
+		check_wall_hit(ray, game);
 	}
 }
+
 
 void	calculate_wall_height(t_ray *ray, t_game *game, int i)
 {
@@ -242,6 +262,23 @@ void	draw_pixels(t_ray *ray, t_game *game, t_texture *textures, int i)
 		y++;
 	}
 }
+void	reset_hits(t_game *game)
+{
+	int i;
+
+	i = 0;
+	while (i < game->bot_nb)
+	{
+		game->ennemy[i].bothit = 0;
+		i++;
+	}
+	i = 0;
+	while (i < game->nb_door)
+	{
+		game->door[i].door_hit = 0;
+		i++;
+	}
+}
 
 void	draw_arrow(t_game *game, t_texture *textures)
 {
@@ -251,18 +288,7 @@ void	draw_arrow(t_game *game, t_texture *textures)
 	ray.fov = FOV;
 	ray.ray = game->player.dirangle + ray.fov / 2;
 	ray.offset = ray.fov / WINX;
-	i = 0;
-		while (i < game->bot_nb)
-	{
-		game->ennemy[i].bothit = 0;
-		i++;
-	}
-	i = 0;
-	while (i < game->nb_door)
-	{
-		game->door[i].door_hit = 0;	
-		i++;
-	}
+	reset_hits(game);
 	i = 0;
 	while (i < WINX)
 	{

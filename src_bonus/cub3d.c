@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/11 19:11:16 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/12 14:55:46 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,9 +140,13 @@ void	check_door(t_game *game)
 			if (game->door[i].distance <= 1.5 && game->door[i].door_hit >= WINX
 				/ 2)
 			{
-				alGetSourcei(game->sound[DOOR].source, AL_SOURCE_STATE, &state);
-				if (state != AL_PLAYING)
-					play_sound(&game->sound[DOOR], false);
+				if (USE_SOUND == true)
+				{
+					alGetSourcei(game->sound[DOOR].source, AL_SOURCE_STATE,
+						&state);
+					if (state != AL_PLAYING)
+						play_sound(&game->sound[DOOR], false);
+				}
 				if (game->door[i].state == OPEN)
 				{
 					game->map[game->door[i].map_y][game->door[i].map_x] = '1';
@@ -230,8 +234,7 @@ int	loop_hook(t_game *game)
 		mini_draw_map(game, texture);
 		drawallbot(game, texture->data);
 		checkbotmoves(game);
-		draw_crosshair(game, texture->data, texture->size_line, texture->bpp,
-			CROSSHAIR);
+		draw_crosshair(texture, CROSSHAIR);
 		update_gun_animation(game);
 		draw_gun(game, texture->data, texture->bpp);
 		bot_attack(game, texture);
@@ -259,7 +262,7 @@ int	main(int ac, char **av)
 	init_player(game);
 	init_mlx(game);
 	init_sound(game);
-	game->menu =  false;
+	game->menu = false;
 	game->is_game_start = true;
 	mlx_loop_hook(game->mlx->mlx_ptr, loop_hook, game);
 	mlx_hook(game->mlx->mlx_win, 17, 0, india, game);

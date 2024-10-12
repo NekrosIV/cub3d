@@ -48,6 +48,13 @@ FILES_BONUS := cub3d.c \
 		draw/draw.c \
 		draw/raycastingbot.c \
 		draw/raycasting.c \
+		draw/gun.c \
+		bot/enemy_animation.c \
+		bot/bot_ai.c \
+		bot/movement_utils.c \
+		bot/collision_detection.c \
+		bot/bot.c \
+		bot/bot_utilities.c \
 		sound.c \
 		utils.c 
 

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:48:51 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/10 18:54:26 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/12 13:13:59 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void    init_sounds_struct(t_game *game)
 
 void	init_sound(t_game *game)
 {
+	if (USE_SOUND == false)
+		return;
 	if (init_openal(game) != 0)
 		free_exit(game, 0, NULL, "INIT_SOUND FAIL");
 	game->sound[OST] = load_sound(game, "textures/berserkbro.wav");

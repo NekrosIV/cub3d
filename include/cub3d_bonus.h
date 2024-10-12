@@ -114,6 +114,11 @@
 # define DAMAGE_BOT 50
 # define FOV 1
 # define CIRCLE_COLOR 0xFF7300
+# define CROSSHAIR 0xFF7300
+# define LINE_THICKNESS ((WINX + WINY) / 800)
+# define CROSSHAIR_SIZE ((WINX + WINY) / 300)
+# define CENTER_X (WINX / 2)
+# define CENTER_Y (WINY / 2)
 # define MINI_W 0x4B0082
 # define MINI_S 0x00FFFF
 # define MINI_D 0x00FF00
@@ -129,6 +134,7 @@
 # define HPP 100
 # define CLOSE 0
 # define OPEN 1
+# define USE_SOUND false
 
 typedef struct s_mlx
 {
@@ -204,6 +210,7 @@ typedef struct s_ray
 	int			ray_hit;
 	int			last_hit;
 	double		perp_length;
+	double		distance;
 	double		y_wall;
 	double		line_h;
 	double		ratio;
@@ -212,6 +219,7 @@ typedef struct s_ray
 	double		skyx;
 	int			wall;
 	double		pos_texture;
+	int			ignore;
 }				t_ray;
 
 typedef struct s_player
@@ -254,6 +262,33 @@ typedef struct s_sound
 	ALuint buffer; // Buffer contenant les données audio
 	ALuint source; // Source pour jouer le son
 }				t_sound;
+
+typedef struct s_utils
+{
+	double		dx;
+	double		dy;
+	double		distance;
+	double		angle;
+	int			screenX;
+	int			screenY;
+	double		line_h;
+	int			starty;
+	int			endy;
+	int			startx;
+	int			endx;
+	double		difference;
+	double		pixelx;
+	double		ratio;
+	double		x_img;
+	double		y_img;
+	int			i;
+	int			ignore;
+	double		posX;
+	double		posY;
+	double		deltaX;
+	double		deltaY;
+
+}				t_utils;
 
 typedef struct s_game
 {
@@ -336,15 +371,24 @@ int				india(t_game *game);
 double			get_current_time(void);
 void			draw_arrow(t_game *game, t_texture *textures);
 int				key_release(int keycode, t_game *game);
-void			draw_crosshair(t_game *game, char *data, int size_line, int bpp,
-					int color);
+void			draw_crosshair(t_texture *texture, int color);
 void			drawEnemy(t_game *game, char *data, t_enemy *enemy);
-void			drawallbot(t_game *game, char *data);
-void			checkbotmoves(t_game *game);
 void			dammage(t_game *game, t_enemy *enemy);
-void			update_enemy_animation(t_game *game, t_enemy *bot);
 void			draw_floor_and_ceiling(t_game *game, t_texture *textures);
 int				mouse_move(int x, int y, t_game *game);
+
+// bot
+int				is_bot_collision(t_enemy *bot1, t_enemy *bot2,
+					double threshold);
+int				is_collision_with_others(t_game *game, t_enemy *current_bot,
+					double new_posX, double new_posY);
+int				is_wall(t_game *game, double x, double y, double radius);
+bool			has_wall_between(t_game *game, t_enemy *bot);
+void			update_enemy_animation(t_game *game, t_enemy *bot);
+bool			try_move_bot(t_game *game, t_enemy *bot, double dx, double dy);
+void			movebot(t_game *game, t_enemy *bot);
+void			drawallbot(t_game *game, char *data);
+void			checkbotmoves(t_game *game);
 void			draw_dammage(t_game *game, t_enemy *bot, t_player *player);
 
 // Déclaration des fonctions pour le son
@@ -353,5 +397,7 @@ void			close_openal(t_game *game);
 t_sound			load_sound(t_game *game, const char *filename);
 void			play_sound(t_sound *sound, int loop);
 void			init_sound(t_game *game);
+void			update_enemy_distance(t_game *game, t_enemy *enemy);
+void			sort_enemies_by_distance(t_game *game);
 
 #endif

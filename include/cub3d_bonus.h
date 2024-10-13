@@ -134,7 +134,7 @@
 # define HPP 100
 # define CLOSE 0
 # define OPEN 1
-# define USE_SOUND false
+# define USE_SOUND true
 
 typedef struct s_mlx
 {

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 16:46:24 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/12 16:49:54 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/13 14:30:54 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	drawallbot(t_game *game, char *data)
 	}
 	i = 0;
 }
+
 void	dammage(t_game *game, t_enemy *enemy)
 {
 	double	dx;

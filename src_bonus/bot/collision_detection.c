@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 16:11:19 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/12 16:16:55 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/13 14:32:34 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,26 +36,24 @@ int	is_collision_with_others(t_game *game, t_enemy *current_bot,
 	t_enemy	*other_bot;
 	t_enemy	temp_bot;
 
-	for (i = 0; i < game->bot_nb; i++)
+	i = 0;
+	while (i < game->bot_nb)
 	{
 		other_bot = &game->ennemy[i];
-		// Ignorer le bot lui-même
 		if (other_bot == current_bot)
 		{
+			i++;
 			continue ;
 		}
-		// Créer un bot temporaire à la nouvelle position pour vérifier la collision
 		temp_bot = *current_bot;
 		temp_bot.posX = new_posX;
 		temp_bot.posY = new_posY;
-		// Vérifier la collision avec les autres bots
 		if (is_bot_collision(&temp_bot, other_bot, 0.5)
 			&& other_bot->action != DEATH)
-		{               // 1.0 est la distance de sécurité
-			return (1); // Collision détectée}
-		}
+			return (1);
+		i++;
 	}
-	return (0); // Pas de collision
+	return (0);
 }
 
 int	is_wall(t_game *game, double x, double y, double radius)

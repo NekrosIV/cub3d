@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/11 19:11:36 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/13 14:27:44 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	init_wall(t_game *game)
 			&game->wall[i].bpp, &game->wall[i].size_line,
 			&game->wall[i].endian);
 }
+
 void	int_enemy_textutre(t_game *game)
 {
 	char	texture_path[100];
@@ -88,6 +89,7 @@ void	int_enemy_textutre(t_game *game)
 		state++;
 	}
 }
+
 void	init_gun_texture(t_game *game)
 {
 	char	texture_path[50];

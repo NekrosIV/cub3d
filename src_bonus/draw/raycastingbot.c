@@ -6,81 +6,77 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/12 17:55:52 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/13 14:25:52 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
 
-void	drawEnemy(t_game *game, char *data, t_enemy *enemy)
+void calculate_enemy_parameters(t_game *game, t_enemy *enemy, t_utils *u)
 {
-	double	dx;
-	double	dy;
-	double	distance;
-	double	angle;
-	int		screenX;
-	int		screenY;
-	double	line_h;
-	int		starty;
-	int		endy;
-	int		startx;
-	int		endx;
-	double	difference;
-	double	pixelx;
-	double	ratio;
-	double	x_img;
-	double	y_img;
-	int		i;
+    u->dx = enemy->posX - game->player.posX;
+    u->dy = enemy->posY - game->player.posY;
+    u->distance = sqrt((u->dx * u->dx) + (u->dy * u->dy));
+    u->line_h = WINY / u->distance;
+    u->starty = (int)(WINY / 2 - u->line_h / 2);
+    u->endy = (int)(WINY / 2 + u->line_h / 2);
+    u->startx = (int)(WINX / 2 - u->line_h / 2);
+    u->endx = (int)(WINX / 2 + u->line_h / 2);
+    u->angle = atan2(u->dy, u->dx);
+    u->difference = game->player.dirangle + u->angle;
+    if (u->difference > PI)
+        u->difference -= 2 * PI;
+    if (u->difference < -PI)
+        u->difference += 2 * PI;
+    u->pixelx = sin(u->difference) * WINX / FOV;
+    u->startx = u->startx + (int)u->pixelx;
+    u->endx = u->endx + (int)u->pixelx;
+    u->ratio = 64.0 / u->line_h;
+}
 
-	if (enemy->bothit < 20)
-		return ;
-	dx = enemy->posX - game->player.posX;
-	dy = enemy->posY - game->player.posY;
-	distance = sqrt((dx * dx) + (dy * dy));
-	line_h = WINY / distance;
-	starty = (int)(WINY / 2 - line_h / 2);
-	endy = (int)(WINY / 2 + line_h / 2);
-	startx = (int)(WINX / 2 - line_h / 2);
-	endx = (int)(WINX / 2 + line_h / 2);
-	angle = atan2(dy, dx);
-	difference = game->player.dirangle + angle;
-	if (difference > PI)
-		difference -= 2 * PI;
-	if (difference < -PI)
-		difference += 2 * PI;
-	pixelx = sin(difference) * WINX / FOV;
-	pixelx = pixelx;
-	startx = startx + (int)pixelx;
-	endx = endx + (int)pixelx;
-	ratio = 64.0 / line_h;
-	x_img = 0.0;
-	y_img = 0.0;
-	while (startx < endx)
-	{
-		if (startx < WINX && startx >= 0)
-		{
-			y_img = 0;
-			if (game->profondeur[startx] > distance)
-			{
-				i = starty;
-				while (i < endy && i < WINY && i >= 0)
-				{
-					if (x_img < 64 && y_img < 64
-						&& *((int *)game->texturebot[enemy->action][enemy->frame].data
-							+ (int)x_img + (int)y_img
-							* 64) != *((int *)game->texturebot[enemy->action][enemy->frame].data))
-					{
-						*((int *)data + i * WINX
-								+ (int)startx) = *((int *)game->texturebot[enemy->action][enemy->frame].data
-								+ (int)x_img + (int)y_img * 64);
-					}
-					y_img += ratio;
-					i++;
-				}
-			}
-		}
-		x_img += ratio;
-		startx++;
-	}
+void draw_enemy_column(t_game *game, char *data, t_enemy *enemy, t_utils *u)
+{
+    if (u->startx < WINX && u->startx >= 0)
+    {
+        u->y_img = 0;
+        if (game->profondeur[u->startx] > u->distance)
+        {
+            u->i = u->starty;
+            while (u->i < u->endy && u->i < WINY && u->i >= 0)
+            {
+                if (u->x_img < 64 && u->y_img < 64 &&
+                    *((int *)game->texturebot[enemy->action][enemy->frame].data +
+                      (int)u->x_img + (int)u->y_img * 64) !=
+                    *((int *)game->texturebot[enemy->action][enemy->frame].data))
+                {
+                    *((int *)data + u->i * WINX + (int)u->startx) =
+                        *((int *)game->texturebot[enemy->action][enemy->frame].data +
+                          (int)u->x_img + (int)u->y_img * 64);
+                }
+                u->y_img += u->ratio;
+                u->i++;
+            }
+        }
+    }
+}
+
+void drawEnemy(t_game *game, char *data, t_enemy *enemy)
+{
+    t_utils u;
+
+    if (enemy->bothit < 20)
+        return;
+
+    calculate_enemy_parameters(game, enemy, &u);
+
+    u.x_img = 0.0;
+    u.y_img = 0.0;
+
+    while (u.startx < u.endx)
+    {
+        draw_enemy_column(game, data, enemy, &u);
+        u.x_img += u.ratio;
+        u.startx++;
+    }
 }
 

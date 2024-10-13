@@ -6,13 +6,13 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 17:21:23 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/12 17:23:14 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/13 14:30:31 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
 
-void	draw_gun_texture(char *data, t_texture *gun, t_ray *ray, int y_start)
+void	draw_gun_texture(char *data, t_texture *gun, t_utils *u, int y_start)
 {
 	int	x;
 	int	y;
@@ -25,17 +25,17 @@ void	draw_gun_texture(char *data, t_texture *gun, t_ray *ray, int y_start)
 	while (y < WINY)
 	{
 		x = x_start;
-		ray->posX = 0;
+		u->posX = 0;
 		while (x < WINX)
 		{
-			if (ray->posX < gun->w && ray->posY < gun->h && *((int *)gun->data
-					+ (int)ray->posX + (int)ray->posY * gun->w) != ignore)
+			if (u->posX < gun->w && u->posY < gun->h && *((int *)gun->data
+					+ (int)u->posX + (int)u->posY * gun->w) != ignore)
 				*((int *)data + x + y * WINX) = *((int *)gun->data
-						+ (int)ray->posX + (int)ray->posY * gun->w);
-			ray->posX += ray->deltaX;
+						+ (int)u->posX + (int)u->posY * gun->w);
+			u->posX += u->deltaX;
 			x++;
 		}
-		ray->posY += ray->deltaY;
+		u->posY += u->deltaY;
 		y++;
 	}
 }
@@ -45,20 +45,20 @@ void	draw_gun(t_game *game, char *data, int bpp)
 	t_texture	*gun;
 	int			resetx;
 	int			y_start;
-	t_ray		ray;
+	t_utils		u;
 
 	gun = &game->gun[game->gun->frame];
-	ray.posX = 0;
-	ray.posY = 0;
-	ray.deltaX = gun->w / (double)WINX * 2;
-	ray.deltaY = gun->h / (double)(WINY / 2) * 0.8;
+	u.posX = 0;
+	u.posY = 0;
+	u.deltaX = gun->w / (double)WINX * 2;
+	u.deltaY = gun->h / (double)(WINY / 2) * 0.8;
 	y_start = WINY - WINY / 1.6;
-	draw_gun_texture(data, gun, &ray, y_start);
+	draw_gun_texture(data, gun, &u, y_start);
 }
 
 void	update_gun_animation(t_game *game)
 {
-	double current_time;
+	double	current_time;
 
 	if (game->gun->animating == 0)
 		return ;

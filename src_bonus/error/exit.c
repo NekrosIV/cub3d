@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:18:57 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/11 19:32:11 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/13 14:27:27 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,14 +133,11 @@ void	stop_and_cleanup_sound(t_sound *sound)
 
 	if (sound->buffer && sound->source)
 	{
-		// Arrêter le son s'il est en cours de lecture
 		alGetSourcei(sound->source, AL_SOURCE_STATE, &state);
 		if (state == AL_PLAYING)
 			alSourceStop(sound->source);
-		// Supprimer la source et le buffer associés
 		alDeleteSources(1, &sound->source);
 		alDeleteBuffers(1, &sound->buffer);
-		
 	}
 }
 

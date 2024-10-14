@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 16:12:52 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/12 16:37:47 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/14 16:41:08 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ bool	bot_attack_decision(t_game *game, t_enemy *bot, double current_time)
 void	calculate_bot_direction(t_game *game, t_enemy *bot, double *dx,
 		double *dy)
 {
-	*dx = game->player.posX - bot->posX;
-	*dy = game->player.posY - bot->posY;
+	*dx = game->player.posx - bot->posx;
+	*dy = game->player.posy - bot->posy;
 	if (bot->distance > 0)
 	{
 		*dx /= bot->distance;

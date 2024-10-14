@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/12 14:51:37 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/14 17:51:35 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,185 +60,6 @@ void	draw_ray_in_data(t_game *game, t_texture *textures, int x0, int y0,
 	}
 }
 
-void	init_ray(t_ray *ray, t_game *game)
-{
-	ray->ray_dX = cos(ray->ray);
-	ray->ray_dY = sin(ray->ray);
-	if (ray->ray_dY < 0.0001 && ray->ray_dY > -0.0001)
-		ray->deltaY = 1e30;
-	else
-		ray->deltaY = 1 / fabs(ray->ray_dY);
-	if (ray->ray_dX < 0.00001 && ray->ray_dX > -0.00001)
-		ray->deltaX = 1e30;
-	else
-		ray->deltaX = 1 / fabs(ray->ray_dX);
-	ray->mapX = (int)game->player.posX;
-	ray->mapY = (int)game->player.posY;
-}
-
-void	calculate_step_and_sidedist(t_ray *ray, t_game *game)
-{
-	if (cos(ray->ray) > 0.0)
-	{
-		ray->stepX = 1;
-		ray->sidedistX = ((double)(ray->mapX + 1) - game->player.posX)
-			* ray->deltaX;
-	}
-	else
-	{
-		ray->stepX = -1;
-		ray->sidedistX = (game->player.posX - (double)ray->mapX) * ray->deltaX;
-	}
-	if (sin(ray->ray) > 0.0)
-	{
-		ray->stepY = -1;
-		ray->sidedistY = (game->player.posY - (double)ray->mapY) * ray->deltaY;
-	}
-	else
-	{
-		ray->stepY = 1;
-		ray->sidedistY = ((double)(ray->mapY + 1) - game->player.posY)
-			* ray->deltaY;
-	}
-}
-
-void	step_ray(t_ray *ray)
-{
-	if (ray->sidedistX < ray->sidedistY)
-	{
-		ray->mapX += ray->stepX;
-		ray->sidedistX += ray->deltaX;
-		ray->last_hit = 0;
-	}
-	else
-	{
-		ray->mapY += ray->stepY;
-		ray->sidedistY += ray->deltaY;
-		ray->last_hit = 1;
-	}
-}
-
-void	check_bot_collision(t_ray *ray, t_game *game)
-{
-	int i = 0;
-
-	while (i < game->bot_nb)
-	{
-		if (ray->mapX == (int)game->ennemy[i].posX && ray->mapY == (int)game->ennemy[i].posY)
-			game->ennemy[i].bothit += 1;
-		i++;
-	}
-}
-
-void	check_door_collision(t_ray *ray, t_game *game)
-{
-	int i = 0;
-
-	while (i < game->nb_door)
-	{
-		if (game->door[i].map_y == ray->mapY && game->door[i].map_x == ray->mapX)
-			game->door[i].door_hit++;
-		i++;
-	}
-}
-
-void	check_wall_hit(t_ray *ray, t_game *game)
-{
-	int i = 0;
-
-	if (game->map[ray->mapY][ray->mapX] != '0')
-	{
-		ray->ray_hit = 1;
-		while (i < game->nb_door && ray->ray_hit == 1)
-		{
-			if (game->door[i].map_y == ray->mapY && game->door[i].map_x == ray->mapX)
-			{
-				ray->ray_hit = 2;
-				game->door[i].door_hit++;
-			}
-			i++;
-		}
-	}
-}
-
-void	perform_dda(t_ray *ray, t_game *game)
-{
-	ray->ray_hit = 0;
-	while (ray->ray_hit == 0)
-	{
-		step_ray(ray);
-		check_bot_collision(ray, game);
-		check_door_collision(ray, game);
-		check_wall_hit(ray, game);
-	}
-}
-
-
-void	calculate_wall_height(t_ray *ray, t_game *game, int i)
-{
-	if (ray->last_hit)
-		ray->length = (ray->sidedistY - ray->deltaY);
-	else
-		ray->length = (ray->sidedistX - ray->deltaX);
-	ray->perp_length = ray->length;
-	game->profondeur[i] = ray->perp_length;
-	ray->line_h = WINY / fabs(ray->perp_length * cos(ray->ray
-				- game->player.dirangle));
-	ray->start_y = (WINY / 2.0) - (ray->line_h / 2.0);
-	ray->end_y = (WINY / 2.0) + (ray->line_h / 2.0);
-	if (ray->end_y > WINY - 1)
-	{
-		ray->end_y = WINY - 1;
-		ray->start_y = 0;
-	}
-}
-
-void	determine_wall_and_pos_texture(t_ray *ray, t_game *game)
-{
-	if (ray->last_hit == 1)
-	{
-		if(ray->ray_hit == 2)
-			ray->wall = 5;
-		else if (ray->stepY == -1)
-			ray->wall = N;
-		else
-			ray->wall = S;
-		ray->pos_texture = game->player.posX + (ray->perp_length * ray->ray_dX);
-		ray->pos_texture -= floor(ray->pos_texture);
-	}
-	else
-	{
-		if(ray->ray_hit == 2)
-			ray->wall = 5;
-		else if (ray->stepX == -1)
-			ray->wall = W;
-		else
-			ray->wall = E;
-		ray->pos_texture = game->player.posY - (ray->perp_length * ray->ray_dY);
-		ray->pos_texture -= floor(ray->pos_texture);
-	}
-}
-void	adjust_texture_coordinates(t_ray *ray, t_game *game)
-{
-	ray->ratio = game->wall[ray->wall].h / ray->line_h;
-	ray->sky_ratio  = game->wall[C].h / (double)(WINY/2);
-	ray->y_sky = 0;
-	while (ray->ray > 2 * PI)
-		ray->ray -= 2 * PI;
-	while (ray->ray < 0)
-		ray->ray += 2 * PI;
-	ray->skyx = ray->ray*(game->wall[C].w / (2*PI));
-	ray->pos_texture *= game->wall[ray->wall].w;
-	if (ray->stepX < 0 && ray->last_hit == 0)
-		ray->pos_texture = game->wall[ray->wall].w - ray->pos_texture - 1;
-	if (ray->last_hit == 1 && ray->stepY > 0)
-		ray->pos_texture = game->wall[ray->wall].w - ray->pos_texture - 1;
-	ray->y_wall = 0.0;
-	if (ray->line_h > WINY)
-		ray->y_wall = ray->ratio * (ray->line_h - (double)WINY) / 2;
-	if (ray->pos_texture > game->wall[ray->wall].w - 1)
-		ray->pos_texture = game->wall[ray->wall].w - 1;
-}
 void	draw_pixels(t_ray *ray, t_game *game, t_texture *textures, int i)
 {
 	int	y;
@@ -246,13 +67,18 @@ void	draw_pixels(t_ray *ray, t_game *game, t_texture *textures, int i)
 	y = 0;
 	while (y <= (int)ray->start_y)
 	{
-		*((int *)textures->data + i + y * WINX) = *((int *)game->wall[C].data + (int)ray->skyx + ((int)ray->y_sky * game->wall[C].size_line/4));
+		*((int *)textures->data + i + y * WINX) = *((int *)game->wall[C].data
+				+ (int)ray->skyx + ((int)ray->y_sky * game->wall[C].size_line
+					/ 4));
 		ray->y_sky += ray->sky_ratio;
 		y++;
 	}
 	while (y <= (int)ray->end_y)
 	{
-		*((int *)textures->data + i + y * WINX) = *((int *)game->wall[ray->wall].data + (int)ray->pos_texture + ((int)ray->y_wall * game->wall[ray->wall].size_line / 4));
+		*((int *)textures->data + i + y
+				* WINX) = *((int *)game->wall[ray->wall].data
+				+ (int)ray->pos_texture + ((int)ray->y_wall
+					* game->wall[ray->wall].size_line / 4));
 		ray->y_wall += ray->ratio;
 		y++;
 	}
@@ -262,9 +88,10 @@ void	draw_pixels(t_ray *ray, t_game *game, t_texture *textures, int i)
 		y++;
 	}
 }
+
 void	reset_hits(t_game *game)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < game->bot_nb)
@@ -303,4 +130,3 @@ void	draw_arrow(t_game *game, t_texture *textures)
 		i++;
 	}
 }
-

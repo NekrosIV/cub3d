@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/13 14:27:44 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/14 17:36:43 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,15 @@ void	int_enemy_textutre(t_game *game)
 			else if (state == DAMAGE)
 				snprintf(texture_path, sizeof(texture_path),
 					"textures/characters/CommandoDeath%d.xpm", 1);
-			game->texturebot[state][frame].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
-					texture_path, &game->texturebot[state][frame].w,
-					&game->texturebot[state][frame].h);
-			if (game->texturebot[state][frame].img == NULL)
+			game->botext[state][frame].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
+					texture_path, &game->botext[state][frame].w,
+					&game->botext[state][frame].h);
+			if (game->botext[state][frame].img == NULL)
 				free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);
-			game->texturebot[state][frame].data = mlx_get_data_addr(game->texturebot[state][frame].img,
-					&game->texturebot[state][frame].bpp,
-					&game->texturebot[state][frame].size_line,
-					&game->texturebot[state][frame].endian);
+			game->botext[state][frame].data = mlx_get_data_addr(game->botext[state][frame].img,
+					&game->botext[state][frame].bpp,
+					&game->botext[state][frame].size_line,
+					&game->botext[state][frame].endian);
 			frame++;
 			if ((state == HALT && frame == 1) || (state == WALK && frame == 4)
 				|| (state == ATTACK && frame == 2) || (state == DEATH

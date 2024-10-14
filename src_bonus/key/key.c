@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:05:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/08 16:06:04 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/14 12:21:57 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	check_bouton_prese(t_game *game)
 		game->is_game_start = true;
 	}
 }
+
 void	choose_state_menu(t_game *game, int keycode)
 {
 	if (keycode == XK_Up)

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:18:57 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/13 14:27:27 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/14 17:36:43 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,10 @@ void	free_text_bot(t_game *game)
 		i = 0;
 		while (i < 4)
 		{
-			if (game->texturebot[j][i].img)
+			if (game->botext[j][i].img)
 			{
-				mlx_destroy_image(game->mlx->mlx_ptr,
-					game->texturebot[j][i].img);
-				game->texturebot[j][i].img = NULL;
+				mlx_destroy_image(game->mlx->mlx_ptr, game->botext[j][i].img);
+				game->botext[j][i].img = NULL;
 			}
 			i++;
 			if ((j == HALT && i == 1) || (j == WALK && i == 4) || (j == ATTACK
@@ -151,7 +150,6 @@ void	delete_audios(t_game *game)
 		stop_and_cleanup_sound(&game->sound[i]);
 		i++;
 	}
-	
 	close_openal(game);
 }
 

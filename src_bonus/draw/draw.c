@@ -6,52 +6,11 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:09:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/12 17:58:44 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/14 17:55:24 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
-
-void	draw_crosshair2(t_texture *texture, int color, int width_in_ints)
-{
-	int	x;
-	int	y;
-
-	x = CENTER_X - LINE_THICKNESS / 2;
-	while (x < CENTER_X + LINE_THICKNESS / 2)
-	{
-		y = CENTER_Y - CROSSHAIR_SIZE;
-		while (y < CENTER_Y + CROSSHAIR_SIZE)
-		{
-			if (x >= 0 && x < WINX && y >= 0 && y < WINY)
-				*((int *)texture->data + y * width_in_ints + x) = color;
-			y++;
-		}
-		x++;
-	}
-}
-
-void	draw_crosshair(t_texture *texture, int color)
-{
-	int	width_in_ints;
-	int	x;
-	int	y;
-
-	width_in_ints = texture->size_line / 4;
-	y = CENTER_Y - LINE_THICKNESS / 2;
-	while (y < CENTER_Y + LINE_THICKNESS / 2)
-	{
-		x = CENTER_X - CROSSHAIR_SIZE;
-		while (x < CENTER_X + CROSSHAIR_SIZE)
-		{
-			if (x >= 0 && x < WINX && y >= 0 && y < WINY)
-				*((int *)texture->data + y * width_in_ints + x) = color;
-			x++;
-		}
-		y++;
-	}
-	draw_crosshair2(texture, color, width_in_ints);
-}
 
 void	draw_rectangle(t_texture *textures, int x, int y, int color)
 {
@@ -82,33 +41,73 @@ void	draw_rectangle(t_texture *textures, int x, int y, int color)
 	}
 }
 
-
-
-void draw_dammage(t_game *game, t_enemy *bot, t_player *player)
+void	draw_circle_row(t_texture *textures, int x, int y, t_utils *u)
 {
-    t_utils   utils;
-    int     x;
-    int     y;
-    int     img_index;
-    int     screen_index;
+	int	j;
+	int	px;
+	int	py;
+	int	dx;
+	int	dy;
 
-    utils.ignore = *((int *)game->dammage.data + (game->dammage.h / 2) * game->dammage.w + (game->dammage.w / 2));
-    utils.deltaX = (double)game->dammage.w / (double)WINX;
-    utils.deltaY = (double)game->dammage.h / (double)WINY;
-    x = 0;
-	while(x < WINX)
-    {
-		y = 0;
-        while (y < WINY)
-        {
-            utils.posX = x * utils.deltaX;
-            utils.posY = y * utils.deltaY;
-            img_index = ((int)utils.posY) * game->dammage.w + (int)utils.posX;
-            screen_index = y * WINX + x;
-            if (*((int *)game->dammage.data + img_index) != utils.ignore)
-                *((int *)game->pic.data + screen_index) = *((int *)game->dammage.data + img_index);
-            y++;
-        }
-		x++;
+	px = x - RADIUS + u->i;
+	if (px < 0 || px >= MIN_DIM)
+		return ;
+	j = 0;
+	while (j < 2 * RADIUS)
+	{
+		py = y - RADIUS + j;
+		if (py < 0 || py >= MIN_DIM)
+		{
+			j++;
+			continue ;
+		}
+		dx = u->i - RADIUS;
+		dy = j - RADIUS;
+		if (dx * dx + dy * dy <= RADIUS * RADIUS)
+			*((int *)textures->data + py * textures->size_line / 4
+					+ px) = u->color;
+		j++;
+	}
+}
+
+void	draw_filled_circle(t_texture *textures, int x, int y, int color)
+{
+	int		i;
+	t_utils	u;
+
+	u.color = color;
+	u.i = 0;
+	while (u.i < 2 * RADIUS)
+	{
+		draw_circle_row(textures, x, y, &u);
+		u.i++;
+	}
+}
+
+void	draw_dammage(t_game *game, t_enemy *bot, t_player *player)
+{
+	t_utils	u;
+	int		x;
+	int		y;
+
+	u.ignore = *((int *)game->dammage.data + (game->dammage.h / 2)
+			* game->dammage.w + (game->dammage.w / 2));
+	u.deltax = (double)game->dammage.w / (double)WINX;
+	u.deltay = (double)game->dammage.h / (double)WINY;
+	x = -1;
+	while (++x < WINX)
+	{
+		y = -1;
+		while (++y < WINY)
+		{
+			u.posx = x * u.deltax;
+			u.posy = y * u.deltay;
+			u.img_index = ((int)u.posy) * game->dammage.w + (int)u.posx;
+			u.screen_index = y * WINX + x;
+			if (*((int *)game->dammage.data + u.img_index) != u.ignore)
+				*((int *)game->pic.data
+						+ u.screen_index) = *((int *)game->dammage.data
+						+ u.img_index);
+		}
 	}
 }

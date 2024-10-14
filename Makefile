@@ -38,6 +38,13 @@ DEPS := $(OBJS:.o=.d)
 
 FILES_BONUS := cub3d.c \
 		parsing/parsing.c \
+		parsing/search.c \
+		parsing/rgb.c \
+		parsing/txtur_pars.c \
+		parsing/pars_map.c \
+		parsing/flood_fill.c \
+		parsing/map_utils.c \
+		parsing/parsing_utils.c \
 		error/exit.c \
 		init/init_mlx.c \
 		init/init_struct.c \
@@ -45,17 +52,25 @@ FILES_BONUS := cub3d.c \
 		player/player_move.c \
 		minimap/minimap.c \
 		key/key.c \
+		key/mouse.c \
 		draw/draw.c \
 		draw/raycastingbot.c \
 		draw/raycasting.c \
+		draw/raycasting2.c \
+		draw/dda.c \
 		draw/gun.c \
+		draw/door.c \
+		draw/health.c \
+		draw/menu.c \
+		draw/crosshair.c \
 		bot/enemy_animation.c \
 		bot/bot_ai.c \
 		bot/movement_utils.c \
 		bot/collision_detection.c \
 		bot/bot.c \
-		bot/bot_utilities.c \
-		sound.c \
+		bot/bot_utils.c \
+		sound/sound.c \
+		sound/sound2.c \
 		utils.c 
 
 SRCS_DIR_BONUS := ./src_bonus

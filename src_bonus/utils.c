@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 18:34:35 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/06 16:10:24 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:58:46 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ void	print_struct(t_game *game)
 {
 	printf("map :\n");
 	print_tabsquare(game->map);
-	printf("pos_x: %d\n", (int)game->player.posX);
-	printf("pos_y: %d\n", (int)game->player.posY);
+	printf("pos_x: %d\n", (int)game->player.posx);
+	printf("pos_y: %d\n", (int)game->player.posy);
 	printf("map_pos: %d\n", game->map_pos);
 	printf("map_rows: %d\n", game->map_rows);
 	printf("map_max_x: %d\n", game->map_max_x);

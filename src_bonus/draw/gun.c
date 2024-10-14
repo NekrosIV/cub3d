@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 17:21:23 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/13 14:30:31 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/14 17:27:38 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,22 @@ void	draw_gun_texture(char *data, t_texture *gun, t_utils *u, int y_start)
 	while (y < WINY)
 	{
 		x = x_start;
-		u->posX = 0;
+		u->posx = 0;
 		while (x < WINX)
 		{
-			if (u->posX < gun->w && u->posY < gun->h && *((int *)gun->data
-					+ (int)u->posX + (int)u->posY * gun->w) != ignore)
+			if (u->posx < gun->w && u->posy < gun->h && *((int *)gun->data
+					+ (int)u->posx + (int)u->posy * gun->w) != ignore)
 				*((int *)data + x + y * WINX) = *((int *)gun->data
-						+ (int)u->posX + (int)u->posY * gun->w);
-			u->posX += u->deltaX;
+						+ (int)u->posx + (int)u->posy * gun->w);
+			u->posx += u->deltax;
 			x++;
 		}
-		u->posY += u->deltaY;
+		u->posy += u->deltay;
 		y++;
 	}
 }
 
-void	draw_gun(t_game *game, char *data, int bpp)
+void	draw_gun(t_game *game, char *data)
 {
 	t_texture	*gun;
 	int			resetx;
@@ -48,10 +48,10 @@ void	draw_gun(t_game *game, char *data, int bpp)
 	t_utils		u;
 
 	gun = &game->gun[game->gun->frame];
-	u.posX = 0;
-	u.posY = 0;
-	u.deltaX = gun->w / (double)WINX * 2;
-	u.deltaY = gun->h / (double)(WINY / 2) * 0.8;
+	u.posx = 0;
+	u.posy = 0;
+	u.deltax = gun->w / (double)WINX * 2;
+	u.deltay = gun->h / ((double)(WINY / 2)) * (0.8);
 	y_start = WINY - WINY / 1.6;
 	draw_gun_texture(data, gun, &u, y_start);
 }

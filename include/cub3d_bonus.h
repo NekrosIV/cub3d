@@ -68,6 +68,7 @@
 # define E_MLXDATA "Failed to get data address for image"
 # define E_AUDIO "Couldnt load audio file"
 
+# define DR_WAV_IMPLEMENTATION
 # define WINAME "GOAT3D"
 # define N 0
 # define S 1
@@ -122,6 +123,7 @@
 # define MINI_W 0x4B0082
 # define MINI_S 0x00FFFF
 # define MINI_D 0x00FF00
+# define RADIUS 4
 # define AIMBOT PI / 12
 # define SGUNRANGE 5
 # define BOT_SHOOT 5
@@ -162,11 +164,11 @@ typedef struct s_enemy
 	int			hp;
 	char		name[10];
 	int			pixel;
-	int			mapX;
-	int			mapY;
+	int			mapx;
+	int			mapy;
 	int			i_count;
-	double		posX;
-	double		posY;
+	double		posx;
+	double		posy;
 	double		distance;
 	int			bothit;
 	int			frame;
@@ -183,19 +185,19 @@ typedef struct s_enemy
 
 typedef struct s_ray
 {
-	double		posX;
-	double		posY;
-	int			mapX;
-	int			mapY;
+	double		posx;
+	double		posy;
+	int			mapx;
+	int			mapy;
 	double		dirangle;
-	double		dirX;
+	double		dirx;
 	double		diry;
 	double		dist;
-	double		deltaX;
-	double		deltaY;
+	double		deltax;
+	double		deltay;
 	double		hit;
-	int			stepX;
-	int			stepY;
+	int			stepx;
+	int			stepy;
 	double		start_y;
 	double		length;
 	double		end_x;
@@ -203,10 +205,10 @@ typedef struct s_ray
 	double		ray;
 	double		offset;
 	double		fov;
-	double		sidedistX;
-	double		sidedistY;
-	double		ray_dX;
-	double		ray_dY;
+	double		sidedistx;
+	double		sidedisty;
+	double		ray_dx;
+	double		ray_dy;
 	int			ray_hit;
 	int			last_hit;
 	double		perp_length;
@@ -224,11 +226,11 @@ typedef struct s_ray
 
 typedef struct s_player
 {
-	double		posX;
-	double		posY;
+	double		posx;
+	double		posy;
 	double		dirangle;
-	double		playerdirX;
-	double		playerdirY;
+	double		playerdirx;
+	double		playerdiry;
 	double		new_x;
 	double		new_y;
 	double		new_dir;
@@ -261,6 +263,11 @@ typedef struct s_sound
 {
 	ALuint buffer; // Buffer contenant les données audio
 	ALuint source; // Source pour jouer le son
+	ALenum		format;
+	ALsizei		size;
+	ALsizei		freq;
+	ALvoid		*data;
+	size_t		data_size;
 }				t_sound;
 
 typedef struct s_utils
@@ -268,9 +275,10 @@ typedef struct s_utils
 	double		dx;
 	double		dy;
 	double		distance;
+	double		distanceSquared;
 	double		angle;
-	int			screenX;
-	int			screenY;
+	int			screenx;
+	int			screeny;
 	double		line_h;
 	int			starty;
 	int			endy;
@@ -279,14 +287,46 @@ typedef struct s_utils
 	double		difference;
 	double		pixelx;
 	double		ratio;
+	double		x_ratio;
+	double		y_ratio;
 	double		x_img;
 	double		y_img;
 	int			i;
+	int			j;
 	int			ignore;
-	double		posX;
-	double		posY;
-	double		deltaX;
-	double		deltaY;
+	double		posx;
+	double		posy;
+	double		deltax;
+	double		deltay;
+	int			min_map_x;
+	int			max_map_x;
+	int			min_map_y;
+	int			max_map_y;
+	int			map_x;
+	int			map_y;
+	int			steps;
+	double		radius;
+	float		tile_width;
+	float		tile_height;
+	float		offset_x;
+	float		offset_y;
+	int			lenght;
+	int			height;
+	double		hp;
+	int			reset;
+	int			color;
+	int			center_x;
+	int			center_y;
+	char		side;
+	int			img_index;
+	int			screen_index;
+	// ALenum			format;
+	// ALsizei			size;
+	// ALsizei			freq;
+	// ALvoid			*data;
+	// drwav			wav;
+	// size_t			data_size;
+	// drwav_uint64	frames_read;
 
 }				t_utils;
 
@@ -305,8 +345,8 @@ typedef struct s_game
 	int			ceiling_hexa;
 	int			fd;
 	char		player_dir;
-	double		playerdirX;
-	double		playerdirY;
+	double		playerdirx;
+	double		playerdiry;
 	int			map_x;
 	int			map_y;
 	int			bot_nb;
@@ -315,7 +355,7 @@ typedef struct s_game
 	t_mlx		*mlx;
 	t_texture	gun[39];
 	t_texture	wall[6];
-	t_texture	texturebot[5][4];
+	t_texture	botext[5][4];
 	t_player	player;
 	t_enemy		*ennemy;
 	t_texture	dammage;
@@ -350,7 +390,9 @@ void			init_mlx(t_game *game);
 void			init_mlx2(t_mlx *mlx);
 int				key_hook(int keycode, t_game *game);
 void			draw_rectangle(t_texture *textures, int x, int y, int color);
-void			draw_gun(t_game *game, char *data, int bpp);
+void			draw_filled_circle(t_texture *textures, int x, int y,
+					int color);
+void			draw_gun(t_game *game, char *data);
 void			movements(t_game *game, double angle_shift);
 void			direction(t_game *game, char side, double speed_cam);
 void			check_moves(t_game *game);
@@ -370,14 +412,16 @@ int				init_player(t_game *game);
 int				india(t_game *game);
 double			get_current_time(void);
 void			draw_arrow(t_game *game, t_texture *textures);
+void			init_ray(t_ray *ray, t_game *game);
+void			calculate_step_and_sidedist(t_ray *ray, t_game *game);
+void			calculate_wall_height(t_ray *ray, t_game *game, int i);
+void			determine_wall_and_pos_texture(t_ray *ray, t_game *game);
+void			adjust_texture_coordinates(t_ray *ray, t_game *game);
 int				key_release(int keycode, t_game *game);
 void			draw_crosshair(t_texture *texture, int color);
-void			drawEnemy(t_game *game, char *data, t_enemy *enemy);
+void			drawenemy(t_game *game, char *data, t_enemy *enemy);
 void			dammage(t_game *game, t_enemy *enemy);
-void			draw_floor_and_ceiling(t_game *game, t_texture *textures);
 int				mouse_move(int x, int y, t_game *game);
-
-// bot
 int				is_bot_collision(t_enemy *bot1, t_enemy *bot2,
 					double threshold);
 int				is_collision_with_others(t_game *game, t_enemy *current_bot,
@@ -389,9 +433,11 @@ bool			try_move_bot(t_game *game, t_enemy *bot, double dx, double dy);
 void			movebot(t_game *game, t_enemy *bot);
 void			drawallbot(t_game *game, char *data);
 void			checkbotmoves(t_game *game);
+void			bot_attack(t_game *game, t_texture *texture);
 void			draw_dammage(t_game *game, t_enemy *bot, t_player *player);
-
-// Déclaration des fonctions pour le son
+int				check_collision_in_cell(t_game *game, double x, double y,
+					t_utils *u);
+bool			is_out_of_bounds_or_wall(t_game *game, int map_x, int map_y);
 int				init_openal(t_game *game);
 void			close_openal(t_game *game);
 t_sound			load_sound(t_game *game, const char *filename);
@@ -399,5 +445,50 @@ void			play_sound(t_sound *sound, int loop);
 void			init_sound(t_game *game);
 void			update_enemy_distance(t_game *game, t_enemy *enemy);
 void			sort_enemies_by_distance(t_game *game);
+void			check_door(t_game *game);
+void			draw_good_state_menu(t_game *game, t_texture *texture);
+void			draw_health(t_game *game, t_texture *texture);
+int				mouse_press(int button, int x, int y, t_game *game);
+int				mouse_move(int x, int y, t_game *game);
+void			perform_dda(t_ray *ray, t_game *game);
+void			get_max_x_y(t_game *game);
+void			pre_flood_fill(t_game *game);
+void			cpy_map(t_game *game);
+void			flood_fill(t_game *game, char **map, int x, int y);
+bool			look_like_a_map_line(char *line);
+bool			check_if_its_map(t_game *game, char *line);
+void			check_line(t_game *game, char *line);
+void			check_player(t_game *game, int x, int y);
+void			fill_map(t_game *game, char *line);
+void			pre_pars_map(t_game *game);
+void			pars_map(t_game *game);
+void			replace_space_in_map(t_game *game);
+void			init_map(t_game *game, char *file);
+void			fill_map(t_game *game, char *line);
+void			pre_pars_map(t_game *game);
+void			pars_map(t_game *game);
+void			replace_space_in_map(t_game *game);
+void			init_map(t_game *game, char *file);
+int				check_if_dir(char *file);
+int				check_file(char *file, t_game *game);
+int				rgb_to_hexa(int rgb[3]);
+int				is_good_int(char *str, char *int_limit);
+int				is_positive_digit(char *str);
+int				number_of_value(char *str);
+void			fill_tab_rgb(t_game *game, char *line, char flag);
+void			init_bot(t_game *game, int i, int x, int y);
+void			init_door(t_game *game, int i, int x, int y);
+void			search_bot(t_game *game, int x, int y, int *i);
+void			search_door(t_game *game, int x, int y, int *j);
+void			search_things(t_game *game);
+bool			multi_def(t_game *game, char *line, char flag);
+void			trime_line(t_game *game, char *line);
+char			*get_texture_path(char *line, t_game *game);
+bool			textures_filled(t_game *game);
+void			count_tab_len(t_game *game, char *line, char **tab);
+void			put_door(t_game *game);
+bool			check_valid_char(char c);
+bool			check_play_pos(char c);
+int				skip_e_space(char *str, bool flag);
 
 #endif

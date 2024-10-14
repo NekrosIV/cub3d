@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/11 14:29:30 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/14 16:47:10 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ t_player	init_player_struct(void)
 {
 	t_player	player;
 
-	player.posX = -1.0;
-	player.posY = -1.0;
+	player.posx = -1.0;
+	player.posy = -1.0;
 	player.dirangle = -1.0;
-	player.playerdirX = -1.0;
-	player.playerdirY = -1.0;
+	player.playerdirx = -1.0;
+	player.playerdiry = -1.0;
 	player.up = false;
 	player.down = false;
 	player.right = false;
@@ -113,8 +113,8 @@ int	init_player(t_game *game)
 		game->player.dirangle = EA;
 	if (game->player_dir == 'W')
 		game->player.dirangle = WE;
-	game->playerdirX = cos(game->player.dirangle);
-	game->playerdirY = sin(game->player.dirangle);
+	game->playerdirx = cos(game->player.dirangle);
+	game->playerdiry = sin(game->player.dirangle);
 	game->player.hp = HPP;
 	return (0);
 }

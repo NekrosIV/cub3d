@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 16:46:24 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/13 14:30:54 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/14 17:41:42 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	drawallbot(t_game *game, char *data)
 	while (i < game->bot_nb)
 	{
 		update_enemy_animation(game, &game->ennemy[i]);
-		drawEnemy(game, data, &game->ennemy[i]);
+		drawenemy(game, data, &game->ennemy[i]);
 		i++;
 	}
 	i = 0;
@@ -46,8 +46,8 @@ void	dammage(t_game *game, t_enemy *enemy)
 	if (enemy->animating == 0 || enemy->bothit < 20
 		|| enemy->distance > SGUNRANGE)
 		return ;
-	dx = enemy->posX - game->player.posX;
-	dy = enemy->posY - game->player.posY;
+	dx = enemy->posx - game->player.posx;
+	dy = enemy->posy - game->player.posy;
 	distance = sqrt((dx * dx) + (dy * dy));
 	angle = atan2(-dy, dx);
 	difference = game->player.dirangle - angle + (PI / 36);
@@ -89,6 +89,21 @@ void	checkbotmoves(t_game *game)
 	{
 		game->ennemy[i].takedmg = false;
 		movebot(game, bot + i);
+		i++;
+	}
+}
+
+void	bot_attack(t_game *game, t_texture *texture)
+{
+	int		i;
+	double	current_time;
+
+	current_time = get_current_time();
+	i = 0;
+	while (i < game->bot_nb)
+	{
+		if (current_time - game->ennemy[i].last_time_hit <= 0.5)
+			draw_dammage(game, &game->ennemy[i], &game->player);
 		i++;
 	}
 }

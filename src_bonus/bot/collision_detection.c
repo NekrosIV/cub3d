@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 16:11:19 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/13 14:32:34 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/14 16:55:52 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,16 @@ int	is_bot_collision(t_enemy *bot1, t_enemy *bot2, double threshold)
 	double	dy;
 	double	distance;
 
-	dx = bot1->posX - bot2->posX;
-	dy = bot1->posY - bot2->posY;
+	dx = bot1->posx - bot2->posx;
+	dy = bot1->posy - bot2->posy;
 	distance = sqrt((dx * dx) + (dy * dy));
-	// Retourner 1 si la distance entre les deux bots est inférieure au seuil
 	if (distance < threshold)
-	{
 		return (1);
-	}
 	return (0);
 }
 
 int	is_collision_with_others(t_game *game, t_enemy *current_bot,
-		double new_posX, double new_posY)
+		double new_posx, double new_posy)
 {
 	int		i;
 	t_enemy	*other_bot;
@@ -46,8 +43,8 @@ int	is_collision_with_others(t_game *game, t_enemy *current_bot,
 			continue ;
 		}
 		temp_bot = *current_bot;
-		temp_bot.posX = new_posX;
-		temp_bot.posY = new_posY;
+		temp_bot.posx = new_posx;
+		temp_bot.posy = new_posy;
 		if (is_bot_collision(&temp_bot, other_bot, 0.5)
 			&& other_bot->action != DEATH)
 			return (1);
@@ -58,80 +55,53 @@ int	is_collision_with_others(t_game *game, t_enemy *current_bot,
 
 int	is_wall(t_game *game, double x, double y, double radius)
 {
-	int		min_map_x;
-	int		max_map_x;
-	int		min_map_y;
-	int		max_map_y;
-	int		map_x;
-	int		map_y;
-	double	closestX;
-	double	closestY;
-	double	distanceX;
-	double	distanceY;
-	double	distanceSquared;
+	t_utils	u;
 
-	min_map_x = (int)floor(x - radius);
-	max_map_x = (int)floor(x + radius);
-	min_map_y = (int)floor(y - radius);
-	max_map_y = (int)floor(y + radius);
-	for (map_y = min_map_y; map_y <= max_map_y; map_y++)
+	u.min_map_x = (int)floor(x - radius);
+	u.max_map_x = (int)floor(x + radius);
+	u.min_map_y = (int)floor(y - radius);
+	u.max_map_y = (int)floor(y + radius);
+	u.map_y = u.min_map_y;
+	u.radius = radius;
+	while (u.map_y <= u.max_map_y)
 	{
-		for (map_x = min_map_x; map_x <= max_map_x; map_x++)
+		u.map_x = u.min_map_x;
+		while (u.map_x <= u.max_map_x)
 		{
-			if (map_x < 0 || map_y < 0 || map_x >= game->map_max_x
-				|| map_y >= game->map_max_y)
+			if (check_collision_in_cell(game, x, y, &u))
 				return (1);
-			if (game->map[map_y][map_x] == '1')
-			{
-				// Vérification précise de la collision cercle-rectangle
-				closestX = fmax(map_x, fmin(x, map_x + 1.0));
-				closestY = fmax(map_y, fmin(y, map_y + 1.0));
-				distanceX = x - closestX;
-				distanceY = y - closestY;
-				distanceSquared = (distanceX * distanceX) + (distanceY
-						* distanceY);
-				if (distanceSquared < (radius * radius))
-				{
-					return (1);
-				}
-			}
+			u.map_x++;
 		}
+		u.map_y++;
 	}
 	return (0);
 }
 
 bool	has_wall_between(t_game *game, t_enemy *bot)
 {
-	double	deltaX;
-	double	deltaY;
-	double	distance;
+	t_utils	u;
 	int		steps;
-	double	incrementX;
-	double	incrementY;
-	double	x;
-	double	y;
-	int		i;
-	int		mapX;
-	int		mapY;
+	double	incrementx;
+	double	incrementy;
 
-	deltaX = game->player.posX - bot->posX;
-	deltaY = game->player.posY - bot->posY;
-	distance = sqrt(deltaX * deltaX + deltaY * deltaY);
-	steps = (int)(distance * 10);
-	incrementX = deltaX / steps;
-	incrementY = deltaY / steps;
-	x = bot->posX;
-	y = bot->posY;
-	i = 0;
-	while (i < steps)
+	u.deltax = game->player.posx - bot->posx;
+	u.deltay = game->player.posy - bot->posy;
+	u.distance = sqrt(u.deltax * u.deltax + u.deltay * u.deltay);
+	steps = (int)(u.distance * 10);
+	incrementx = u.deltax / steps;
+	incrementy = u.deltay / steps;
+	u.posx = bot->posx;
+	u.posy = bot->posy;
+	u.i = 0;
+	while (u.i < steps)
 	{
-		x += incrementX;
-		y += incrementY;
-		mapX = (int)floor(x);
-		mapY = (int)floor(y);
-		if (game->map[mapY][mapX] != '0')
+		u.posx += incrementx;
+		u.posy += incrementy;
+		u.map_x = (int)floor(u.posx);
+		u.map_y = (int)floor(u.posy);
+		if (is_out_of_bounds_or_wall(game, u.map_x, u.map_y))
 			return (true);
-		i++;
+		u.i++;
 	}
 	return (false);
 }

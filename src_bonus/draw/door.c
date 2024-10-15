@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:28:20 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/14 17:01:02 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/15 15:30:36 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,15 @@ void	play_door_sound(t_game *game)
 
 void	toggle_door_state(t_game *game, t_door *door)
 {
-	if (door->state == OPEN)
+	if (door->state == IS_OPEN)
 	{
 		game->map[door->map_y][door->map_x] = '1';
-		door->state = CLOSE;
+		door->state = IS_CLOSE;
 	}
 	else
 	{
 		game->map[door->map_y][door->map_x] = '0';
-		door->state = OPEN;
+		door->state = IS_OPEN;
 	}
 }
 

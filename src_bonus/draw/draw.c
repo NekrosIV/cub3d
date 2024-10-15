@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:09:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/14 17:55:24 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/15 18:22:17 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,35 @@ void	draw_filled_circle(t_texture *textures, int x, int y, int color)
 	while (u.i < 2 * RADIUS)
 	{
 		draw_circle_row(textures, x, y, &u);
+		u.i++;
+	}
+}
+
+void	draw_ray_in_data(t_texture *textures, t_utils *ut)
+{
+	t_utils	u;
+
+	u.dx = (int)ut->endx - (int)ut->startx;
+	u.dy = (int)ut->endy - (int)ut->starty;
+	u.steps = fabs(u.dy);
+	if (fabs(u.dx) > fabs(u.dy))
+		u.steps = fabs(u.dx);
+	u.deltax = u.dx / (float)u.steps;
+	u.deltay = u.dy / (float)u.steps;
+	u.posx = (int)ut->startx;
+	u.posy = (int)ut->starty;
+	u.i = 0;
+	while (u.i <= u.steps)
+	{
+		u.xi = (int)(u.posx + 0.5);
+		u.yi = (int)(u.posy + 0.5);
+		if (u.xi >= 0 && u.xi < WINX && u.yi >= 0 && u.yi < WINY)
+		{
+			*((int *)textures->data + u.yi * textures->size_line / 4
+					+ u.xi) = ut->color;
+		}
+		u.posx += u.deltax;
+		u.posy += u.deltay;
 		u.i++;
 	}
 }

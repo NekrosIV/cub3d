@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   flood_fill.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 19:01:07 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/01 19:06:49 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/15 15:45:53 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	pre_flood_fill(t_game *game)
 	int	x;
 
 	y = 0;
-	flood_fill(game, game->cpy_map, game->player.posX, game->player.posY);
+	flood_fill(game, game->cpy_map, game->player.posx, game->player.posy);
 	while (game->cpy_map[y])
 	{
 		x = 0;

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:11:56 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/14 19:27:26 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/15 15:54:10 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	init_door(t_game *game, int i, int x, int y)
 	game->door[i].map_x = x;
 	game->door[i].map_y = y;
 	game->door[i].frame = 0;
-	game->door[i].state = CLOSE;
+	game->door[i].state = IS_CLOSE;
 	game->door[i].last_time = get_current_time();
 }
 

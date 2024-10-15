@@ -6,12 +6,12 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:24:23 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/14 18:42:26 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/15 16:02:54 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
-#include "dr_wav.h"
+#include "sound.h"
 
 ALenum	init_wav_file(t_game *game, const char *filename, drwav *wav)
 {

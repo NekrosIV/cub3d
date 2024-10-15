@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d_bonus.h                                            :+:      :+:    :+:   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/28 13:32:50 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/15 16:32:06 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,9 @@
 # define E 3
 # define WINX 1200
 # define WINY 900
-# define MIN_X_OR_Y ((WINX) < (WINY) ? (WINX) : (WINY))
-# define MIN_DIM MIN_X_OR_Y / 4
 # define PI 3.14159265358979323846
 # define NO 1.57079632679489661923
-# define SO (3 * PI) / 2
-# define WE PI * 1
+# define WE PI
 # define TILE_SIZE 21
 # define BIG_TILE_SIZE 50
 # define EA 0
@@ -92,10 +89,6 @@
 # define MINI_W 0x4B0082
 # define MINI_S 0x00FFFF
 # define CROSSHAIR 0xFF7300
-# define LINE_THICKNESS ((WINX + WINY) / 800)
-# define CROSSHAIR_SIZE ((WINX + WINY) / 300)
-# define CENTER_X (WINX / 2)
-# define CENTER_Y (WINY / 2)
 
 typedef struct s_mlx
 {
@@ -116,19 +109,19 @@ typedef struct s_textures
 
 typedef struct s_ray
 {
-	double		posX;
-	double		posY;
-	int			mapX;
-	int			mapY;
+	double		posx;
+	double		posy;
+	int			mapx;
+	int			mapy;
 	double		dirangle;
-	double		dirX;
+	double		dirx;
 	double		diry;
 	double		dist;
-	double		deltaX;
-	double		deltaY;
+	double		deltax;
+	double		deltay;
 	double		hit;
-	int			stepX;
-	int			stepY;
+	int			stepx;
+	int			stepy;
 	double		start_y;
 	double		length;
 	double		end_x;
@@ -136,10 +129,10 @@ typedef struct s_ray
 	double		ray;
 	double		offset;
 	double		fov;
-	double		sidedistX;
-	double		sidedistY;
-	double		ray_dX;
-	double		ray_dY;
+	double		sidedistx;
+	double		sidedisty;
+	double		ray_dx;
+	double		ray_dy;
 	int			ray_hit;
 	int			last_hit;
 	double		perp_length;
@@ -152,8 +145,8 @@ typedef struct s_ray
 
 typedef struct s_player
 {
-	double		posX;
-	double		posY;
+	double		posx;
+	double		posy;
 	double		dirangle;
 	double		new_x;
 	double		new_y;
@@ -190,6 +183,10 @@ typedef struct s_game
 	char		player_dir;
 	int			map_x;
 	int			map_y;
+	int			line_thickness;
+	int			crosshair_size;
+	int			center_x;
+	int			center_y;
 	t_texture	pic;
 	t_mlx		*mlx;
 	t_texture	wall[4];
@@ -210,17 +207,11 @@ void			print_tabint(int *tab, int len);
 void			init_mlx(t_game *game);
 void			init_mlx2(t_mlx *mlx);
 int				key_hook(int keycode, t_game *game);
-void			draw_rectangle(t_texture *textures, int x, int y, int color);
-void			draw_gun(t_game *game, char *data, int bpp);
 void			movements(t_game *game, double angle_shift);
 void			direction(t_game *game, char side, double speed_cam);
 void			check_moves(t_game *game);
 double			get_current_time(void);
 void			update_gun_animation(t_game *game);
-void			draw_filled_circle(t_texture *textures, int start_x,
-					int start_y, int color);
-void			draw_ray_in_data(t_game *game, t_texture *textures, int x0,
-					int y0, int x1, int y1, int color);
 void			draw_loop(t_game *game, int line_size, float offset_x,
 					float offset_y);
 float			find_offset(t_game *game, double playerpos, int max);
@@ -230,7 +221,7 @@ int				india(t_game *game);
 double			get_current_time(void);
 void			draw_arrow(t_game *game, t_texture *textures);
 int				key_release(int keycode, t_game *game);
-void			draw_crosshair(t_texture *textures, int color);
+void			draw_crosshair(t_texture *textures,t_game *game, int color);
 void			calculate_wall_height(t_ray *ray, t_game *game, int i);
 void			determine_wall_and_pos_texture(t_ray *ray, t_game *game);
 void			adjust_texture_coordinates(t_ray *ray, t_game *game);

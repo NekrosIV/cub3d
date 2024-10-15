@@ -6,29 +6,12 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/14 16:47:10 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/15 17:53:10 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
 
-t_player	init_player_struct(void)
-{
-	t_player	player;
-
-	player.posx = -1.0;
-	player.posy = -1.0;
-	player.dirangle = -1.0;
-	player.playerdirx = -1.0;
-	player.playerdiry = -1.0;
-	player.up = false;
-	player.down = false;
-	player.right = false;
-	player.left = false;
-	player.side_r = false;
-	player.side_l = false;
-	return (player);
-}
 void	init_textures(t_game *game)
 {
 	int	i;
@@ -54,6 +37,7 @@ void	init_textures(t_game *game)
 		i++;
 	}
 }
+
 void	init_pic(t_game *game)
 {
 	game->pic.img = 0;
@@ -65,24 +49,30 @@ void	init_pic(t_game *game)
 	game->pic.size_line = 0;
 }
 
-t_game	*init_game(void)
+void	init_mlx(t_game *game)
 {
-	t_game	*game;
+	t_mlx		*mlx;
+	t_texture	*texture;
 
-	game = malloc(sizeof(t_game));
-	if (!game)
-		exit(1);
-	game->map_max_x = -1;
-	game->map_max_y = -1;
-	game->map_pos = -1;
-	game->map_rows = -1;
-	game->map = NULL;
-	game->fd = -1;
-	game->map_column = -1;
-	game->player_dir = '0';
-	game->cpy_map = NULL;
-	game->mlx = NULL;
-	game->player = init_player_struct();
+	texture = &game->pic;
+	mlx = malloc(sizeof(t_mlx));
+	if (!mlx)
+		free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC);
+	game->mlx = mlx;
+	mlx->mlx_ptr = mlx_init();
+	if (!mlx->mlx_ptr)
+		free_exit(game, __LINE__ - 2, __FILE__, E_INITMLX);
+	init_wall(game);
+	int_enemy_texture(game);
+	init_gun_texture(game);
+	// init_menu_texture(game);
+	load_image_to_game(game, texture);
+	mlx->mlx_win = mlx_new_window(mlx->mlx_ptr, WINX, WINY, WINAME);
+	mlx_mouse_hide(mlx->mlx_ptr, mlx->mlx_win);
+}
+
+void	init_game_2(t_game *game)
+{
 	game->map_x = 0;
 	game->map_y = 0;
 	game->bot_nb = 0;
@@ -98,23 +88,33 @@ t_game	*init_game(void)
 	game->state_menu = NEW_GAME;
 	game->device = NULL;
 	game->context = NULL;
-	init_textures(game);
-	init_pic(game);
-	return (game);
+	game->line_thickness = ((WINX + WINY) / 800);
+	game->crosshair_size = ((WINX + WINY) / 300);
+	game->center_x = (WINX / 2);
+	game->center_y = (WINY / 2);
+	game->m_d = MIN_DIM / 4;
 }
 
-int	init_player(t_game *game)
+t_game	*init_game(void)
 {
-	if (game->player_dir == 'N')
-		game->player.dirangle = NO;
-	if (game->player_dir == 'S')
-		game->player.dirangle = SO;
-	if (game->player_dir == 'E')
-		game->player.dirangle = EA;
-	if (game->player_dir == 'W')
-		game->player.dirangle = WE;
-	game->playerdirx = cos(game->player.dirangle);
-	game->playerdiry = sin(game->player.dirangle);
-	game->player.hp = HPP;
-	return (0);
+	t_game	*game;
+
+	game = malloc(sizeof(t_game));
+	if (!game)
+		free_exit(NULL, __LINE__ - 2, __FILE__, E_MALLOC);
+	game->map_max_x = -1;
+	game->map_max_y = -1;
+	game->map_pos = -1;
+	game->map_rows = -1;
+	game->map = NULL;
+	game->fd = -1;
+	game->map_column = -1;
+	game->player_dir = '0';
+	game->cpy_map = NULL;
+	game->mlx = NULL;
+	game->player = init_player_struct();
+	init_textures(game);
+	init_pic(game);
+	init_game_2(game);
+	return (game);
 }

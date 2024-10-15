@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:05:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/14 12:21:57 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/15 12:31:11 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	choose_state_menu(t_game *game, int keycode)
 		}
 	}
 }
+
 int	key_hook(int keycode, t_game *game)
 {
 	if (keycode == XK_Escape)

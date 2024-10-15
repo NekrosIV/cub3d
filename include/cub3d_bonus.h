@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d_bonus.h                                            :+:      :+:    :+:   */
+/*   cub3d_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/09/28 13:32:50 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/15 17:51:31 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,14 @@
 # define C 4
 # define WINX 1200
 # define WINY 900
-# define MIN_X_OR_Y ((WINX) < (WINY) ? (WINX) : (WINY))
-# define MIN_DIM MIN_X_OR_Y / 4
+# if WINX < WINY
+#  define MIN_DIM WINX / 4
+# else
+#  define MIN_DIM WINY / 4
+# endif
 # define PI 3.14159265358979323846
 # define NO 1.57079632679489661923
-# define SO (3 * PI) / 2
-# define WE PI * 1
+# define WE PI
 # define TILE_SIZE 21
 # define BIG_TILE_SIZE 50
 # define EA 0
@@ -116,10 +118,6 @@
 # define FOV 1
 # define CIRCLE_COLOR 0xFF7300
 # define CROSSHAIR 0xFF7300
-# define LINE_THICKNESS ((WINX + WINY) / 800)
-# define CROSSHAIR_SIZE ((WINX + WINY) / 300)
-# define CENTER_X (WINX / 2)
-# define CENTER_Y (WINY / 2)
 # define MINI_W 0x4B0082
 # define MINI_S 0x00FFFF
 # define MINI_D 0x00FF00
@@ -134,9 +132,9 @@
 # define ORANGEHP 0xFFB347
 # define GREENHP 0x39FF14
 # define HPP 100
-# define CLOSE 0
-# define OPEN 1
-# define USE_SOUND true
+# define IS_CLOSE 0
+# define IS_OPEN 1
+# define USE_SOUND 0
 
 typedef struct s_mlx
 {
@@ -261,8 +259,8 @@ typedef struct s_door
 
 typedef struct s_sound
 {
-	ALuint buffer; // Buffer contenant les données audio
-	ALuint source; // Source pour jouer le son
+	ALuint		buffer;
+	ALuint		source;
 	ALenum		format;
 	ALsizei		size;
 	ALsizei		freq;
@@ -275,7 +273,7 @@ typedef struct s_utils
 	double		dx;
 	double		dy;
 	double		distance;
-	double		distanceSquared;
+	double		distancesquared;
 	double		angle;
 	int			screenx;
 	int			screeny;
@@ -284,6 +282,8 @@ typedef struct s_utils
 	int			endy;
 	int			startx;
 	int			endx;
+	int			xi;
+	int			yi;
 	double		difference;
 	double		pixelx;
 	double		ratio;
@@ -320,14 +320,6 @@ typedef struct s_utils
 	char		side;
 	int			img_index;
 	int			screen_index;
-	// ALenum			format;
-	// ALsizei			size;
-	// ALsizei			freq;
-	// ALvoid			*data;
-	// drwav			wav;
-	// size_t			data_size;
-	// drwav_uint64	frames_read;
-
 }				t_utils;
 
 typedef struct s_game
@@ -349,7 +341,12 @@ typedef struct s_game
 	double		playerdiry;
 	int			map_x;
 	int			map_y;
+	int			line_thickness;
+	int			crosshair_size;
+	int			center_x;
+	int			center_y;
 	int			bot_nb;
+	int 		m_d;
 	bool		do_damage;
 	t_texture	pic;
 	t_mlx		*mlx;
@@ -379,6 +376,9 @@ typedef struct s_game
 t_game			*parsing(char *file);
 void			read_file(char *file, t_game *game);
 void			free_exit(t_game *game, int line, char *file, char *error);
+void			free_mlx(t_game *game, t_mlx *mlx);
+void			delete_audios(t_game *game);
+int				india(t_game *game);
 t_game			*init_game(void);
 char			*get_texture_path(char *line, t_game *game);
 void			print_struct(t_game *game);
@@ -387,7 +387,15 @@ void			free_taboftab(char **tab);
 bool			look_like_a_map_line(char *line);
 void			print_tabint(int *tab, int len);
 void			init_mlx(t_game *game);
-void			init_mlx2(t_mlx *mlx);
+void			build_enemy_texture_path(char *texture_path, size_t path_size,
+					int state, int frame);
+void			load_texture_into_game(t_game *game, char *texture_path,
+					int state, int frame);
+bool			should_break_enemy_loop(int state, int frame);
+void			build_menu_texture_path(char *texture_path, size_t path_size,
+					int state, int frame);
+void			load_menu_texture_into_game(t_game *game, char *texture_path,
+					int state, int frame);
 int				key_hook(int keycode, t_game *game);
 void			draw_rectangle(t_texture *textures, int x, int y, int color);
 void			draw_filled_circle(t_texture *textures, int x, int y,
@@ -402,14 +410,14 @@ void			mini_draw_map(t_game *game, t_texture *texture);
 void			mini_draw_arrow(t_game *game, t_texture *texture);
 void			draw_filled_circle(t_texture *textures, int start_x,
 					int start_y, int color);
-void			draw_ray_in_data(t_game *game, t_texture *textures, int x0,
-					int y0, int x1, int y1, int color);
+void			draw_enemies_on_minimap(t_game *game, t_texture *textures,
+					t_utils *u);
+void			draw_ray_in_data(t_texture *textures, t_utils *ut);
 void			draw_loop(t_game *game, int line_size, float offset_x,
 					float offset_y);
 float			find_offset(t_game *game, double playerpos, int max);
 t_player		init_player_struct(void);
 int				init_player(t_game *game);
-int				india(t_game *game);
 double			get_current_time(void);
 void			draw_arrow(t_game *game, t_texture *textures);
 void			init_ray(t_ray *ray, t_game *game);
@@ -418,7 +426,7 @@ void			calculate_wall_height(t_ray *ray, t_game *game, int i);
 void			determine_wall_and_pos_texture(t_ray *ray, t_game *game);
 void			adjust_texture_coordinates(t_ray *ray, t_game *game);
 int				key_release(int keycode, t_game *game);
-void			draw_crosshair(t_texture *texture, int color);
+void			draw_crosshair(t_texture *texture, t_game *game, int color);
 void			drawenemy(t_game *game, char *data, t_enemy *enemy);
 void			dammage(t_game *game, t_enemy *enemy);
 int				mouse_move(int x, int y, t_game *game);
@@ -490,5 +498,13 @@ void			put_door(t_game *game);
 bool			check_valid_char(char c);
 bool			check_play_pos(char c);
 int				skip_e_space(char *str, bool flag);
+void			determine_grid_steps(t_player *player);
+void			check_diagonal_collision(t_game *game, t_player *player);
+void			attempt_move_player(t_game *game, t_player *player);
+void			int_enemy_texture(t_game *game);
+void			init_menu_texture(t_game *game);
+void			init_wall(t_game *game);
+void			init_gun_texture(t_game *game);
+void			load_image_to_game(t_game *game, t_texture *texture);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 17:26:39 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/01 19:25:00 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/15 15:44:59 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,43 +14,43 @@
 
 void	init_ray(t_ray *ray, t_game *game)
 {
-	ray->ray_dX = cos(ray->ray);
-	ray->ray_dY = sin(ray->ray);
-	if (ray->ray_dY < 0.0001 && ray->ray_dY > -0.0001)
-		ray->deltaY = 1e30;
+	ray->ray_dx = cos(ray->ray);
+	ray->ray_dy = sin(ray->ray);
+	if (ray->ray_dy < 0.0001 && ray->ray_dy > -0.0001)
+		ray->deltay = 1e30;
 	else
-		ray->deltaY = 1 / fabs(ray->ray_dY);
-	if (ray->ray_dX < 0.00001 && ray->ray_dX > -0.00001)
-		ray->deltaX = 1e30;
+		ray->deltay = 1 / fabs(ray->ray_dy);
+	if (ray->ray_dx < 0.00001 && ray->ray_dx > -0.00001)
+		ray->deltax = 1e30;
 	else
-		ray->deltaX = 1 / fabs(ray->ray_dX);
-	ray->mapX = (int)game->player.posX;
-	ray->mapY = (int)game->player.posY;
+		ray->deltax = 1 / fabs(ray->ray_dx);
+	ray->mapx = (int)game->player.posx;
+	ray->mapy = (int)game->player.posy;
 }
 
 void	calculate_step_and_sidedist(t_ray *ray, t_game *game)
 {
 	if (cos(ray->ray) > 0.0)
 	{
-		ray->stepX = 1;
-		ray->sidedistX = ((double)(ray->mapX + 1) - game->player.posX)
-			* ray->deltaX;
+		ray->stepx = 1;
+		ray->sidedistx = ((double)(ray->mapx + 1) - game->player.posx)
+			* ray->deltax;
 	}
 	else
 	{
-		ray->stepX = -1;
-		ray->sidedistX = (game->player.posX - (double)ray->mapX) * ray->deltaX;
+		ray->stepx = -1;
+		ray->sidedistx = (game->player.posx - (double)ray->mapx) * ray->deltax;
 	}
 	if (sin(ray->ray) > 0.0)
 	{
-		ray->stepY = -1;
-		ray->sidedistY = (game->player.posY - (double)ray->mapY) * ray->deltaY;
+		ray->stepy = -1;
+		ray->sidedisty = (game->player.posy - (double)ray->mapy) * ray->deltay;
 	}
 	else
 	{
-		ray->stepY = 1;
-		ray->sidedistY = ((double)(ray->mapY + 1) - game->player.posY)
-			* ray->deltaY;
+		ray->stepy = 1;
+		ray->sidedisty = ((double)(ray->mapy + 1) - game->player.posy)
+			* ray->deltay;
 	}
 }
 
@@ -59,19 +59,19 @@ void	perform_dda(t_ray *ray, t_game *game)
 	ray->ray_hit = 0;
 	while (ray->ray_hit == 0)
 	{
-		if (ray->sidedistX < ray->sidedistY)
+		if (ray->sidedistx < ray->sidedisty)
 		{
-			ray->mapX += ray->stepX;
-			ray->sidedistX += ray->deltaX;
+			ray->mapx += ray->stepx;
+			ray->sidedistx += ray->deltax;
 			ray->last_hit = 0;
 		}
 		else
 		{
-			ray->mapY += ray->stepY;
-			ray->sidedistY += ray->deltaY;
+			ray->mapy += ray->stepy;
+			ray->sidedisty += ray->deltay;
 			ray->last_hit = 1;
 		}
-		if (game->map[ray->mapY][ray->mapX] != '0')
+		if (game->map[ray->mapy][ray->mapx] != '0')
 			ray->ray_hit = 1;
 	}
 }

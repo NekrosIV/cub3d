@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/01 19:24:40 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/15 17:38:02 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 void	calculate_wall_height(t_ray *ray, t_game *game, int i)
 {
 	if (ray->last_hit)
-		ray->length = (ray->sidedistY - ray->deltaY);
+		ray->length = (ray->sidedisty - ray->deltay);
 	else
-		ray->length = (ray->sidedistX - ray->deltaX);
+		ray->length = (ray->sidedistx - ray->deltax);
 	ray->perp_length = ray->length;
 	game->profondeur[i] = ray->perp_length;
 	ray->line_h = WINY / fabs(ray->perp_length * cos(ray->ray
@@ -35,20 +35,20 @@ void	determine_wall_and_pos_texture(t_ray *ray, t_game *game)
 {
 	if (ray->last_hit == 1)
 	{
-		if (ray->stepY == -1)
+		if (ray->stepy == -1)
 			ray->wall = N;
 		else
 			ray->wall = S;
-		ray->pos_texture = game->player.posX + (ray->perp_length * ray->ray_dX);
+		ray->pos_texture = game->player.posx + (ray->perp_length * ray->ray_dx);
 		ray->pos_texture -= floor(ray->pos_texture);
 	}
 	else
 	{
-		if (ray->stepX == -1)
+		if (ray->stepx == -1)
 			ray->wall = W;
 		else
 			ray->wall = E;
-		ray->pos_texture = game->player.posY - (ray->perp_length * ray->ray_dY);
+		ray->pos_texture = game->player.posy - (ray->perp_length * ray->ray_dy);
 		ray->pos_texture -= floor(ray->pos_texture);
 	}
 }
@@ -61,9 +61,9 @@ void	adjust_texture_coordinates(t_ray *ray, t_game *game)
 	while (ray->ray < 0)
 		ray->ray += 2 * PI;
 	ray->pos_texture *= game->wall[ray->wall].w;
-	if (ray->stepX < 0 && ray->last_hit == 0)
+	if (ray->stepx < 0 && ray->last_hit == 0)
 		ray->pos_texture = game->wall[ray->wall].w - ray->pos_texture - 1;
-	if (ray->last_hit == 1 && ray->stepY > 0)
+	if (ray->last_hit == 1 && ray->stepy > 0)
 		ray->pos_texture = game->wall[ray->wall].w - ray->pos_texture - 1;
 	ray->y_wall = 0.0;
 	if (ray->line_h > WINY)

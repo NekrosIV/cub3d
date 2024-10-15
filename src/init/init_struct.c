@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_struct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/01 19:15:07 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/15 17:03:41 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ t_player	init_player_struct(void)
 {
 	t_player	player;
 
-	player.posX = -1.0;
-	player.posY = -1.0;
+	player.posx = -1.0;
+	player.posy = -1.0;
 	player.dirangle = -1.0;
 	player.up = false;
 	player.down = false;
@@ -69,7 +69,7 @@ t_game	*init_game(void)
 
 	game = malloc(sizeof(t_game));
 	if (!game)
-		exit(1);
+		free_exit(NULL, __LINE__ - 2, __FILE__, E_MALLOC);
 	game->map_max_x = -1;
 	game->map_max_y = -1;
 	game->map_pos = -1;
@@ -84,10 +84,12 @@ t_game	*init_game(void)
 	game->mlx = NULL;
 	game->floor_hexa = -1;
 	game->ceiling_hexa = -1;
+	game->line_thickness = ((WINX + WINY) / 800);
+	game->crosshair_size = ((WINX + WINY) / 300);
+	game->center_x = (WINX / 2);
+	game->center_y = (WINY / 2);
 	game->player = init_player_struct();
-	init_textures(game);
-	init_pic(game);
-	return (game);
+	return (init_textures(game), init_pic(game), game);
 }
 
 int	init_player(t_game *game)
@@ -95,7 +97,7 @@ int	init_player(t_game *game)
 	if (game->player_dir == 'N')
 		game->player.dirangle = NO;
 	if (game->player_dir == 'S')
-		game->player.dirangle = SO;
+		game->player.dirangle = (3 * PI) / 2;
 	if (game->player_dir == 'E')
 		game->player.dirangle = EA;
 	if (game->player_dir == 'W')

@@ -6,13 +6,14 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 13:03:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/14 16:49:31 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/15 12:24:04 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
 
-// Fonction pour initialiser les offsets de sécurité pour la détection des collisions
+// Fonction pour initialiser les offsets 
+// de sécurité pour la détection des collisions
 void	initialize_safety_offsets(t_player *player)
 {
 	if (cos(player->new_dir) < 0)
@@ -34,70 +35,6 @@ void	calculate_new_position(t_player *player)
 		+ player->safetyy;
 }
 
-// Fonction pour déterminer les pas sur la grille et initialiser le flag de collision
-void	determine_grid_steps(t_player *player)
-{
-	player->stepx = (int)player->posx - (int)player->new_x;
-	player->stepy = (int)player->posy - (int)player->new_y;
-	player->flag = 1;
-}
-
-// Fonction pour vérifier les collisions lors d'un mouvement diagonal
-void	check_diagonal_collision(t_game *game, t_player *player)
-{
-	if (player->stepx && player->stepy)
-	{
-		if (game->map[(int)player->posy][(int)player->new_x] != '0')
-			player->flag = 0;
-		if (game->map[(int)player->new_y][(int)player->posx] != '0')
-			player->flag = 0;
-	}
-}
-void	adjust_player_posX(t_player *player)
-{
-	if (cos(player->new_dir) > 0)
-		player->posx = (double)((int)player->posx + 1) - 0.07;
-	else
-		player->posx = (double)((int)player->posx) + 0.07;
-}
-
-void	adjust_player_posY(t_player *player)
-{
-	if (sin(player->new_dir) > 0)
-		player->posy = (double)((int)player->posy) + 0.07;
-	else
-		player->posy = (double)((int)player->posy + 1) - 0.07;
-}
-
-// Fonction pour tenter de déplacer le joueur en fonction de la détection des collisions
-void	attempt_move_player(t_game *game, t_player *player)
-{
-	if (game->map[(int)player->new_y][(int)player->new_x] == '0'
-		&& player->flag)
-	{
-		player->posx = player->new_x - player->safetyx;
-		player->posy = player->new_y - player->safetyy;
-	}
-	else
-	{
-		if (game->map[(int)player->posy][(int)player->new_x] == '0')
-		{
-			player->posx = player->new_x - player->safetyx;
-			adjust_player_posY(player);
-		}
-		else if (game->map[(int)player->new_y][(int)player->posx] == '0')
-		{
-			player->posy = player->new_y - player->safetyy;
-			adjust_player_posX(player);
-		}
-		else
-		{
-			adjust_player_posY(player);
-			adjust_player_posX(player);
-		}
-	}
-}
-
 // Fonction principale de mouvement
 void	movements(t_game *game, double angle_shift)
 {
@@ -110,7 +47,7 @@ void	movements(t_game *game, double angle_shift)
 	calculate_new_position(player);
 	determine_grid_steps(player);
 	check_diagonal_collision(game, player);
-	if(USE_SOUND == true)
+	if (USE_SOUND == true)
 	{
 		alGetSourcei(game->sound[STEP].source, AL_SOURCE_STATE, &state);
 		if (state != AL_PLAYING)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 18:43:27 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/01 18:52:39 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/15 15:46:05 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ void	pre_pars_map(t_game *game)
 			if (game->player_dir == '0' && check_play_pos(game->map[y][x]))
 			{
 				game->player_dir = game->map[y][x];
-				game->player.posY = y;
-				game->player.posX = x;
+				game->player.posy = y;
+				game->player.posx = x;
 			}
 			else if (game->player_dir != '0' && check_play_pos(game->map[y][x]))
 				free_exit(game, 0, NULL, E_MULTIPOS);

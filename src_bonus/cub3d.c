@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/14 17:24:47 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/15 17:40:29 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	loop_hook(t_game *game)
 		(check_moves(game), check_door(game));
 		(draw_arrow(game, texture), mini_draw_map(game, texture));
 		(drawallbot(game, texture->data), checkbotmoves(game));
-		draw_crosshair(texture, CROSSHAIR);
+		draw_crosshair(texture,game, CROSSHAIR);
 		(update_gun_animation(game), draw_gun(game, texture->data));
 		(bot_attack(game, texture), draw_health(game, texture));
 	}

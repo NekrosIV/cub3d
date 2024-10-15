@@ -46,11 +46,17 @@ FILES_BONUS := cub3d.c \
 		parsing/map_utils.c \
 		parsing/parsing_utils.c \
 		error/exit.c \
-		init/init_mlx.c \
+		error/free_mlx.c\
+		error/free_sound.c\
 		init/init_struct.c \
 		init/init_sound.c\
+		init/init_player.c \
+		init/init_mlx_textutre.c \
+		init/init_mlx_utils.c \
 		player/player_move.c \
+		player/collision_detection.c \
 		minimap/minimap.c \
+		minimap/mini_raycasting.c \
 		key/key.c \
 		key/mouse.c \
 		draw/draw.c \
@@ -158,7 +164,7 @@ bonus: $(NAME_BONUS)
 $(NAME_BONUS): $(OBJS_BONUS)
 	@make --silent -C ${LIBFTDIR}
 	@make --silent -C ${MLXDIR}
-	@$(CC) $(CFLAGS) $(SOUND_FLAGS) -I$(HEADERS) -o $@ $(OBJS_BONUS) ${MLX_FLAGS} -L ${LIBFTDIR} -lft
+	@$(CC) $(CFLAGS) $(SOUND_FLAGS) -I$(HEADERS)  $(SOUND_HEADERS) -o $@ $(OBJS_BONUS) ${MLX_FLAGS} -L ${LIBFTDIR} -lft
 	@printf "$(RESET)\n\n\n"
 	@printf "⠀⠀$(PURPLE)⢀⠂⠘⠀⠱⠈⡝⣏⠐⠀⠑⠒⠤⣼⢶⠁⣠⠀⠠$(INDI)⠀⠀⠀⠀⢸⠍⣎⢙⣿⣿⢿⡁⠤⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣄⡀⠀$(RED)⠀⠀⠀⠀⠀⠀⠄⣡⠀⠈⠒⠄⢄⠀⠀⠀$(INDI)⠐⣫⡇⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠶⣷⣴⣥⣐⠘⢟⡟⡧⢛⣤⣳⣿⣿⠿⠟⠉⠀⠀⣰⡛⠄$(BLUE)⠀⠀⠀⠀⠀⠀⠈⢿⣿⣿⡇⠒⡤$(RESET)\n"
 	@printf "⠀$(PURPLE)⠀⡠⠒⠂⠡⠐⠁⡠⠠⢈⠍⠁⠀⠘⢟⢾⣿⣿⡀⠁$(INDI)⠀⠀⠀⠀⠘⢦⠰⣍⡻⣿⢀⢺⠁⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⡿⣿⢹⣿⣿⣿⣆⡀$(RED)⠀⠀⠀⠀⢠⢚⡤⡸⢊⣀⢨⣌⠀⠀⠀$(INDI)⢚⡿⠀⡰⠀⡀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠉⠛⠊⢀⠔⠿⠿⠋⠉⠀⠀⠀⠀⠀⣸⣿⣯$(BLUE)⠀⢀⡠⠶⣀⠀⠀⠀⠘⣿⡅⠈⠌⠋$(RESET)\n"

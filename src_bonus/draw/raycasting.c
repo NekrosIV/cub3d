@@ -6,59 +6,11 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/14 17:51:35 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/15 18:21:57 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
-
-void	draw_ray_in_data(t_game *game, t_texture *textures, int x0, int y0,
-		int x1, int y1, int color)
-{
-	int	dx;
-	int	sx;
-	int	dy;
-	int	sy;
-	int	err;
-	int	e2;
-	int	pixel_index;
-
-	(void)game;
-	// y0 *= (WINY / game->map_max_y);
-	// y1 *= (WINY / game->map_max_y);
-	// x0 *= (WINX / game->map_max_x);
-	// x1 *= (WINX / game->map_max_x);
-	dx = abs(x1 - x0);
-	sx = x0 < x1 ? 1 : -1;
-	dy = -abs(y1 - y0);
-	sy = y0 < y1 ? 1 : -1;
-	err = dx + dy;
-	while (1)
-	{
-		if (x0 >= 0 && x0 < WINX && y0 >= 0 && y0 < WINY)
-		{
-			// Calculer l'index du pixel dans la mémoire tampon
-			pixel_index = y0 * textures->size_line + x0 * (textures->bpp / 8);
-			// Stocker la couleur (supposant un format RGB avec 32 bits par pixel)
-			textures->data[pixel_index] = color & 0xFF;             // Rouge
-			textures->data[pixel_index + 1] = (color >> 8) & 0xFF;  // Vert
-			textures->data[pixel_index + 2] = (color >> 16) & 0xFF; // Bleu
-		}
-		if (x0 == x1 && y0 == y1)
-			break ;
-		e2 = 2 * err;
-		if (e2 >= dy)
-		{
-			err += dy;
-			x0 += sx;
-		}
-		if (e2 <= dx)
-		{
-			err += dx;
-			y0 += sy;
-		}
-	}
-}
 
 void	draw_pixels(t_ray *ray, t_game *game, t_texture *textures, int i)
 {

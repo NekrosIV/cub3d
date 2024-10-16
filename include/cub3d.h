@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/16 13:33:59 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/16 16:01:48 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ int				india(t_game *game);
 double			get_current_time(void);
 void			draw_arrow(t_game *game, t_texture *textures);
 int				key_release(int keycode, t_game *game);
-void			draw_crosshair(t_texture *textures,t_game *game, int color);
+void			draw_crosshair(t_texture *textures, t_game *game, int color);
 void			calculate_wall_height(t_ray *ray, t_game *game, int i);
 void			determine_wall_and_pos_texture(t_ray *ray, t_game *game);
 void			adjust_texture_coordinates(t_ray *ray, t_game *game);

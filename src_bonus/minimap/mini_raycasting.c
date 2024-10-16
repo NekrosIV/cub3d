@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_raycasting.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 12:33:49 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/15 17:58:12 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/16 16:15:01 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,25 @@ void	calculate_offsets(t_game *game, t_utils *u)
 
 	map_pixel_width = game->map_max_x * u->tile_width;
 	map_pixel_height = game->map_max_y * u->tile_height;
-	if (map_pixel_width > MIN_DIM)
+	if (map_pixel_width > (M / 4))
 	{
-		if (game->player.posx * u->tile_width < MIN_DIM / 2.0f)
+		if (game->player.posx * u->tile_width < (M / 4) / 2.0f)
 			u->offset_x = 0.0f;
-		else if (game->player.posx * u->tile_width > map_pixel_width - MIN_DIM
+		else if (game->player.posx * u->tile_width > map_pixel_width - (M / 4)
 			/ 2.0f)
-			u->offset_x = MIN_DIM - map_pixel_width;
+			u->offset_x = (M / 4) - map_pixel_width;
 		else
-			u->offset_x = (MIN_DIM / 2.0f) - game->player.posx * u->tile_width;
+			u->offset_x = ((M / 4) / 2.0f) - game->player.posx * u->tile_width;
 	}
-	if (map_pixel_height > MIN_DIM)
+	if (map_pixel_height > (M / 4))
 	{
-		if (game->player.posy * u->tile_height < MIN_DIM / 2.0f)
+		if (game->player.posy * u->tile_height < (M / 4) / 2.0f)
 			u->offset_y = 0.0f;
-		else if (game->player.posy * u->tile_height > map_pixel_height - MIN_DIM
+		else if (game->player.posy * u->tile_height > map_pixel_height - (M / 4)
 			/ 2.0f)
-			u->offset_y = MIN_DIM - map_pixel_height;
+			u->offset_y = (M / 4) - map_pixel_height;
 		else
-			u->offset_y = (MIN_DIM / 2.0f) - game->player.posy * u->tile_height;
+			u->offset_y = ((M / 4) / 2.0f) - game->player.posy * u->tile_height;
 	}
 }
 
@@ -108,7 +108,7 @@ void	mini_draw_arrow(t_game *game, t_texture *textures)
 	int		nb_ray;
 	int		i;
 
-	nb_ray = MIN_DIM;
+	nb_ray = (M / 4);
 	init_utils_var_for_mini_draw_arrow(game, &u, &ray, nb_ray);
 	i = 0;
 	while (i < nb_ray)

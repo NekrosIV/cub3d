@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/15 17:51:31 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/16 18:23:51 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@
 # define LIGHT_GREEN "\1\033[38;5;120m\2"
 
 # define E_MALLOC "Malloc failure!"
-# define E_DIR "Wrong argument: Directory"
+# define E_DIR "Wrong argument: Is a directory"
 # define E_TNFOND "Texture path not found"
 # define E_TMULTI "Multiple definition for textutre path : "
 # define E_SPACE "Invalid whitespace characters"
@@ -75,12 +75,13 @@
 # define W 2
 # define E 3
 # define C 4
+# define D 5
 # define WINX 1200
 # define WINY 900
 # if WINX < WINY
-#  define MIN_DIM WINX / 4
+#  define M WINX
 # else
-#  define MIN_DIM WINY / 4
+#  define M WINY
 # endif
 # define PI 3.14159265358979323846
 # define NO 1.57079632679489661923
@@ -122,7 +123,6 @@
 # define MINI_S 0x00FFFF
 # define MINI_D 0x00FF00
 # define RADIUS 4
-# define AIMBOT PI / 12
 # define SGUNRANGE 5
 # define BOT_SHOOT 5
 # define TRIGGERBOT 15
@@ -134,7 +134,7 @@
 # define HPP 100
 # define IS_CLOSE 0
 # define IS_OPEN 1
-# define USE_SOUND 0
+# define USE_SOUND 1
 
 typedef struct s_mlx
 {
@@ -346,7 +346,7 @@ typedef struct s_game
 	int			center_x;
 	int			center_y;
 	int			bot_nb;
-	int 		m_d;
+	int			m_d;
 	bool		do_damage;
 	t_texture	pic;
 	t_mlx		*mlx;
@@ -373,13 +373,13 @@ typedef struct s_game
 	ALCcontext	*context;
 }				t_game;
 
-t_game			*parsing(char *file);
+void			parsing(char *file, t_game *game);
 void			read_file(char *file, t_game *game);
 void			free_exit(t_game *game, int line, char *file, char *error);
 void			free_mlx(t_game *game, t_mlx *mlx);
 void			delete_audios(t_game *game);
 int				india(t_game *game);
-t_game			*init_game(void);
+void			init_game(t_game *game);
 char			*get_texture_path(char *line, t_game *game);
 void			print_struct(t_game *game);
 void			print_tabsquare(char **tab);

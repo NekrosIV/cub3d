@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:52:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/15 18:12:01 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/16 19:06:27 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	determine_wall_and_pos_texture(t_ray *ray, t_game *game)
 	if (ray->last_hit == 1)
 	{
 		if (ray->ray_hit == 2)
-			ray->wall = 5;
+			ray->wall = D;
 		else if (ray->stepy == -1)
 			ray->wall = N;
 		else
@@ -89,7 +89,7 @@ void	determine_wall_and_pos_texture(t_ray *ray, t_game *game)
 	else
 	{
 		if (ray->ray_hit == 2)
-			ray->wall = 5;
+			ray->wall = D;
 		else if (ray->stepx == -1)
 			ray->wall = W;
 		else

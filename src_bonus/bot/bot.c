@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bot.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 16:46:24 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/14 17:41:42 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/16 16:12:57 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	dammage(t_game *game, t_enemy *enemy)
 		difference -= 2 * PI;
 	while (difference < 0)
 		difference += 2 * PI;
-	if (fabs(difference) > AIMBOT)
+	if (fabs(difference) > (PI / 12))
 		return ;
 	enemy->hp -= DAMAGE_BOT;
 	enemy->action = DAMAGE;

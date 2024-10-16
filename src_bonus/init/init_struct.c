@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_struct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/15 17:53:10 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/16 16:54:30 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,24 +51,22 @@ void	init_pic(t_game *game)
 
 void	init_mlx(t_game *game)
 {
-	t_mlx		*mlx;
 	t_texture	*texture;
 
 	texture = &game->pic;
-	mlx = malloc(sizeof(t_mlx));
-	if (!mlx)
+	game->mlx = malloc(sizeof(t_mlx));
+	if (!game->mlx)
 		free_exit(game, __LINE__ - 2, __FILE__, E_MALLOC);
-	game->mlx = mlx;
-	mlx->mlx_ptr = mlx_init();
-	if (!mlx->mlx_ptr)
+	game->mlx->mlx_ptr = mlx_init();
+	if (!game->mlx->mlx_ptr)
 		free_exit(game, __LINE__ - 2, __FILE__, E_INITMLX);
 	init_wall(game);
 	int_enemy_texture(game);
 	init_gun_texture(game);
 	// init_menu_texture(game);
 	load_image_to_game(game, texture);
-	mlx->mlx_win = mlx_new_window(mlx->mlx_ptr, WINX, WINY, WINAME);
-	mlx_mouse_hide(mlx->mlx_ptr, mlx->mlx_win);
+	game->mlx->mlx_win = mlx_new_window(game->mlx->mlx_ptr, WINX, WINY, WINAME);
+	mlx_mouse_hide(game->mlx->mlx_ptr, game->mlx->mlx_win);
 }
 
 void	init_game_2(t_game *game)
@@ -92,16 +90,11 @@ void	init_game_2(t_game *game)
 	game->crosshair_size = ((WINX + WINY) / 300);
 	game->center_x = (WINX / 2);
 	game->center_y = (WINY / 2);
-	game->m_d = MIN_DIM / 4;
+	game->m_d = (M / 4) / 4;
 }
 
-t_game	*init_game(void)
+void	init_game(t_game *game)
 {
-	t_game	*game;
-
-	game = malloc(sizeof(t_game));
-	if (!game)
-		free_exit(NULL, __LINE__ - 2, __FILE__, E_MALLOC);
 	game->map_max_x = -1;
 	game->map_max_y = -1;
 	game->map_pos = -1;
@@ -116,5 +109,4 @@ t_game	*init_game(void)
 	init_textures(game);
 	init_pic(game);
 	init_game_2(game);
-	return (game);
 }

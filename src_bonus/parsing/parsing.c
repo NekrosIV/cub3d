@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/14 18:52:28 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/16 16:01:32 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,13 @@ void	read_file(char *file, t_game *game)
 	game->fd = -1;
 }
 
-t_game	*parsing(char *file)
+void	parsing(char *file, t_game *game)
 {
-	t_game	*game;
-
 	if (ft_strncmp(&file[ft_strlen(file) - 4], ".cub", 4))
 		free_exit(NULL, 0, NULL, E_FILE);
-	game = init_game();
+	init_game(game);
 	read_file(file, game);
 	print_struct(game);
 	put_door(game);
 	game->map[(int)game->player.posy][(int)game->player.posx] = '0';
-	return (game);
 }

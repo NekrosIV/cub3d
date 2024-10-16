@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/15 16:32:06 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:33:59 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,10 @@
 # define BIG_TILE_SIZE 50
 # define EA 0
 # define SPEED_BOT 0.005
-# define SPEED_M 0.01
-# define SPEED_C 0.008
-// # define SPEED_M 0.1
-// # define SPEED_C 0.02
+// # define SPEED_M 0.01
+// # define SPEED_C 0.008
+# define SPEED_M 0.1
+# define SPEED_C 0.02
 # define FLOOR 0xFF7300
 # define SKY 0x4B0082
 # define FOV 1

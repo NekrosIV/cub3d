@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rgb.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 18:30:20 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/01 19:05:54 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/16 14:13:40 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	is_positive_digit(char *str)
 	i = 0;
 	if (str[i] == '\0')
 		return (0);
-	if ((str[i] == '+' || str[i] == '-') && str[i + 1] != '\0')
+	if ((str[i] == '+') && str[i + 1] != '\0')
 		i++;
 	while (str[i])
 	{
@@ -90,15 +90,14 @@ void	fill_tab_rgb(t_game *game, char *line, char flag)
 	while (tab[i])
 	{
 		if (!is_positive_digit(tab[i]))
-			(free(line), free_exit(game, 0, NULL, E_RGB));
+			(free(line), free_taboftab(tab), free_exit(game, 0, NULL, E_RGB));
 		if (!is_good_int(tab[i], "255"))
-			(free(line), free_exit(game, 0, NULL, E_RGB));
+			(free(line), free_taboftab(tab), free_exit(game, 0, NULL, E_RGB));
 		if (flag == 'F')
 			game->floor[i] = ft_atoi(tab[i]);
 		else
 			game->ceiling[i] = ft_atoi(tab[i]);
-		free(tab[i]);
 		i++;
 	}
-	free(tab);
+	free_taboftab(tab);
 }

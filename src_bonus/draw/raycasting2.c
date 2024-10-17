@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:52:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/16 19:06:27 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/17 14:10:27 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,16 +104,12 @@ void	adjust_texture_coordinates(t_ray *ray, t_game *game)
 	ray->ratio = game->wall[ray->wall].h / ray->line_h;
 	ray->sky_ratio = game->wall[C].h / (double)(WINY / 2);
 	ray->y_sky = 0;
-	while (ray->ray > 2 * PI)
-		ray->ray -= 2 * PI;
-	while (ray->ray < 0)
-		ray->ray += 2 * PI;
 	ray->skyx = ray->ray * (game->wall[C].w / (2 * PI));
 	ray->pos_texture *= game->wall[ray->wall].w;
-	if (ray->stepx < 0 && ray->last_hit == 0)
-		ray->pos_texture = game->wall[ray->wall].w - ray->pos_texture - 1;
-	if (ray->last_hit == 1 && ray->stepy > 0)
-		ray->pos_texture = game->wall[ray->wall].w - ray->pos_texture - 1;
+	// if (ray->stepx < 0 && ray->last_hit == 0)
+	// 	ray->pos_texture = game->wall[ray->wall].w - ray->pos_texture - 1;
+	// if (ray->last_hit == 1 && ray->stepy > 0)
+	// 	ray->pos_texture = game->wall[ray->wall].w - ray->pos_texture - 1;
 	ray->y_wall = 0.0;
 	if (ray->line_h > WINY)
 		ray->y_wall = ray->ratio * (ray->line_h - (double)WINY) / 2;

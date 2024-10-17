@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_struct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/16 16:54:30 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/17 14:26:50 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ void	init_game_2(t_game *game)
 	game->center_x = (WINX / 2);
 	game->center_y = (WINY / 2);
 	game->m_d = (M / 4) / 4;
+	game->ennemy = NULL;
+	game->door = NULL;
 }
 
 void	init_game(t_game *game)

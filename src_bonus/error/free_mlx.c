@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_mlx.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 12:38:46 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/16 16:00:21 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/17 14:22:15 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	free_all_textures(t_game *game)
 	free_texture(game, game->wall, 6);
 	free_texture(game, game->gun, 39);
 	free_text_bot(game);
-	free_text_menu(game);
+	// free_text_menu(game);
 }
 
 void	free_mlx(t_game *game, t_mlx *mlx)

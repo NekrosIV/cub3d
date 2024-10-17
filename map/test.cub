@@ -1,10 +1,11 @@
-NO textures/n.xpm
+NO textures/s.xpm
 SO textures/s.xpm
-WE textures/w.xpm
+WE textures/e.xpm
 EA textures/e.xpm
 
 F 0,0,0
-C 0,0,0
+C textures/skybox/skybox_desert_night.xpm
+
            1
 11111111111S11111111
 11111111000000011111

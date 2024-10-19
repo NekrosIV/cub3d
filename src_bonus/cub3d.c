@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/16 16:54:16 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/18 12:02:10 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ int	main(int ac, char **av)
 	init_player(&game);
 	init_mlx(&game);
 	init_sound(&game);
-	game.menu = false;
-	game.is_game_start = true;
+	// game.menu = false;
+	// game.is_game_start = true;
 	mlx_loop_hook(game.mlx->mlx_ptr, loop_hook, &game);
 	mlx_hook(game.mlx->mlx_win, 17, 0, india, &game);
 	mlx_hook(game.mlx->mlx_win, 02, (1L << 0), key_hook, &game);

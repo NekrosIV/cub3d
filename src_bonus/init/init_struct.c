@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/17 14:26:50 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/18 12:01:57 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	init_mlx(t_game *game)
 	init_wall(game);
 	int_enemy_texture(game);
 	init_gun_texture(game);
-	// init_menu_texture(game);
+	init_menu_texture(game);
 	load_image_to_game(game, texture);
 	game->mlx->mlx_win = mlx_new_window(game->mlx->mlx_ptr, WINX, WINY, WINAME);
 	mlx_mouse_hide(game->mlx->mlx_ptr, game->mlx->mlx_win);

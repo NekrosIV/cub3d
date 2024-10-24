@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/17 14:09:28 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/24 18:27:44 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	draw_pixels(t_ray *ray, t_game *game, t_texture *textures, int i)
 	int	y;
 
 	y = 0;
-	while (y <= (int)ray->start_y)
+	while (y < (int)ray->start_y)
 	{
 		*((int *)textures->data + i + y * WINX) = game->ceiling_hexa;
 		y++;

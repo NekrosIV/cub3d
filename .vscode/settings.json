@@ -1,0 +1,15 @@
+{
+	"files.associations": {
+		"cub3d.h": "c",
+		"cub3d_bonus.h": "c",
+		"unistd.h": "c",
+		"random": "c",
+		"libft.h": "c",
+		"array": "c",
+		"string": "c",
+		"string_view": "c",
+		"ranges": "c",
+		"span": "c",
+		"dr_wav.h": "c"
+	}
+}

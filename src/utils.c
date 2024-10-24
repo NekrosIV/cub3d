@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 18:34:35 by pscala            #+#    #+#             */
-/*   Updated: 2024/09/16 12:52:08 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/15 15:47:39 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ void	print_tabsquare(char **tab)
 
 	i = 0;
 	if (!tab)
+	{
+		ft_printf("%s\n", tab);
 		return ;
+	}
 	while (tab[i])
 	{
 		ft_printf("%s\n", tab[i]);
@@ -47,18 +50,26 @@ void	print_struct(t_game *game)
 {
 	printf("map :\n");
 	print_tabsquare(game->map);
-	printf("pos_x: %d\n", (int)game->player.posX);
-	printf("pos_y: %d\n", (int)game->player.posY);
+	printf("pos_x: %d\n", (int)game->player.posx);
+	printf("pos_y: %d\n", (int)game->player.posy);
 	printf("map_pos: %d\n", game->map_pos);
 	printf("map_rows: %d\n", game->map_rows);
 	printf("map_max_x: %d\n", game->map_max_x);
 	printf("map_max_y: %d\n", game->map_max_y);
-	printf("NO: %s\n", game->no);
-	printf("SO: %s\n", game->so);
-	printf("EA: %s\n", game->ea);
-	printf("WE: %s\n", game->we);
+	printf("NO: %s\n", game->wall_path[N]);
+	printf("SO: %s\n", game->wall_path[S]);
+	printf("EA: %s\n", game->wall_path[E]);
+	printf("WE: %s\n", game->wall_path[W]);
 	printf("ceiling: \n");
 	print_tabint(game->ceiling, 3);
 	printf("floor: \n");
 	print_tabint(game->floor, 3);
+}
+
+double	get_current_time(void)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((double)time.tv_sec + (double)time.tv_usec / 1000000.0);
 }

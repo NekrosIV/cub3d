@@ -1,5 +1,5 @@
-NAME := cub3d
-NAME_BONUS := cub3d_bonus
+NAME := cub3D
+NAME_BONUS := cub3D_bonus
 CC := cc
 CFLAGS :=  -g3 -MMD -O3
 MLX_FLAGS = -Lmlx -lmlx -Imlx -lXext -lX11 -lm -lXfixes

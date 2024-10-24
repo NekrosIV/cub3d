@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minimap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 16:08:47 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/16 16:15:01 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/24 17:46:07 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	draw_element_in_map(t_game *game, int screen_x, int screen_y)
 	if (game->map[game->map_y][game->map_x] == '1')
 		draw_rectangle(&game->pic, screen_x, screen_y, MINI_W);
 	else
-		draw_rectangle(&game->pic, screen_x, screen_y, MINI_S);
+		draw_rectangle(&game->pic, screen_x, screen_y, MINI_F);
 	i = 0;
 	while (i < game->nb_door)
 	{

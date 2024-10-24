@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 13:03:42 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/18 12:03:39 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/24 18:14:27 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,17 @@ void	build_menu_texture_path(char *texture_path, size_t path_size, int state,
 		int frame)
 {
 	if (state == NEW_GAME)
-		snprintf(texture_path, path_size, "textures/255/got3d_%d.xpm", frame + 1);
+		snprintf(texture_path, path_size, "textures/menu/got3d_%d.xpm", frame
+			+ 1);
 	else if (state == N_EXIT)
-		snprintf(texture_path, path_size, "textures/255/got3d_%d.xpm", frame + 3);
+		snprintf(texture_path, path_size, "textures/menu/got3d_%d.xpm", frame
+			+ 3);
 	else if (state == PAUSE)
-		snprintf(texture_path, path_size, "textures/255/got3d_%d.xpm", frame + 5);
+		snprintf(texture_path, path_size, "textures/menu/got3d_%d.xpm", frame
+			+ 5);
 	else if (state == P_EXIT)
-		snprintf(texture_path, path_size, "textures/255/got3d_%d.xpm", frame + 7);
+		snprintf(texture_path, path_size, "textures/menu/got3d_%d.xpm", frame
+			+ 7);
 }
 
 void	load_menu_texture_into_game(t_game *game, char *texture_path, int state,

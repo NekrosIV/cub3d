@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:09:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/16 16:15:01 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/24 18:15:37 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,32 +53,3 @@ void	draw_crosshair(t_texture *texture, t_game *game, int color)
 	}
 	draw_crosshair2(texture, game, color, width_in_ints);
 }
-
-// void	draw_rectangle(t_texture *textures, int x, int y, int color)
-// {
-// 	int	i;
-// 	int	j;
-
-// 	i = 0;
-// 	while (i < TILE_SIZE)
-// 	{
-// 		if ((x + i) < 0 || (x + i) >= (M / 4))
-// 		{
-// 			i++;
-// 			continue ;
-// 		}
-// 		j = 0;
-// 		while (j < TILE_SIZE)
-// 		{
-// 			if ((y + j) < 0 || (y + j) >= (M / 4))
-// 			{
-// 				j++;
-// 				continue ;
-// 			}
-// 			*((int *)textures->data + (y + j) * textures->size_line / 4 + (x
-// 						+ i)) = color;
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// }

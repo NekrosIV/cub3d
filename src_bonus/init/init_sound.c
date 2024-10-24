@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:48:51 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/15 12:12:21 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/24 18:05:28 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ void	init_sound(t_game *game)
 		return ;
 	if (init_openal(game) != 0)
 		free_exit(game, 0, NULL, "INIT_SOUND FAIL");
-	game->sound[OST] = load_sound(game, "textures/berserkbro.wav");
-	game->sound[GUN] = load_sound(game, "textures/lasergun5.wav");
-	game->sound[E_DEAD] = load_sound(game, "textures/LegoYodaDeath.wav");
-	game->sound[E_TRIG] = load_sound(game, "textures/mauvaisenouvelle.wav");
-	game->sound[E_HURT] = load_sound(game, "textures/hurt.wav");
-	game->sound[STEP] = load_sound(game, "textures/footstep.wav");
-	game->sound[DOOR] = load_sound(game, "textures/door.wav");
+	game->sound[OST] = load_sound(game, "sfx/berserkbro.wav");
+	game->sound[GUN] = load_sound(game, "sfx/lasergun5.wav");
+	game->sound[E_DEAD] = load_sound(game, "sfx/LegoYodaDeath.wav");
+	game->sound[E_TRIG] = load_sound(game, "sfx/mauvaisenouvelle.wav");
+	game->sound[E_HURT] = load_sound(game, "sfx/hurt.wav");
+	game->sound[STEP] = load_sound(game, "sfx/footstep.wav");
+	game->sound[DOOR] = load_sound(game, "sfx/door.wav");
 	play_sound(&game->sound[OST], true);
 }

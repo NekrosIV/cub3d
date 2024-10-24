@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/15 15:46:16 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/24 17:16:49 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	check_file(char *file, t_game *game)
 	int	fd;
 
 	if (check_if_dir(file) == 1)
-		free_exit(game, -1, NULL, E_DIR);
+		free_exit(game, __LINE__ -1, __FILE__, E_DIR);
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 		free_exit(game, __LINE__ - 2, __FILE__, strerror(errno));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/16 16:01:48 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/24 17:14:34 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@
 # define LIGHT_GREEN "\1\033[38;5;120m\2"
 
 # define E_MALLOC "Malloc failure!"
-# define E_DIR "Wrong argument: Directory"
+# define E_DIR "Wrong argument: Is a directory"
 # define E_TNFOND "Texture path not found"
 # define E_TMULTI "Multiple definition for textutre path : "
 # define E_SPACE "Invalid whitespace characters"

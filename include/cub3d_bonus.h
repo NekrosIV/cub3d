@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/19 14:11:56 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/24 18:14:49 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,8 @@
 # define FOV 1
 # define CIRCLE_COLOR 0xFF7300
 # define CROSSHAIR 0xFF7300
-# define MINI_W 0x4B0082
-# define MINI_S 0x00FFFF
+# define MINI_W 0xFF7300
+# define MINI_F 0x121336
 # define MINI_D 0x00FF00
 # define RADIUS 4
 # define SGUNRANGE 5

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_raycasting.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 12:33:49 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/16 16:15:01 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/24 17:54:34 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	draw_ray(t_ray *ray, t_game *game, t_texture *textures, int i)
 	if (fabs(ray->ray - game->player.dirangle) < 0.01)
 		u.color = 0xFF0000;
 	else if (i % 1 == 0)
-		u.color = 0x000000;
+		u.color = 0x545654;
 	draw_ray_in_data(textures, &u);
 }
 

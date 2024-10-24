@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 18:36:55 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/14 19:02:05 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/24 16:52:26 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ void	trime_line(t_game *game, char *line)
 		game->wall_path[C] = get_texture_path(line + i, game);
 	else if (game->map_rows == -1 && !look_like_a_map_line(line))
 		(free(line), free_exit(game, 0, NULL, E_TEXTURE));
-	else if (look_like_a_map_line(line))
-		(free(line), free_exit(game, 0, NULL, E_HITORMISS));
 	else
 		(free(line), free_exit(game, 0, NULL, E_NLAST));
 	if (line[i] == '\0')

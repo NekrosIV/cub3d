@@ -6,14 +6,12 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 13:03:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/15 12:24:04 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/10/24 15:00:42 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
 
-// Fonction pour initialiser les offsets 
-// de sécurité pour la détection des collisions
 void	initialize_safety_offsets(t_player *player)
 {
 	if (cos(player->new_dir) < 0)
@@ -26,7 +24,6 @@ void	initialize_safety_offsets(t_player *player)
 		player->safetyy = 0.07;
 }
 
-// Fonction pour calculer la nouvelle position potentielle du joueur
 void	calculate_new_position(t_player *player)
 {
 	player->new_x = player->posx + cos(player->new_dir) * SPEED_M
@@ -35,7 +32,6 @@ void	calculate_new_position(t_player *player)
 		+ player->safetyy;
 }
 
-// Fonction principale de mouvement
 void	movements(t_game *game, double angle_shift)
 {
 	t_player	*player;

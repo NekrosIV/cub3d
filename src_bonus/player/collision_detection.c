@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   collision_detection.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 12:22:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/16 17:20:02 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/24 18:12:43 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
 
-// Fonction pour déterminer les pas
-// sur la grille et initialiser le flag de collision
 void	determine_grid_steps(t_player *player)
 {
 	player->stepx = (int)player->posx - (int)player->new_x;
@@ -21,8 +19,6 @@ void	determine_grid_steps(t_player *player)
 	player->flag = 1;
 }
 
-// Fonction pour vérifier les collisions lors
-//  d'un mouvement diagonal
 void	check_diagonal_collision(t_game *game, t_player *player)
 {
 	if (player->stepx && player->stepy)
@@ -50,8 +46,6 @@ void	adjust_player_posy(t_player *player)
 		player->posy = (double)((int)player->posy + 1) - 0.07;
 }
 
-// Fonction pour tenter de déplacer le joueur
-// en fonction de la détection des collisions
 void	attempt_move_player(t_game *game, t_player *player)
 {
 	if (game->map[(int)player->new_y][(int)player->new_x] == '0'

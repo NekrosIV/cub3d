@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   txtur_pars.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 18:36:55 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/01 18:37:58 by pscala           ###   ########.fr       */
+/*   Updated: 2024/10/24 16:52:58 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ void	trime_line(t_game *game, char *line)
 		fill_tab_rgb(game, line + i, 'C');
 	else if (game->map_rows == -1 && !look_like_a_map_line(line))
 		(free(line), free_exit(game, 0, NULL, E_TEXTURE));
-	else if (look_like_a_map_line(line))
-		(free(line), free_exit(game, 0, NULL, E_HITORMISS));
 	else
 		(free(line), free_exit(game, 0, NULL, E_NLAST));
 	if (line[i] == '\0')

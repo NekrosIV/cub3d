@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/24 18:28:28 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/09 14:29:18 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ void	draw_pixels(t_ray *ray, t_game *game, t_texture *textures, int i)
 	y = 0;
 	while (y < (int)ray->start_y)
 	{
-		*((int *)textures->data + i + y * WINX) = *((int *)game->wall[C].data
-				+ (int)ray->skyx + ((int)ray->y_sky * game->wall[C].size_line
+		*((int *)textures->data + i + y * WINX) = *((int *)game->ceiling[game->ceiling->frame].data
+				+ (int)ray->skyx + ((int)ray->y_sky * game->ceiling[game->ceiling->frame].size_line
 					/ 4));
 		ray->y_sky += ray->sky_ratio;
 		y++;

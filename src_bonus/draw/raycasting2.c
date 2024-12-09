@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:52:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/24 16:32:51 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/09 14:39:02 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,13 @@ void	determine_wall_and_pos_texture(t_ray *ray, t_game *game)
 void	adjust_texture_coordinates(t_ray *ray, t_game *game)
 {
 	ray->ratio = game->wall[ray->wall].h / ray->line_h;
-	ray->sky_ratio = game->wall[C].h / (double)(WINY / 2);
+	ray->sky_ratio = game->ceiling[game->ceiling->frame].h / (double)(WINY / 2);
 	ray->y_sky = 0;
 	while (ray->ray > 2 * PI)
 		ray->ray -= 2 * PI;
 	while (ray->ray < 0)
 		ray->ray += 2 * PI;
-	ray->skyx = ray->ray * (game->wall[C].w / (2 * PI));
+	ray->skyx = ray->ray * (game->ceiling[game->ceiling->frame].w / (2 * PI));
 	ray->pos_texture *= game->wall[ray->wall].w;
 	if (ray->stepx < 0 && ray->last_hit == 0)
 		ray->pos_texture = game->wall[ray->wall].w - ray->pos_texture - 1;

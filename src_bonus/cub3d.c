@@ -6,11 +6,28 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/24 14:59:47 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/09 15:00:22 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
+
+void	update_ceiling_animation(t_game *game)
+{
+	double	current_time;
+
+	current_time = get_current_time();
+	if (current_time - game->ceiling->last_time >= game->ceiling->frame_delay)
+	{
+		game->ceiling->frame += 1;
+		if (game->ceiling->frame > 63)
+		{
+			game->ceiling->frame = 0;
+			game->ceiling->animating = 0;
+		}
+		game->ceiling->last_time = current_time;
+	}
+}
 
 int	loop_hook(t_game *game)
 {
@@ -22,6 +39,7 @@ int	loop_hook(t_game *game)
 	if (game->menu == false)
 	{
 		(check_moves(game), check_door(game));
+		update_ceiling_animation(game);
 		(draw_arrow(game, texture), mini_draw_map(game, texture));
 		(drawallbot(game, texture->data), checkbotmoves(game));
 		draw_crosshair(texture, game, CROSSHAIR);

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/15 13:34:27 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/09 14:40:40 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,31 @@ void	init_gun_texture(t_game *game)
 	game->gun->animating = 0;
 	game->gun->frame_delay = 0.060;
 	game->gun->last_time = get_current_time();
+}
+
+void	init_ceiling_texture(t_game *game)
+{
+	char	texture_path[50];
+	int		frame;
+
+	frame = 0;
+	while (frame < 64)
+	{
+		snprintf(texture_path, sizeof(texture_path), "textures/skybox_anim/2SK%d.xpm",
+			frame + 1);
+		game->ceiling[frame].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
+				texture_path, &game->ceiling[frame].w, &game->ceiling[frame].h);
+		if (game->ceiling[frame].img == NULL)
+			free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);
+		game->ceiling[frame].data = mlx_get_data_addr(game->ceiling[frame].img,
+				&game->ceiling[frame].bpp, &game->ceiling[frame].size_line,
+				&game->ceiling[frame].endian);
+		frame++;
+	}
+	game->ceiling->frame = 0;
+	game->ceiling->animating = 0;
+	game->ceiling->frame_delay = 0.060;
+	game->ceiling->last_time = get_current_time();
 }
 
 void	load_image_to_game(t_game *game, t_texture *texture)

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:08 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/24 17:16:15 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/10 17:52:54 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,6 @@ void	parsing(char *file, t_game *game)
 	read_file(file, game);
 	print_struct(game);
 	put_door(game);
+	game->floor_hexa = rgb_to_hexa(game->floor);
 	game->map[(int)game->player.posy][(int)game->player.posx] = '0';
 }

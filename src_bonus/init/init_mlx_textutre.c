@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/09 14:40:40 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/10 13:25:20 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void	init_ceiling_texture(t_game *game)
 	frame = 0;
 	while (frame < 64)
 	{
-		snprintf(texture_path, sizeof(texture_path), "textures/skybox_anim/2SK%d.xpm",
+		snprintf(texture_path, sizeof(texture_path), "textures/skybox_anim/3SK%d.xpm",
 			frame + 1);
 		game->ceiling[frame].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
 				texture_path, &game->ceiling[frame].w, &game->ceiling[frame].h);

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/10 17:53:05 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/20 14:52:10 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ void	draw_pixels(t_ray *ray, t_game *game, t_texture *textures, int i)
 		ray->y_wall += ray->ratio;
 		y++;
 	}
-	while (y < WINY)
-	{
-		*((int *)textures->data + i + y * WINX) = game->floor_hexa;
-		y++;
-	}
+	// while (y < WINY)
+	// {
+	// 	*((int *)textures->data + i + y * WINX) = game->floor_hexa;
+	// 	y++;
+	// }
 }
 
 void	reset_hits(t_game *game)
@@ -69,6 +69,7 @@ void	draw_arrow(t_game *game, t_texture *textures)
 	ray.offset = ray.fov / WINX;
 	reset_hits(game);
 	i = 0;
+	draw_floor(game, textures);
 	while (i < WINX)
 	{
 		init_ray(&ray, game);
@@ -82,3 +83,5 @@ void	draw_arrow(t_game *game, t_texture *textures)
 		i++;
 	}
 }
+
+

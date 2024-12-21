@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/09 15:00:22 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/19 17:04:08 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,40 @@ void	update_ceiling_animation(t_game *game)
 	}
 }
 
+void update_doors(t_game *game)
+{
+	double deltaTime = get_current_time() - game->door->last_time;
+	game->door->last_time = get_current_time();
+	double speed = 1.0 / 0.5;
+    for (int i = 0; i < game->nb_door; i++)
+    {
+        t_door *door = &game->door[i];
+        if (door->state == IS_OPENING)
+        {
+			printf("door == opening\nopen_state = %f\n",door->open_state);
+            door->open_state += speed * deltaTime;
+            if (door->open_state >= 1.0) {
+                door->open_state = 1.0;
+                door->state = IS_OPEN;
+				game->map[door->map_y][door->map_x] = '0';
+                // La porte est pleinement ouverte
+            }
+        }
+        else if (door->state == IS_CLOSING)
+        {
+			printf("door == closing\nopen_state = %f\n",door->open_state);
+            door->open_state -= speed * deltaTime;
+            if (door->open_state <= 0.0) {
+                door->open_state = 0.0;
+                door->state = IS_CLOSE;
+				game->map[door->map_y][door->map_x] = '1';
+                // La porte est pleinement fermée
+            }
+        }
+    }
+}
+
+
 int	loop_hook(t_game *game)
 {
 	void		*img_ptr;
@@ -38,7 +72,7 @@ int	loop_hook(t_game *game)
 	texture = &game->pic;
 	if (game->menu == false)
 	{
-		(check_moves(game), check_door(game));
+		(check_moves(game), check_door(game), update_doors(game));
 		update_ceiling_animation(game);
 		(draw_arrow(game, texture), mini_draw_map(game, texture));
 		(drawallbot(game, texture->data), checkbotmoves(game));

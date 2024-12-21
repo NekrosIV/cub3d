@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/09 16:27:58 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/21 16:38:09 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@
 # define E 3
 # define C 4
 # define D 5
-# define WINX 1200
-# define WINY 900
+# define WINX 1520
+# define WINY 1080
 # if WINX < WINY
 #  define M WINX
 # else
@@ -86,13 +86,13 @@
 # define PI 3.14159265358979323846
 # define NO 1.57079632679489661923
 # define WE PI
+# define EA 0
 # define TILE_SIZE 21
 # define BIG_TILE_SIZE 50
-# define EA 0
 // # define SPEED_BOT 0.005
-// # define SPEED_M 0.1
-// # define SPEED_C 0.008
-# define SPEED_BOT 0.005
+// # define SPEED_M 0.01
+// # define SPEED_C 0.0001
+# define SPEED_BOT 0.05
 # define SPEED_M 0.1
 # define SPEED_C 0.002
 # define WALL_TEXT_CARRE 64
@@ -132,9 +132,15 @@
 # define ORANGEHP 0xFFB347
 # define GREENHP 0x39FF14
 # define HPP 100
-# define IS_CLOSE 0
-# define IS_OPEN 1
-# define USE_SOUND 0
+
+# define USE_SOUND 1
+
+typedef enum e_door_state {
+    IS_CLOSE,
+    IS_OPEN,
+    IS_OPENING,
+    IS_CLOSING
+} t_door_state;
 
 typedef struct s_mlx
 {
@@ -214,6 +220,7 @@ typedef struct s_ray
 	double		y_wall;
 	double		line_h;
 	double		ratio;
+	int door_index;
 	double		sky_ratio;
 	double		y_sky;
 	double		skyx;
@@ -252,6 +259,7 @@ typedef struct s_door
 	int			map_x;
 	int			frame;
 	int			state;
+	double 		open_state;
 	double		last_time;
 	double		distance;
 	int			door_hit;
@@ -353,6 +361,7 @@ typedef struct s_game
 	t_texture	gun[39];
 	t_texture	ceiling[64];
 	t_texture	wall[6];
+	t_texture	sol;
 	t_texture	botext[5][4];
 	t_player	player;
 	t_enemy		*ennemy;
@@ -421,6 +430,7 @@ t_player		init_player_struct(void);
 int				init_player(t_game *game);
 double			get_current_time(void);
 void			draw_arrow(t_game *game, t_texture *textures);
+void			draw_floor(t_game *game, t_texture *textures);
 void			init_ray(t_ray *ray, t_game *game);
 void			calculate_step_and_sidedist(t_ray *ray, t_game *game);
 void			calculate_wall_height(t_ray *ray, t_game *game, int i);

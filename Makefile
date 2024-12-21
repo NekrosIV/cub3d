@@ -63,6 +63,7 @@ FILES_BONUS := cub3d.c \
 		draw/raycastingbot.c \
 		draw/raycasting.c \
 		draw/raycasting2.c \
+		draw/draw_floor.c \
 		draw/dda.c \
 		draw/gun.c \
 		draw/door.c \

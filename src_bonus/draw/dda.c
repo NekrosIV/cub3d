@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:44:33 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/24 15:37:58 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/19 17:18:15 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,89 @@ void	check_wall_hit(t_ray *ray, t_game *game)
 				&& game->door[i].map_x == ray->mapx)
 			{
 				ray->ray_hit = 2;
+				ray->door_index = i;
 				game->door[i].door_hit++;
 			}
 			i++;
 		}
 	}
 }
+
+// void	check_wall_hit(t_ray *ray, t_game *game)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	if (game->map[ray->mapy][ray->mapx] != '0')
+// 	{
+// 		ray->ray_hit = 1;
+// 		while (i < game->nb_door && ray->ray_hit == 1)
+// 		{
+// 			if (game->door[i].map_y == ray->mapy
+// 				&& game->door[i].map_x == ray->mapx)
+// 			{
+// 				// On a touché une porte
+// 				ray->ray_hit = 2;
+// 				ray->door_index = i;
+// 				game->door[i].door_hit++;
+
+// 				// --- Début de la logique de porte partiellement ouverte --- //
+// 				t_door *door = &game->door[i];
+// 				double open = door->open_state; // entre 0.0 et 1.0
+
+// 				// Calcul de la distance parcourue (perp_length)
+// 				// Selon last_hit, on sait quelle direction a été frappée
+// 				double perp_length;
+// 				if (ray->last_hit == 0)
+// 					perp_length = ray->sidedistx - ray->deltax;
+// 				else
+// 					perp_length = ray->sidedisty - ray->deltay;
+
+// 				// Point d’impact exact
+// 				double hitX = game->player.posx + perp_length * ray->ray_dx;
+// 				double hitY = game->player.posy + perp_length * ray->ray_dy;
+
+// 				// Supposons que la porte coulisse horizontalement. 
+// 				// Quand open=0.0, la porte occupe [mapx, mapx+1].
+// 				// Quand open=1.0, elle n'occupe plus rien.
+// 				// On dit que la partie occupée est [mapx, mapx+(1-open)].
+// 				if (ray->last_hit == 0)
+// 				{
+// 					// face verticale frappée, test sur hitX
+// 					double occupied_end = ray->mapx + (1.0 - open);
+// 					if (hitX >= occupied_end)
+// 					{
+// 						// Le rayon est dans la partie ouverte de la porte
+// 						// Donc on ne s'arrête pas : on considère cette case comme vide
+// 						ray->ray_hit = 0; 
+// 						// Pas de break, on continue DDA dans perform_dda
+// 					}
+// 					// Sinon, on a vraiment heurté la porte, on garde ray_hit = 2
+// 				}
+// 				else
+// 				{
+// 					// face horizontale frappée, test sur hitY
+// 					// Adaptez la logique si la porte coulisse verticalement.
+// 					// Par exemple, si la porte coulisse verticalement, 
+// 					// la partie occupée pourrait être [mapy, mapy+(1-open)].
+					
+// 					// Exemple si elle coulisse aussi horizontalement (même logique)
+// 					// A adapter selon votre orientation réelle.
+// 					double occupied_end = ray->mapy + (1.0 - open);
+// 					if (hitY >= occupied_end)
+// 					{
+// 						// Partie ouverte
+// 						ray->ray_hit = 0; 
+// 					}
+// 					// Sinon, partie occupée, on reste à ray_hit = 2
+// 				}
+// 				// --- Fin de la logique de porte partiellement ouverte --- //
+// 			}
+// 			i++;
+// 		}
+// 	}
+// }
+
 
 void	perform_dda(t_ray *ray, t_game *game)
 {

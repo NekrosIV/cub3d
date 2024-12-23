@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/20 14:52:10 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/23 17:06:32 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,24 @@ void	draw_pixels(t_ray *ray, t_game *game, t_texture *textures, int i)
 	y = 0;
 	while (y <= (int)ray->start_y)
 	{
-		*((int *)textures->data + i + y * WINX) = *((int *)game->ceiling[game->ceiling->frame].data
-				+ (int)ray->skyx + ((int)ray->y_sky * game->ceiling[game->ceiling->frame].size_line
-					/ 4));
+		*((int *)textures->data + i + y
+				* WINX) = *((int *)game->ceiling[game->ceiling->frame].data
+				+ (int)ray->skyx + ((int)ray->y_sky
+					* game->ceiling[game->ceiling->frame].size_line / 4));
 		ray->y_sky += ray->sky_ratio;
 		y++;
 	}
 	while (y <= (int)ray->end_y)
 	{
-		*((int *)textures->data + i + y
-				* WINX) = *((int *)game->wall[ray->wall].data
-				+ (int)ray->pos_texture + ((int)ray->y_wall
-					* game->wall[ray->wall].size_line / 4));
+		if (*((int *)game->wall[ray->wall].data + (int)ray->pos_texture
+				+ ((int)ray->y_wall * game->wall[ray->wall].size_line
+					/ 4)) != 65535)
+		{
+			*((int *)textures->data + i + y
+					* WINX) = *((int *)game->wall[ray->wall].data
+					+ (int)ray->pos_texture + ((int)ray->y_wall
+						* game->wall[ray->wall].size_line / 4));
+		}
 		ray->y_wall += ray->ratio;
 		y++;
 	}
@@ -72,16 +78,20 @@ void	draw_arrow(t_game *game, t_texture *textures)
 	draw_floor(game, textures);
 	while (i < WINX)
 	{
+		ray.two_time = 0;
+		while (ray.two_time < 2)
+		{
 		init_ray(&ray, game);
 		calculate_step_and_sidedist(&ray, game);
-		perform_dda(&ray, game);
-		calculate_wall_height(&ray, game, i);
-		determine_wall_and_pos_texture(&ray, game);
-		adjust_texture_coordinates(&ray, game);
-		draw_pixels(&ray, game, textures, i);
+
+			perform_dda(&ray, game);
+			calculate_wall_height(&ray, game, i);
+			determine_wall_and_pos_texture(&ray, game);
+			adjust_texture_coordinates(&ray, game);
+			draw_pixels(&ray, game, textures, i);
+			ray.two_time++;
+		}
 		ray.ray -= ray.offset;
 		i++;
 	}
 }
-
-

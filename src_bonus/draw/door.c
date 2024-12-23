@@ -6,11 +6,12 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:28:20 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/19 15:50:27 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/22 15:55:40 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
+
 
 void	update_door_distance(t_game *game, t_door *door)
 {

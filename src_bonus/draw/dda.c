@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:44:33 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/19 17:18:15 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/23 17:15:50 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,27 @@ void	check_door_collision(t_ray *ray, t_game *game)
 	}
 }
 
+bool	is_a_door(t_ray *ray, t_game *game)
+{
+	int	i;
+
+	i = 0;
+	while (i < game->nb_door)
+	{
+		if (game->door[i].map_y == ray->mapy
+			&& game->door[i].map_x == ray->mapx)
+			return(true);
+		i++;
+	}
+	return(false);
+}
+
 void	check_wall_hit(t_ray *ray, t_game *game)
 {
 	int	i;
 
 	i = 0;
-	if (game->map[ray->mapy][ray->mapx] != '0')
+	if (game->map[ray->mapy][ray->mapx] != '0' || is_a_door(ray,game))
 	{
 		ray->ray_hit = 1;
 		while (i < game->nb_door && ray->ray_hit == 1)
@@ -69,6 +84,11 @@ void	check_wall_hit(t_ray *ray, t_game *game)
 			if (game->door[i].map_y == ray->mapy
 				&& game->door[i].map_x == ray->mapx)
 			{
+				if(ray->two_time == 0)
+				{
+					ray->ray_hit = 0;
+					return;
+				}
 				ray->ray_hit = 2;
 				ray->door_index = i;
 				game->door[i].door_hit++;
@@ -78,10 +98,9 @@ void	check_wall_hit(t_ray *ray, t_game *game)
 	}
 }
 
-// void	check_wall_hit(t_ray *ray, t_game *game)
+// // void	check_wall_hit(t_ray *ray, t_game *game)
 // {
 // 	int	i;
-
 // 	i = 0;
 // 	if (game->map[ray->mapy][ray->mapx] != '0')
 // 	{

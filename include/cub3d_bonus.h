@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/21 16:38:09 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/23 14:24:19 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@
 # define S 1
 # define W 2
 # define E 3
-# define C 4
+# define F 4
 # define D 5
 # define WINX 1520
 # define WINY 1080
@@ -227,6 +227,7 @@ typedef struct s_ray
 	int			wall;
 	double		pos_texture;
 	int			ignore;
+	int			two_time;
 }				t_ray;
 
 typedef struct s_player
@@ -360,7 +361,7 @@ typedef struct s_game
 	t_mlx		*mlx;
 	t_texture	gun[39];
 	t_texture	ceiling[64];
-	t_texture	wall[6];
+	t_texture	wall[13];
 	t_texture	sol;
 	t_texture	botext[5][4];
 	t_player	player;

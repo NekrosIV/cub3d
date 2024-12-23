@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/21 16:27:15 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/23 14:43:57 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ void	init_menu_texture(t_game *game)
 
 void	init_wall(t_game *game)
 {
-	int	i;
+	int		i;
+	char	texture_path[50];
 
 	i = 0;
 	while (i < 5)
@@ -74,16 +75,20 @@ void	init_wall(t_game *game)
 				&game->wall[i].endian);
 		i++;
 	}
-	game->wall[i].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
-			"textures/doom/door3.xpm", &game->wall[i].w, &game->wall[i].h);
-	if (!game->wall[i].img)
-		free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);
-	game->wall[i].data = mlx_get_data_addr(game->wall[i].img,
-			&game->wall[i].bpp, &game->wall[i].size_line,
-			&game->wall[i].endian);
+	while (i < 12)
+	{
+		snprintf(texture_path, sizeof(texture_path), "textures/door/door%d.xpm",
+			i - 5);
+		game->wall[i].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
+				texture_path, &game->wall[i].w, &game->wall[i].h);
+		if (!game->wall[i].img)
+			free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);
+		game->wall[i].data = mlx_get_data_addr(game->wall[i].img,
+				&game->wall[i].bpp, &game->wall[i].size_line,
+				&game->wall[i].endian);
+		i++;
+	}
 }
-
-
 
 void	init_gun_texture(t_game *game)
 {
@@ -148,9 +153,8 @@ void	load_image_to_game(t_game *game, t_texture *texture)
 			"textures/floor/grass.xpm", &game->sol.w, &game->sol.h);
 	if (game->sol.img == NULL)
 		free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);
-	game->sol.data = mlx_get_data_addr(game->sol.img,
-			&game->sol.bpp, &game->sol.size_line,
-			&game->sol.endian);
+	game->sol.data = mlx_get_data_addr(game->sol.img, &game->sol.bpp,
+			&game->sol.size_line, &game->sol.endian);
 	texture->img = mlx_new_image(game->mlx->mlx_ptr, WINX, WINY);
 	if (texture->img == NULL)
 		free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 18:36:55 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/24 16:52:26 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/23 14:19:50 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ bool	multi_def(t_game *game, char *line, char flag)
 		(free(line), free_exit(game, 0, NULL, E_TMULTI "EA"));
 	if (flag == 'F' && game->floor[0] != -1)
 		(free(line), free_exit(game, 0, NULL, E_TMULTI "F"));
-	if (flag == 'C' && game->wall_path[C] != NULL)
+	if (flag == 'C' && game->wall_path[F] != NULL)
 		(free(line), free_exit(game, 0, NULL, E_TMULTI "C"));
 	return (false);
 }
@@ -45,7 +45,7 @@ void	trime_line(t_game *game, char *line)
 	else if (ft_strncmp(line + i, "F", 1) == 0 && !multi_def(game, line, 'F'))
 		fill_tab_rgb(game, line + i, 'F');
 	else if (ft_strncmp(line + i, "C", 1) == 0 && !multi_def(game, line, 'C'))
-		game->wall_path[C] = get_texture_path(line + i, game);
+		game->wall_path[F] = get_texture_path(line + i, game);
 	else if (game->map_rows == -1 && !look_like_a_map_line(line))
 		(free(line), free_exit(game, 0, NULL, E_TEXTURE));
 	else
@@ -88,7 +88,7 @@ bool	textures_filled(t_game *game)
 	if (game->floor[0] == -1)
 		return (false);
 	else if (!game->wall_path[E] || !game->wall_path[N] || !game->wall_path[S]
-		|| !game->wall_path[W] || !game->wall_path[C])
+		|| !game->wall_path[W] || !game->wall_path[F])
 		return (false);
 	return (true);
 }

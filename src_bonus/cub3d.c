@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/23 17:16:06 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/24 13:57:47 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ void update_doors(t_game *game)
     for (int i = 0; i < game->nb_door; i++)
     {
         t_door *door = &game->door[i];
-        if (door->state == IS_OPENING && current_time - door->last_time >=  0.06)
+        if (door->state == IS_OPENING && current_time - door->last_time >=  0.03)
         {
             // door->open_state += speed * deltaTime;
 			door->frame++;
-            if (door->frame == 11) {
+            if (door->frame == 24) {
                 door->open_state = 1.0;
                 door->state = IS_OPEN;
 				game->map[door->map_y][door->map_x] = '0';
@@ -49,14 +49,13 @@ void update_doors(t_game *game)
             }
 			door->last_time = current_time;
         }
-        else if (door->state == IS_CLOSING && current_time - door->last_time >=  0.06)
+        else if (door->state == IS_CLOSING && current_time - door->last_time >=  0.03)
         {
             // door->open_state -= speed * deltaTime;
 			door->frame--;
             if (door->frame == 5) {
                 door->open_state = 0.0;
                 door->state = IS_CLOSE;
-				game->map[door->map_y][door->map_x] = '1';
                 // La porte est pleinement fermée
             }
 			door->last_time = current_time;

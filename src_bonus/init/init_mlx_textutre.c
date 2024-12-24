@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/23 14:43:57 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/24 13:57:01 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ void	init_wall(t_game *game)
 				&game->wall[i].endian);
 		i++;
 	}
-	while (i < 12)
+	while (i < 25)
 	{
-		snprintf(texture_path, sizeof(texture_path), "textures/door/door%d.xpm",
+		snprintf(texture_path, sizeof(texture_path), "textures/door/doorr%d.xpm",
 			i - 5);
 		game->wall[i].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
 				texture_path, &game->wall[i].w, &game->wall[i].h);

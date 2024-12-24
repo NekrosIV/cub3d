@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:28:20 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/22 15:55:40 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/24 12:41:04 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ bool	is_player_near_door(t_game *game, t_door *door)
 	if (door->map_y != (int)game->player.posy
 		|| door->map_x != (int)game->player.posx)
 	{
-		if (door->distance <= 1.5 && door->door_hit >= WINX / 2)
+		if (door->distance <= 2 && door->door_hit >= WINX / 2)
 			return (true);
 	}
 	return (false);
@@ -61,7 +61,10 @@ void	toggle_door_state(t_game *game, t_door *door)
 	if (door->state == IS_CLOSE)
         door->state = IS_OPENING;
     else if (door->state == IS_OPEN)
-        door->state = IS_CLOSING;
+ 	{       
+		door->state = IS_CLOSING;
+		game->map[door->map_y][door->map_x] = '1';
+	}
 }
 
 void	check_door(t_game *game)

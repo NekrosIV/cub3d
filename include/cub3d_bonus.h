@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/23 14:24:19 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/24 14:01:46 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@
 # define GREENHP 0x39FF14
 # define HPP 100
 
-# define USE_SOUND 1
+# define USE_SOUND 0
 
 typedef enum e_door_state {
     IS_CLOSE,
@@ -361,7 +361,7 @@ typedef struct s_game
 	t_mlx		*mlx;
 	t_texture	gun[39];
 	t_texture	ceiling[64];
-	t_texture	wall[13];
+	t_texture	wall[25];
 	t_texture	sol;
 	t_texture	botext[5][4];
 	t_player	player;

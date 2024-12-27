@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/12/19 16:19:31 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/27 17:53:41 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	init_mlx(t_game *game)
 	game->mlx->mlx_ptr = mlx_init();
 	if (!game->mlx->mlx_ptr)
 		free_exit(game, __LINE__ - 2, __FILE__, E_INITMLX);
+	init_loading_texture(game);
 	init_wall(game);
 	int_enemy_texture(game);
 	init_gun_texture(game);
@@ -94,6 +95,7 @@ void	init_game_2(t_game *game)
 	game->m_d = (M / 4) / 4;
 	game->ennemy = NULL;
 	game->door = NULL;
+	game->loading_page = true;
 }
 
 void	init_game(t_game *game)

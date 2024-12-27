@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:05:19 by pscala            #+#    #+#             */
-/*   Updated: 2024/10/15 12:31:11 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/27 17:26:49 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ int	key_hook(int keycode, t_game *game)
 {
 	if (keycode == XK_Escape)
 		free_exit(game, 0, NULL, "EOG");
+	else if (game->loading_page == true)
+		return (0);
 	else if (keycode == XK_w)
 		game->player.up = true;
 	else if (keycode == XK_s)

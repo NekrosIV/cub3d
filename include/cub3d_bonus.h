@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/27 16:12:29 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/27 17:22:14 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,9 +364,11 @@ typedef struct s_game
 	int			bot_nb;
 	int			m_d;
 	bool		do_damage;
+	bool		loading_page;
 	t_texture	pic;
 	t_mlx		*mlx;
 	t_texture	gun[39];
+	t_texture	loading[45];
 	t_texture	ceiling[64];
 	t_texture	wall[25];
 	t_texture	sol;
@@ -526,5 +528,6 @@ void			init_wall(t_game *game);
 void			init_gun_texture(t_game *game);
 void			load_image_to_game(t_game *game, t_texture *texture);
 void			init_ceiling_texture(t_game *game);
+void			init_loading_texture(t_game *game);
 
 #endif

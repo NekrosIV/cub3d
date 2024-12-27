@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/27 18:31:08 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/27 19:07:06 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	update_loading_page(t_game *game)
 	if (current_time - game->loading->last_time >= game->loading->frame_delay)
 	{
 		game->loading->frame += 1;
-		if (game->loading->frame > 44)
+		if (game->loading->frame > 55)
 		{
 			game->loading->frame = 0;
 		}

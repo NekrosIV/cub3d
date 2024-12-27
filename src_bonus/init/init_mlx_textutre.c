@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/27 18:34:06 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/27 19:06:10 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void	init_loading_texture(t_game *game)
 	int		frame;
 
 	frame = 0;
-	while (frame < 46)
+	while (frame < 57)
 	{
 		snprintf(texture_path, sizeof(texture_path), "textures/loading/loding%d.xpm",
 			frame);

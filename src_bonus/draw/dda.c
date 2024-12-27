@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:44:33 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/24 14:14:52 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/27 16:16:44 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,32 +71,56 @@ bool	is_a_door(t_ray *ray, t_game *game)
 	return(false);
 }
 
-void	check_wall_hit(t_ray *ray, t_game *game)
-{
-	int	i;
+// void	check_wall_hit(t_ray *ray, t_game *game)
+// {
+// 	int	i;
 
-	i = 0;
-	if (game->map[ray->mapy][ray->mapx] != '0' || is_a_door(ray,game))
-	{
-		ray->ray_hit = 1;
-		while (i < game->nb_door && ray->ray_hit == 1)
-		{
-			if (game->door[i].map_y == ray->mapy
-				&& game->door[i].map_x == ray->mapx)
-			{
-				if(ray->two_time == 0)
-				{
-					ray->ray_hit = 0;
-					return;
-				}
-				ray->ray_hit = 2;
-				ray->door_index = i;
-				game->door[i].door_hit++;
-			}
-			i++;
-		}
-	}
+// 	i = 0;
+// 	if (game->map[ray->mapy][ray->mapx] != '0' || is_a_door(ray,game))
+// 	{
+// 		ray->ray_hit = 1;
+// 		while (i < game->nb_door && ray->ray_hit == 1)
+// 		{
+// 			if (game->door[i].map_y == ray->mapy
+// 				&& game->door[i].map_x == ray->mapx)
+// 			{
+// 				if(ray->two_time == 0)
+// 				{
+// 					ray->ray_hit = 0;
+// 					return;
+// 				}
+// 				ray->ray_hit = 2;
+// 				ray->door_index = i;
+// 				game->door[i].door_hit++;
+// 			}
+// 			i++;
+// 		}
+// 	}
+// }
+void check_wall_hit(t_ray *ray, t_game *game)
+{
+    // On considère le mur (ou porte) s’il n’est pas '0'
+    if (game->map[ray->mapy][ray->mapx] != '0' || is_a_door(ray, game))
+    {
+        ray->ray_hit = 1; // par défaut mur
+        for (int i = 0; i < game->nb_door && ray->ray_hit == 1; i++)
+        {
+            if (game->door[i].map_y == ray->mapy && game->door[i].map_x == ray->mapx)
+            {
+					ray->store_door = true;
+					ray->stored_door_index = i;
+					ray->stored_last_hit = ray->last_hit;
+					ray->stored_sidedistx = ray->sidedistx;
+					ray->stored_sidedisty = ray->sidedisty;
+					// ray->stored_perp_length = perp_length;
+					ray->ray_hit = 0; 
+					game->door[i].door_hit++;
+                return;
+            }
+        }
+    }
 }
+
 
 // // void	check_wall_hit(t_ray *ray, t_game *game)
 // {

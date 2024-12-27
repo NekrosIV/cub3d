@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/24 14:01:46 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/27 16:12:29 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,12 +135,13 @@
 
 # define USE_SOUND 0
 
-typedef enum e_door_state {
-    IS_CLOSE,
-    IS_OPEN,
-    IS_OPENING,
-    IS_CLOSING
-} t_door_state;
+typedef enum e_door_state
+{
+	IS_CLOSE,
+	IS_OPEN,
+	IS_OPENING,
+	IS_CLOSING
+}				t_door_state;
 
 typedef struct s_mlx
 {
@@ -220,7 +221,7 @@ typedef struct s_ray
 	double		y_wall;
 	double		line_h;
 	double		ratio;
-	int door_index;
+	int			door_index;
 	double		sky_ratio;
 	double		y_sky;
 	double		skyx;
@@ -228,6 +229,12 @@ typedef struct s_ray
 	double		pos_texture;
 	int			ignore;
 	int			two_time;
+	bool		store_door;
+	int			stored_door_index;
+	bool		stored_last_hit;
+	double		stored_perp_length;
+	double		stored_sidedistx;
+	double		stored_sidedisty;
 }				t_ray;
 
 typedef struct s_player
@@ -260,7 +267,7 @@ typedef struct s_door
 	int			map_x;
 	int			frame;
 	int			state;
-	double 		open_state;
+	double		open_state;
 	double		last_time;
 	double		distance;
 	int			door_hit;

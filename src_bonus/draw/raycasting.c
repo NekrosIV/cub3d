@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:05:13 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/24 14:14:58 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/27 16:14:05 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,23 +73,32 @@ void	draw_arrow(t_game *game, t_texture *textures)
 	ray.fov = FOV;
 	ray.ray = game->player.dirangle + ray.fov / 2;
 	ray.offset = ray.fov / WINX;
+	ray.store_door = false;
 	reset_hits(game);
 	i = 0;
 	draw_floor(game, textures);
 	while (i < WINX)
 	{
-		ray.two_time = 0;
-		while (ray.two_time < 2)
-		{
 		init_ray(&ray, game);
 		calculate_step_and_sidedist(&ray, game);
-
-			perform_dda(&ray, game);
+		perform_dda(&ray, game);
+		calculate_wall_height(&ray, game, i);
+		determine_wall_and_pos_texture(&ray, game);
+		adjust_texture_coordinates(&ray, game);
+		draw_pixels(&ray, game, textures, i);
+		if (ray.store_door)
+		{
+			ray.ray_hit = 2;
+			ray.door_index = ray.stored_door_index;
+			ray.last_hit = ray.stored_last_hit;
+			ray.sidedistx = ray.stored_sidedistx;
+			ray.sidedisty = ray.stored_sidedisty;
+			// ray->perp_length = ray.stored_perp_length;
 			calculate_wall_height(&ray, game, i);
 			determine_wall_and_pos_texture(&ray, game);
 			adjust_texture_coordinates(&ray, game);
 			draw_pixels(&ray, game, textures, i);
-			ray.two_time++;
+			ray.store_door = false;
 		}
 		ray.ray -= ray.offset;
 		i++;

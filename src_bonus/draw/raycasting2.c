@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:52:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/24 14:15:03 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/27 15:33:29 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	determine_wall_and_pos_texture(t_ray *ray, t_game *game)
 	else
 	{
 		if (ray->ray_hit == 2)
-			ray->wall = D;
+			ray->wall = game->door[ray->door_index].frame;
 		else if (ray->stepx == -1)
 			ray->wall = W;
 		else

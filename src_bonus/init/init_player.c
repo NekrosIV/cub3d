@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 12:46:24 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/15 16:11:53 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/28 16:14:23 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_player	init_player_struct(void)
 	player.left = false;
 	player.side_r = false;
 	player.side_l = false;
+	player.last_update_time = get_current_time();
 	return (player);
 }
 

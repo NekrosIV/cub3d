@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:44:33 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/27 16:16:44 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/28 16:04:44 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,14 +107,21 @@ void check_wall_hit(t_ray *ray, t_game *game)
         {
             if (game->door[i].map_y == ray->mapy && game->door[i].map_x == ray->mapx)
             {
-					ray->store_door = true;
+				// if(!ray->store_door)
+				{	ray->store_door = true;
 					ray->stored_door_index = i;
 					ray->stored_last_hit = ray->last_hit;
 					ray->stored_sidedistx = ray->sidedistx;
 					ray->stored_sidedisty = ray->sidedisty;
-					// ray->stored_perp_length = perp_length;
 					ray->ray_hit = 0; 
 					game->door[i].door_hit++;
+				}
+				// else
+				// {
+					// ray->ray_hit = 2;
+					// ray->door_index = i; 
+					// game->door[i].door_hit++;
+				// }
                 return;
             }
         }

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:01:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/27 19:06:10 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/28 13:17:51 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,30 +115,7 @@ void	init_gun_texture(t_game *game)
 	game->gun->last_time = get_current_time();
 }
 
-void	init_loading_texture(t_game *game)
-{
-	char	texture_path[50];
-	int		frame;
 
-	frame = 0;
-	while (frame < 57)
-	{
-		snprintf(texture_path, sizeof(texture_path), "textures/loading/loding%d.xpm",
-			frame);
-		game->loading[frame].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
-				texture_path, &game->loading[frame].w, &game->loading[frame].h);
-		if (game->loading[frame].img == NULL)
-			free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);
-		game->loading[frame].data = mlx_get_data_addr(game->loading[frame].img,
-				&game->loading[frame].bpp, &game->loading[frame].size_line,
-				&game->loading[frame].endian);
-		frame++;
-	}
-	game->loading->frame = 0;
-	game->loading->animating = 0;
-	game->loading->frame_delay = 0.05;
-	game->loading->last_time = get_current_time();
-}
 
 void	init_ceiling_texture(t_game *game)
 {
@@ -185,4 +162,29 @@ void	load_image_to_game(t_game *game, t_texture *texture)
 		free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);
 	texture->data = mlx_get_data_addr(texture->img, &texture->bpp,
 			&texture->size_line, &texture->endian);
+}
+
+void	init_loading_texture(t_game *game)
+{
+	char	texture_path[50];
+	int		frame;
+
+	frame = 0;
+	while (frame < 57)
+	{
+		snprintf(texture_path, sizeof(texture_path), "textures/loading/loding%d.xpm",
+			frame);
+		game->loading[frame].img = mlx_xpm_file_to_image(game->mlx->mlx_ptr,
+				texture_path, &game->loading[frame].w, &game->loading[frame].h);
+		if (game->loading[frame].img == NULL)
+			free_exit(game, __LINE__ - 2, __FILE__, E_MLXIMG);
+		game->loading[frame].data = mlx_get_data_addr(game->loading[frame].img,
+				&game->loading[frame].bpp, &game->loading[frame].size_line,
+				&game->loading[frame].endian);
+		frame++;
+	}
+	game->loading->frame = 0;
+	game->loading->animating = 0;
+	game->loading->frame_delay = 0.05;
+	game->loading->last_time = get_current_time();
 }

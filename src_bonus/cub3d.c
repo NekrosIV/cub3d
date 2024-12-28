@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/27 19:07:06 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/28 16:33:35 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,21 +67,6 @@ void	update_doors(t_game *game)
 		}
 	}
 }
-void	update_loading_page(t_game *game)
-{
-	double	current_time;
-
-	current_time = get_current_time();
-	if (current_time - game->loading->last_time >= game->loading->frame_delay)
-	{
-		game->loading->frame += 1;
-		if (game->loading->frame > 55)
-		{
-			game->loading->frame = 0;
-		}
-		game->loading->last_time = current_time;
-	}
-}
 
 // void update_doors(t_game *game)
 // {
@@ -115,34 +100,6 @@ void	update_loading_page(t_game *game)
 //         }
 //     }
 // }
-void	draw_loading_page(t_game *game, t_texture *texture)
-{
-	t_utils	u;
-	int		x;
-	int		y;
-	int		img_index;
-	int		screen_index;
-
-	update_loading_page(game);
-	u.x_ratio = (double)game->loading[game->loading->frame].w / (double)WINX;
-	u.y_ratio = (double)game->loading[game->loading->frame].h / (double)WINY;
-	x = -1;
-	while (++x < WINX)
-	{
-		y = -1;
-		while (++y < WINY)
-		{
-			u.x_img = x * u.x_ratio;
-			u.y_img = y * u.y_ratio;
-			img_index = ((int)u.y_img) * game->loading[game->loading->frame].w
-				+ (int)u.x_img;
-			screen_index = y * WINX + x;
-			*((int *)game->pic.data
-					+ screen_index) = *((int *)game->loading[game->loading->frame].data
-					+ img_index);
-		}
-	}
-}
 
 int	loop_hook(t_game *game)
 {
@@ -152,7 +109,7 @@ int	loop_hook(t_game *game)
 
 	texture = &game->pic;
 	if (game->loading_page == true)
-		draw_loading_page(game, texture);
+		loading_page(game, texture);
 	else if (game->menu == false)
 	{
 		(check_moves(game), check_door(game), update_doors(game));
@@ -164,7 +121,7 @@ int	loop_hook(t_game *game)
 		(bot_attack(game, texture), draw_health(game, texture));
 	}
 	else
-		; // draw_good_state_menu(game, texture);
+		draw_good_state_menu(game, texture);
 	mlx_put_image_to_window(game->mlx->mlx_ptr, game->mlx->mlx_win,
 		texture->img, 0, 0);
 	if (game->player.hp <= 0)

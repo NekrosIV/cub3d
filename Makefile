@@ -68,6 +68,7 @@ FILES_BONUS := cub3d.c \
 		draw/gun.c \
 		draw/door.c \
 		draw/health.c \
+		draw/loading.c \
 		draw/menu.c \
 		draw/crosshair.c \
 		bot/enemy_animation.c \

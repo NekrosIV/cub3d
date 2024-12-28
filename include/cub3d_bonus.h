@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/27 19:05:59 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/28 17:12:35 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@
 // # define SPEED_BOT 0.005
 // # define SPEED_M 0.01
 // # define SPEED_C 0.0001
-# define SPEED_BOT 0.05
-# define SPEED_M 0.1
+# define SPEED_BOT 2.5
+# define SPEED_M 3
 # define SPEED_C 0.002
 # define WALL_TEXT_CARRE 64
 # define FLOOR 0xFF7300
@@ -179,6 +179,7 @@ typedef struct s_enemy
 	int			frame;
 	int			action;
 	double		last_time;
+	double		last_update_time;
 	double		last_time_hit;
 	int			animating;
 	double		last_time2;
@@ -259,6 +260,7 @@ typedef struct s_player
 	bool		side_r;
 	bool		side_l;
 	int			hp;
+	double		last_update_time;
 }				t_player;
 
 typedef struct s_door
@@ -421,7 +423,7 @@ void			draw_rectangle(t_texture *textures, int x, int y, int color);
 void			draw_filled_circle(t_texture *textures, int x, int y,
 					int color);
 void			draw_gun(t_game *game, char *data);
-void			movements(t_game *game, double angle_shift);
+// void			movements(t_game *game, double angle_shift);
 void			direction(t_game *game, char side, double speed_cam);
 void			check_moves(t_game *game);
 double			get_current_time(void);
@@ -529,5 +531,6 @@ void			init_gun_texture(t_game *game);
 void			load_image_to_game(t_game *game, t_texture *texture);
 void			init_ceiling_texture(t_game *game);
 void			init_loading_texture(t_game *game);
+void			loading_page(t_game *game, t_texture *texture);
 
 #endif

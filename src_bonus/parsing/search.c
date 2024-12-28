@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:11:56 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/23 14:39:44 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/28 17:15:29 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	init_bot(t_game *game, int i, int x, int y)
 	game->ennemy[i].action = HALT;
 	game->ennemy[i].frame = 0;
 	game->ennemy[i].last_time = get_current_time();
+	game->ennemy[i].last_update_time = get_current_time();
 	game->ennemy[i].last_time2 = get_current_time();
 	game->ennemy[i].last_time_hit = 0;
 	game->ennemy[i].animating = 1;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:18:57 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/16 15:56:02 by pscala           ###   ########.fr       */
+/*   Updated: 2024/12/30 17:03:55 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ void	free_everything(t_game *game)
 		free_taboftab(game->cpy_map);
 	if (game->mlx)
 		free_mlx(game, game->mlx);
-	if (game->context || game->device)
-		delete_audios(game);
+	if (&game->engine)
+		close_sounds(game);
 	if (game->ennemy)
 		free(game->ennemy);
 	if (game->door)

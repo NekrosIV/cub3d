@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 18:36:55 by pscala            #+#    #+#             */
-/*   Updated: 2024/12/23 14:19:50 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/30 15:15:52 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool	multi_def(t_game *game, char *line, char flag)
 {
 	if (flag == 'N' && game->wall_path[N] != NULL)
 		(free(line), free_exit(game, 0, NULL, E_TMULTI "NO"));
-	if (flag == 'S' && game->wall_path[S] != NULL)
+	if (flag == 'S' && game->wall_path[SO] != NULL)
 		(free(line), free_exit(game, 0, NULL, E_TMULTI "SO"));
 	if (flag == 'W' && game->wall_path[W] != NULL)
 		(free(line), free_exit(game, 0, NULL, E_TMULTI "WE"));
@@ -37,7 +37,7 @@ void	trime_line(t_game *game, char *line)
 	if (ft_strncmp(line + i, "NO", 2) == 0 && !multi_def(game, line, 'N'))
 		game->wall_path[N] = get_texture_path(line + i, game);
 	else if (ft_strncmp(line + i, "SO", 2) == 0 && !multi_def(game, line, 'S'))
-		game->wall_path[S] = get_texture_path(line + i, game);
+		game->wall_path[SO] = get_texture_path(line + i, game);
 	else if (ft_strncmp(line + i, "WE", 2) == 0 && !multi_def(game, line, 'W'))
 		game->wall_path[W] = get_texture_path(line + i, game);
 	else if (ft_strncmp(line + i, "EA", 2) == 0 && !multi_def(game, line, 'E'))
@@ -87,7 +87,7 @@ bool	textures_filled(t_game *game)
 {
 	if (game->floor[0] == -1)
 		return (false);
-	else if (!game->wall_path[E] || !game->wall_path[N] || !game->wall_path[S]
+	else if (!game->wall_path[E] || !game->wall_path[N] || !game->wall_path[SO]
 		|| !game->wall_path[W] || !game->wall_path[F])
 		return (false);
 	return (true);

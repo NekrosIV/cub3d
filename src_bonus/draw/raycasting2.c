@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:52:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/27 15:33:29 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/30 15:16:08 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	determine_wall_and_pos_texture(t_ray *ray, t_game *game)
 		else if (ray->stepy == -1)
 			ray->wall = N;
 		else
-			ray->wall = S;
+			ray->wall = SO;
 		ray->pos_texture = game->player.posx + (ray->perp_length * ray->ray_dx);
 		ray->pos_texture -= floor(ray->pos_texture);
 	}

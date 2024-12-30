@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bot.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 16:46:24 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/16 16:12:57 by pscala           ###   ########.fr       */
+/*   Updated: 2024/12/30 17:09:23 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ void	dammage(t_game *game, t_enemy *enemy)
 	enemy->hp -= DAMAGE_BOT;
 	enemy->action = DAMAGE;
 	enemy->frame = 0;
-	play_sound(&game->sound[E_HURT], false);
+	if (USE_SOUND)
+		play_sound(game, E_HURT);
 }
 
 void	do_damage_to_bot(t_game *game)

@@ -6,12 +6,11 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:28:20 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/24 12:41:04 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/30 17:10:24 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
-
 
 void	update_door_distance(t_game *game, t_door *door)
 {
@@ -36,13 +35,13 @@ bool	is_player_near_door(t_game *game, t_door *door)
 
 void	play_door_sound(t_game *game)
 {
-	ALint	state;
 
 	if (USE_SOUND == true)
 	{
-		alGetSourcei(game->sound[DOOR].source, AL_SOURCE_STATE, &state);
-		if (state != AL_PLAYING)
-			play_sound(&game->sound[DOOR], false);
+		// if (!ma_sound_is_playing(&game->sound[DOOR].sound))
+		// {
+			play_sound(game, DOOR);
+		// }
 	}
 }
 
@@ -59,9 +58,9 @@ void	toggle_door_state(t_game *game, t_door *door)
 	// 	door->state = IS_OPEN;
 	// }
 	if (door->state == IS_CLOSE)
-        door->state = IS_OPENING;
-    else if (door->state == IS_OPEN)
- 	{       
+		door->state = IS_OPENING;
+	else if (door->state == IS_OPEN)
+	{
 		door->state = IS_CLOSING;
 		game->map[door->map_y][door->map_x] = '1';
 	}

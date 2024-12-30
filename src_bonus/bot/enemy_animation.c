@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 15:09:50 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/28 17:21:50 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/30 17:09:39 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void	handle_bot_damage(t_game *game, t_enemy *bot, double current_time)
 
 void	handle_bot_death(t_game *game, t_enemy *bot, double current_time)
 {
-	if (bot->frame == 1)
-		play_sound(&game->sound[E_DEAD], false);
+	if (bot->frame == 1 && USE_SOUND)
+		play_sound(game, E_DEAD);
 	bot->frame_delay = 0.2;
 	if (current_time - bot->last_time >= bot->frame_delay)
 	{

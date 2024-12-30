@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:34:49 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/14 17:00:41 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/30 17:10:41 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ int	mouse_press(int button, int x, int y, t_game *game)
 	{
 		if (game->gun->animating == 0 && game->menu == false)
 		{
-			play_sound(&game->sound[GUN], false);
+			if(USE_SOUND)
+				play_sound(game, GUN);
 			game->gun->animating = 1;
 			game->do_damage = 1;
 		}

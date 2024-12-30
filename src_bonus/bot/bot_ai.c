@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 16:12:52 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/14 16:41:08 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/30 17:08:53 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ void	activate_bot_if_triggered(t_game *game, t_enemy *bot)
 {
 	if (bot->distance <= TRIGGERBOT && !has_wall_between(game, bot))
 	{
-		play_sound(&game->sound[E_TRIG], false);
+		if(USE_SOUND)
+			play_sound(game, E_TRIG);
 		bot->is_active = true;
 	}
 }

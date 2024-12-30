@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:44 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/28 17:12:35 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/30 17:19:03 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 
 # include "../libft/include/libft.h"
 # include "../mlx/mlx.h"
-# include "../vendor/lib/openal/include/AL/al.h"
-# include "../vendor/lib/openal/include/AL/alc.h"
+# include "miniaudio.h"
 # include <X11/keysym.h>
 # include <errno.h>
 # include <fcntl.h>
@@ -67,11 +66,9 @@
 # define E_MLXIMG "Failed to load image"
 # define E_MLXDATA "Failed to get data address for image"
 # define E_AUDIO "Couldnt load audio file"
-
-# define DR_WAV_IMPLEMENTATION
 # define WINAME "GOAT3D"
 # define N 0
-# define S 1
+# define SO 1
 # define W 2
 # define E 3
 # define F 4
@@ -133,7 +130,8 @@
 # define GREENHP 0x39FF14
 # define HPP 100
 
-# define USE_SOUND 0
+# define USE_SOUND 1
+# define NUM_SOUNDS 7
 
 typedef enum e_door_state
 {
@@ -277,13 +275,10 @@ typedef struct s_door
 
 typedef struct s_sound
 {
-	ALuint		buffer;
-	ALuint		source;
-	ALenum		format;
-	ALsizei		size;
-	ALsizei		freq;
-	ALvoid		*data;
-	size_t		data_size;
+	ma_sound	sound;
+	bool		used;
+	float		volume;
+	char		*filepath;
 }				t_sound;
 
 typedef struct s_utils
@@ -390,16 +385,15 @@ typedef struct s_game
 	t_door		*door;
 	int			check_door;
 	bool		menu;
-	t_sound		sound[7];
-	ALCdevice	*device;
-	ALCcontext	*context;
+	t_sound		sound[NUM_SOUNDS];
+	ma_engine	engine;
 }				t_game;
 
 void			parsing(char *file, t_game *game);
 void			read_file(char *file, t_game *game);
 void			free_exit(t_game *game, int line, char *file, char *error);
 void			free_mlx(t_game *game, t_mlx *mlx);
-void			delete_audios(t_game *game);
+void			close_sounds(t_game *game);
 int				india(t_game *game);
 void			init_game(t_game *game);
 char			*get_texture_path(char *line, t_game *game);
@@ -469,11 +463,12 @@ void			draw_dammage(t_game *game, t_enemy *bot, t_player *player);
 int				check_collision_in_cell(t_game *game, double x, double y,
 					t_utils *u);
 bool			is_out_of_bounds_or_wall(t_game *game, int map_x, int map_y);
-int				init_openal(t_game *game);
-void			close_openal(t_game *game);
-t_sound			load_sound(t_game *game, const char *filename);
-void			play_sound(t_sound *sound, int loop);
+int				load_sound(t_game *game, const char *filepath, float volume,
+					bool loop, int slot);
 void			init_sound(t_game *game);
+void			play_sound(t_game *game, int slot);
+void			init_sound_engine(t_game *game);
+int				init_miniaudio(t_game *game);
 void			update_enemy_distance(t_game *game, t_enemy *enemy);
 void			sort_enemies_by_distance(t_game *game);
 void			check_door(t_game *game);

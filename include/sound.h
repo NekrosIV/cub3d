@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   sound.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 15:59:30 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/16 16:19:49 by pscala           ###   ########.fr       */
+/*   Updated: 2024/12/30 15:18:47 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SOUND_H
 # define SOUND_H
 
-# include "../vendor/lib/openal/include/dr_wav.h"
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:56:30 by pscala            #+#    #+#             */
-/*   Updated: 2024/12/28 13:35:27 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/30 15:04:35 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,6 @@ void	init_game_2(t_game *game)
 	game->menu = true;
 	game->is_game_start = false;
 	game->state_menu = NEW_GAME;
-	game->device = NULL;
-	game->context = NULL;
 	game->line_thickness = ((WINX + WINY) / 800);
 	game->crosshair_size = ((WINX + WINY) / 300);
 	game->center_x = (WINX / 2);

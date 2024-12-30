@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 13:03:02 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/28 16:14:53 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/30 17:11:02 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,11 @@ void	calculate_new_position(t_player *player)
 void	movements(t_game *game, double angle_shift, double delta_time)
 {
 	t_player	*player;
-	ALint		state;
 
 	player = &game->player;
 	player->new_dir = player->dirangle + angle_shift;
-	
 	// On initialise les offsets de sécurité
 	initialize_safety_offsets(player);
-
 	// Au lieu de juste SPEED_M, on fait SPEED_M * delta_time
 	// Ainsi, si delta_time est petit (FPS élevé), on avance moins.
 	// Si delta_time est grand (FPS faible), on avance plus.
@@ -69,17 +66,15 @@ void	movements(t_game *game, double angle_shift, double delta_time)
 		+ player->safetyx;
 	player->new_y = player->posy - sin(player->new_dir) * SPEED_M * delta_time
 		+ player->safetyy;
-
 	determine_grid_steps(player);
 	check_diagonal_collision(game, player);
-
 	if (USE_SOUND == true)
 	{
-		alGetSourcei(game->sound[STEP].source, AL_SOURCE_STATE, &state);
-		if (state != AL_PLAYING)
-			play_sound(&game->sound[STEP], false);
+		// if (!ma_sound_is_playing(&game->sound[STEP].sound))
+		// {
+			play_sound(game, STEP);
+		// }
 	}
-
 	attempt_move_player(game, player);
 }
 
@@ -113,7 +108,6 @@ void	check_moves(t_game *game)
 	current_time = get_current_time();
 	delta_time = current_time - player->last_update_time;
 	player->last_update_time = current_time;
-
 	// On utilise delta_time dans movements()
 	if (player->up == true)
 		movements(game, 0, delta_time);
@@ -128,7 +122,6 @@ void	check_moves(t_game *game)
 	if (player->side_r == true)
 		direction(game, 'd', SPEED_C);
 }
-
 
 // void	check_moves(t_game *game)
 // {

@@ -6,97 +6,81 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:24:23 by kasingh           #+#    #+#             */
-/*   Updated: 2024/10/15 16:02:54 by kasingh          ###   ########.fr       */
+/*   Updated: 2024/12/30 17:18:45 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#define MINIAUDIO_IMPLEMENTATION
 #include "cub3d_bonus.h"
-#include "sound.h"
 
-ALenum	init_wav_file(t_game *game, const char *filename, drwav *wav)
+void init_sound_engine(t_game *game)
 {
-	ALenum	format;
-
-	if (!drwav_init_file(wav, filename, NULL))
-		free_exit(game, 0, NULL, E_AUDIO);
-	if (wav->channels == 1)
-		format = AL_FORMAT_MONO16;
-	else if (wav->channels == 2)
-		format = AL_FORMAT_STEREO16;
-	else
-	{
-		drwav_uninit(wav);
-		free_exit(game, 0, NULL, E_AUDIO);
-	}
-	return (format);
+    ma_result result = ma_engine_init(NULL, &game->engine);
+    if (result != MA_SUCCESS)
+    {
+        fprintf(stderr, "Failed to initialize miniAudio engine. Error code: %d\n", result);
+        free_exit(game, __LINE__, __FILE__, "Failed to initialize audio engine");
+    }
+    memset(game->sound, 0, sizeof(game->sound));
 }
 
-void	*read_wav_data(t_game *game, drwav *wav, size_t *data_size)
-{
-	void			*data;
-	drwav_uint64	frames_read;
 
-	*data_size = wav->totalPCMFrameCount * wav->channels * sizeof(int16_t);
-	data = malloc(*data_size);
-	if (!data)
-	{
-		drwav_uninit(wav);
-		free_exit(game, 0, NULL, E_AUDIO);
-	}
-	frames_read = drwav_read_pcm_frames_s16(wav, wav->totalPCMFrameCount, data);
-	if (frames_read == 0)
-	{
-		free(data);
-		drwav_uninit(wav);
-		free_exit(game, 0, NULL, E_AUDIO);
-	}
-	return (data);
+/*
+** Charge un fichier audio dans un "slot" précis du tableau de sons.
+** - 'filepath' : chemin vers le WAV/MP3/OGG...
+** - 'volume'   : volume [0.0 -> 1.0].
+** - 'loop'     : true => lecture en boucle, false => lecture unique.
+** - 'slot'     : index dans le tableau (0 <= slot < NUM_SOUNDS).
+** Retour : l'index du slot si tout va bien (ou déclenche free_exit en cas d'erreur).
+*/
+int load_sound(t_game *game, const char *filepath, float volume, bool loop, int slot)
+{
+    // Vérifie la validité du slot
+    if (slot < 0 || slot >= NUM_SOUNDS)
+        free_exit(game, __LINE__, __FILE__, "Invalid sound slot index");
+
+    // Vérifie qu'on n'écrase pas un slot déjà utilisé
+    if (game->sound[slot].used)
+        free_exit(game, __LINE__, __FILE__, "Sound slot already in use");
+
+    // Prépare la structure
+    game->sound[slot].volume   = volume;
+    game->sound[slot].used     = false;  // On mettra à true après le init
+    game->sound[slot].filepath = strdup(filepath); // Copie le chemin
+
+    // Charge le son via miniAudio
+    ma_result result = ma_sound_init_from_file(
+        &game->engine,
+        filepath,
+        MA_SOUND_FLAG_STREAM,  // Ou 0 si vous voulez charger entièrement en RAM
+        NULL,
+        NULL,
+        &game->sound[slot].sound
+    );
+    if (result != MA_SUCCESS)
+    {
+        fprintf(stderr, "Failed to load sound '%s' (code=%d)\n", filepath, result);
+        free(game->sound[slot].filepath);
+        free_exit(game, __LINE__, __FILE__, "ma_sound_init_from_file failed");
+    }
+
+    // Configure volume et boucle
+    ma_sound_set_volume(&game->sound[slot].sound, volume);
+    ma_sound_set_looping(&game->sound[slot].sound, loop ? MA_TRUE : MA_FALSE);
+
+    game->sound[slot].used = true;
+    return slot;
 }
 
-ALuint	create_al_buffer(t_game *game, t_sound *sound)
+void play_sound(t_game *game, int slot)
 {
-	ALuint	buffer;
+    if (slot < 0 || slot >= NUM_SOUNDS)
+    if (!game->sound[slot].used)
+        return;
 
-	alGenBuffers(1, &buffer);
-	if (alGetError() != AL_NO_ERROR)
-	{
-		free((void *)sound->data);
-		free_exit(game, 0, NULL, E_AUDIO);
-	}
-	alBufferData(buffer, sound->format, sound->data, sound->data_size,
-		sound->freq);
-	if (alGetError() != AL_NO_ERROR)
-	{
-		alDeleteBuffers(1, &buffer);
-		free_exit(game, 0, NULL, E_AUDIO);
-	}
-	return (buffer);
+    ma_result r = ma_sound_start(&game->sound[slot].sound);
+    if (r != MA_SUCCESS)
+        free_exit(game, __LINE__, __FILE__, "Failed to start sound");
 }
 
-ALuint	create_al_source(t_game *game, ALuint buffer)
-{
-	ALuint	source;
 
-	alGenSources(1, &source);
-	if (alGetError() != AL_NO_ERROR)
-	{
-		alDeleteBuffers(1, &buffer);
-		free_exit(game, 0, NULL, E_AUDIO);
-	}
-	return (source);
-}
-
-t_sound	load_sound(t_game *game, const char *filename)
-{
-	t_sound	sound;
-	drwav	wav;
-
-	sound.format = init_wav_file(game, filename, &wav);
-	sound.data = read_wav_data(game, &wav, &sound.data_size);
-	sound.freq = wav.sampleRate;
-	drwav_uninit(&wav);
-	sound.buffer = create_al_buffer(game, &sound);
-	free(sound.data);
-	sound.source = create_al_source(game, sound.buffer);
-	return (sound);
-}

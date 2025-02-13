@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:09:12 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/28 16:33:35 by kasingh          ###   ########.fr       */
+/*   Updated: 2025/02/13 14:40:32 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	update_doors(t_game *game)
 		{
 			// door->open_state += speed * deltaTime;
 			door->frame++;
-			if (door->frame == 24)
+			if (door->frame == 25)
 			{
 				door->open_state = 1.0;
 				door->state = IS_OPEN;

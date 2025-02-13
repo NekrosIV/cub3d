@@ -6,7 +6,7 @@
 /*   By: kasingh <kasingh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:44:33 by kasingh           #+#    #+#             */
-/*   Updated: 2024/12/28 16:04:44 by kasingh          ###   ########.fr       */
+/*   Updated: 2025/02/13 14:48:59 by kasingh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,14 @@ bool	is_a_door(t_ray *ray, t_game *game)
 void check_wall_hit(t_ray *ray, t_game *game)
 {
     // On considère le mur (ou porte) s’il n’est pas '0'
-    if (game->map[ray->mapy][ray->mapx] != '0' || is_a_door(ray, game))
+    if (game->map[ray->mapy][ray->mapx] != '0' )
     {
         ray->ray_hit = 1; // par défaut mur
         for (int i = 0; i < game->nb_door && ray->ray_hit == 1; i++)
         {
             if (game->door[i].map_y == ray->mapy && game->door[i].map_x == ray->mapx)
             {
-				// if(!ray->store_door)
+				if(!ray->store_door)
 				{	ray->store_door = true;
 					ray->stored_door_index = i;
 					ray->stored_last_hit = ray->last_hit;
@@ -116,12 +116,12 @@ void check_wall_hit(t_ray *ray, t_game *game)
 					ray->ray_hit = 0; 
 					game->door[i].door_hit++;
 				}
-				// else
-				// {
-					// ray->ray_hit = 2;
-					// ray->door_index = i; 
-					// game->door[i].door_hit++;
-				// }
+				else
+				{
+					ray->ray_hit = 2;
+					ray->door_index = i; 
+					game->door[i].door_hit++;
+				}
                 return;
             }
         }
